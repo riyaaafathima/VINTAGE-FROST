@@ -1,5 +1,6 @@
 const userModel = require("../../model/user/user");
-
+const productModel = require("../../model/admin/product");
+const categoryModel= require('../../model/admin/category')
 
 
 const dashboardRender = (req, res) => {
@@ -10,40 +11,80 @@ const dashboardRender = (req, res) => {
   }
 };
 
+const addCategory=async(req,res)=>{
 
-const getAllproducts=(req,res)=>{
   try {
-    res.render('admin/page-products-list')
+
+
+    const{categoryName,isActive}=req.body
+    console.log(req.body);
+    
+    
+    const newCategory = await categoryModel.create({
+      categoryName,
+      isActive
+  })
+  console.log('Created category:', newCategory);
+  
+  res.status(201).json(newCategory)
+  } catch (error) {
+    console.log(error);
+    
+    
+  }
+}
+
+const getAllCategory= async(req,res)=>{
+  try {
+    res.render('admin/add-category')
+    
   } catch (error) {
     
   }
 }
 
-const addProduct=(req,res)=>{
-  try{
-    res.render('admin/add-product')
+const getAllproducts = async(req, res) => {
+  try {
+    const allProducts = await productModel.find({})
+    res.render("admin/page-products-list",{allProducts});
+  } catch (error) {
 
-  }catch(error){
- 
   }
-}
+};
 
-const addProductController=(req,res)=>{
-  try{
-  console.log(req.body,'this is req.body');
+const addProduct = async (req, res) => {
+  try {
+    const allCategory=await categoryModel.find({})
+    res.render("admin/add-product",{allCategory});
+  } catch (error) {}
+};
 
-  console.log(req.file)
 
- 
- 
-  
-  
-  }catch(error){
+
+const addProductController = async (req, res) => {
+  try {
+    console.log(req.body, "this is req.body");
+    const { productName, price, stock, category, description, quantity } =
+      req.body;
+
+    console.log(req.files);
+    const allImages = req.files.map((item) => {
+      return item.filename;
+    });
+    const newProduct = new productModel({
+      productName,
+      price:JSON.parse(price),
+      stock,
+      category,
+      description,
+      quantity,
+      image: allImages,
+    });
+    await newProduct.save();
+  } catch (error) {
     console.log(error);
-    
-
   }
-}
+};
 
 const userDetailsRender = async (req, res) => {
   try {
@@ -57,32 +98,89 @@ const userDetailsRender = async (req, res) => {
   }
 };
 
+const editProduct= async(req,res)=>{
+  try{
 
-const blockuser= async(req,res)=>{
-  try {
-    const userId=req.param.id
+    const productId= req.params.id  
+
+    const product = await productModel.findById(productId)
+
+   res.render('admin/edit-product',{product})
+ }catch(error){
+  console.log(error);
   
-    const updateUser= await user.findByIdAndUpdate(
-      userId,{$set:{status:false}},{new:true}  // new return updated doc
+ }
+  }
+
+  const updateProduct= async(req,res)=>{
+    try {
+      const { productName, price, stock, category, description, quantity } =
+      req.body;
+
+      const{id}=req.params
+
       
+
+    console.log(req.files);
+    const allImages = req.files.map((item) => {
+      return item.filename;
+    });
+    
+
+    const updateProduct= await productModel.findByIdAndUpdate(id,{$set:{
+      productName,
+      price:JSON.parse(price),
+      stock,
+      category,
+      description,
+      quantity,
+      images:allImages  
+
+    }
+
+    })
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+const blockuser = async (req, res) => {
+  try {
+    const userId = req.param.id;
+
+    const updateUser = await user.findByIdAndUpdate(
+      userId,
+      { $set: { status: false } },
+      { new: true } // new return updated doc
     );
 
     if (!updateUser) {
-
-      return res.status(404).json({message:'user not found'})
+      return res.status(404).json({ message: "user not found" });
     }
 
-
-    const action= status?'blocked':'unblocked'
-    res.status(200).json({message:`user succesfully ${action}`,user:updateUser})
+    const action = status ? "blocked" : "unblocked";
+    res
+      .status(200)
+      .json({ message: `user succesfully ${action}`, user: updateUser });
   } catch (error) {
-    console.log('error blocking/unvlocking user',error);
+    console.log("error blocking/unvlocking user", error);
 
-  res.status(500).json({message:'server error'})
-    
-    
-    
+    res.status(500).json({ message: "server error" });
   }
-}
+};
 
-module.exports = { dashboardRender, userDetailsRender,blockuser,getAllproducts,addProduct,addProductController };
+module.exports = {
+  dashboardRender,
+  userDetailsRender,
+  blockuser,
+  getAllproducts,
+  addProduct,
+  addProductController,
+  addCategory,
+  getAllCategory,
+  editProduct,
+  updateProduct
+};

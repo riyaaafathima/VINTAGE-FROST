@@ -5,37 +5,29 @@ const {
   getAllproducts,
   addProduct,
   addProductController,
+  addCategory,
+  getAllCategory,
+  editProduct,
+  updateProduct
 } = require("../../controller/admin/controller");
 const multer =require('multer');
 const preventNavigation = require("../../middleware/preventNavigation");
-const path= require('path')
-const fs= require('fs')
-
-const uploadDir = path.join(__dirname, "public", "uploads");
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); 
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null,` ${uniqueSuffix}-${file.originalname}`);
-  },
-});
-
-const upload = multer({ storage });
-
+const upload = require("../../config/multer/multer");
 
 
 const router = require("express").Router();
 
 router.get("/dashboard",preventNavigation, dashboardRender);
 
-router.get('/getAllproducts',getAllproducts)
+router.route('/add-category').get(getAllCategory).post(addCategory);
 
-router.get('/add-Product',addProduct)
+router.get('/edit-product/:id',editProduct)
+
+router.get('/getAllproducts',getAllproducts);
+
+router.put('/edit-product/:id',upload.array('images',3),updateProduct)
+
+router.get('/add-Product',addProduct);
 
 router.get("/users", userDetailsRender);
 

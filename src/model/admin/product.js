@@ -1,4 +1,5 @@
 const mongoose= require ('mongoose')
+const { array } = require('../../config/multer/multer')
 
 
 const productSchema= new mongoose.Schema({
@@ -24,14 +25,15 @@ const productSchema= new mongoose.Schema({
     },
     category:{
         type:mongoose.Schema.Types.ObjectId,ref:'category',required:true
+
     },
     description:{
         type:String
 
     },
     image:{
-        type:[string]
-    },
+        type:[]
+    },  
 
 },{
      timestamps:true

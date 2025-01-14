@@ -131,7 +131,7 @@ const verifyOtpController = async (req, res) => {
       const isFirstDoc = users.length == 0;
 
       const user = new userModel({
-        username,
+        username,  
         password: password,
         email,
         isAdmin: isFirstDoc ? true : false,

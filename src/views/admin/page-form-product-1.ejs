@@ -9,13 +9,235 @@
         <meta property="og:title" content="" />
         <meta property="og:type" content="" />
         <meta property="og:url" content="" />
-        <meta property="og:image" content="" />
+        <meta property="og: " content="" />
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg" />
         <!-- Template CSS -->
-        <link href="assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <link href="assets/css/main.css" rel="stylesheet" type="text/css" />
     </head>
+    <style>
+     
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
 
+        .main-content {
+            margin-left: 300px;
+            padding: 20px 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .page-title {
+            font-size: 24px;
+            color: #2d3748;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #4ade80;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #333;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-container {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4ade80;
+        }
+
+        .images-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .image-upload-box {
+            border: 2px dashed #e2e8f0;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+
+        .price-variant {
+            display: flex;
+            gap: 16px;
+            align-items: end;
+            margin-bottom: 16px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        #add-btn{
+            
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            width: 12%;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #4a5568;
+            color: white;
+            align-self:center;
+            margin-bottom: 20px;
+            text-align: center;
+            
+
+        }
+        #img-1preview{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+                
+
+        }
+        #img-2preview{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+
+        }
+        #img-3preview{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+
+
+        }
+        .crop-btns{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            margin: auto;
+            
+        }
+        #save-btn{
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            width: 12%;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #4a5568;
+            color: white;
+            align-self:center;
+            margin-bottom: 20px;
+            text-align: center;
+        
+        }
+        #crop-btn{
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            width: 12%;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            background-color: #4a5568;
+            color: white;
+            align-self:center;
+            margin-bottom: 20px;
+            text-align: center;
+        
+        }
+
+
+    </style>
     <body>
         <div class="screen-overlay"></div>
         <aside class="navbar-aside" id="offcanvas_aside">
@@ -72,7 +294,7 @@
                     <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-form-product-1.ejs">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
+                                          <span class="text">Add product</span>
                         </a>
                         <div class="submenu">
                             <a href="page-form-product-1.ejs" class="active">Add product 1</a>

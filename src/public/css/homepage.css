@@ -121,7 +121,6 @@ nav ul li a::after {
     }
     main .cake-list .sml-cnt{
         flex: 1;
-        background: yellowgreen;
         background-image: url(/img/_Lovely\ Princess\ Cake\ _3_\ Sticker\ for\ Sale\ by\ ShewyOranges.jpg);
         background-position: center;
         background-size: cover;
@@ -133,7 +132,6 @@ nav ul li a::after {
 
     main .cake-list .sml-cnt1{
     flex: 1;
-    background: yellow;
     background-image: url(/img/download.jpg);
     background-position: center;
     background-size: cover;
@@ -142,7 +140,6 @@ nav ul li a::after {
     }
     main .cake-list .sml-cnt2{
     flex: 1;
-    background:green;
     background-image: url(/img/download\ \(2\).jpg);
     background-position: center;
     background-size: cover;
@@ -152,7 +149,6 @@ nav ul li a::after {
     }
     main .cake-list .sml-cnt3{
     flex: 1;
-    background: red;
     background-image: url(/img/_Lovely\ Princess\ Cake\ _3_\ Sticker\ for\ Sale\ by\ ShewyOranges.jpg);
     background-position: center;
     background-size: cover;
@@ -161,7 +157,6 @@ nav ul li a::after {
     }
     main .cake-list .sml-cnt4{
     flex: 1;
-    background:palegoldenrod;
     background-image: url(/img/download\ \(3\).jpg);
     background-position: center;
     background-size: cover;
@@ -169,7 +164,6 @@ nav ul li a::after {
     }
     main .cake-list .sml-cnt5{
     flex: 1;
-    background: purple;
     background-image: url(/img/୨୧.jpg);
     background-position: center;
     background-size: cover;
