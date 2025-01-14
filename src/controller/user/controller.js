@@ -22,11 +22,8 @@ const loginRender = (req, res) => {
   } catch (error) {}
 };
 
-
 const loginController = async (req, res) => {
-
   console.log(req.body);
-
 
   try {
     const { email, password } = req.body;
@@ -41,22 +38,22 @@ const loginController = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, isMailExist.password);
     if (!isMatch) {
-     return res.status(400).json({ error: "incorrect Password" });
+      return res.status(400).json({ error: "incorrect Password" });
     }
 
     if (isMailExist.isAdmin) {
-
       req.session.isAdmin = isMailExist;
-     return res.status(200).json({redirecturl:'/admin/dashboard'})
-
+     
+      
+      return res.status(200).json({ redirecturl: "/admin/dashboard" });
     }
-     req.session.user = isMailExist;
-    res.status(200).json({redirecturl:'/home-page'})
-
+    req.session.user = isMailExist;
+    console.log(req.session);
+    
+    res.status(200).json({ redirecturl: "/home-page" });
   } catch (error) {
     res.status(500).json(error);
   }
-
 };
 
 const signupconteroller = async (req, res) => {
@@ -86,8 +83,6 @@ const signupconteroller = async (req, res) => {
       }, 30000);
 
       res.status(200).json("success");
-
-
     }
   } catch (error) {
     res.status(500).json(error.message);
@@ -101,6 +96,7 @@ const resendOtp = (req, res) => {
     sendMail(email, resendOtp);
 
     req.session.otpUsersData.otp = resendOtp;
+    console.log("new otp", resendOtp);
 
     setTimeout(() => {
       req.session.otpUsersData.otp = null;
@@ -115,7 +111,7 @@ const resendOtp = (req, res) => {
 
 const serveOtpController = (req, res) => {
   try {
-    const email = req.session.otpUsersData.email;
+    const email = req.session?.otpUsersData?.email;
     res.render("user/otpPage", { email });
   } catch (error) {
     console.log(error);
@@ -140,7 +136,6 @@ const verifyOtpController = async (req, res) => {
         email,
         isAdmin: isFirstDoc ? true : false,
       });
-    
 
       await user.save();
 

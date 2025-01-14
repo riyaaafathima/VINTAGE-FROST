@@ -40,8 +40,10 @@ btn_el.addEventListener('click', async(e)=>{
 
     if (response.ok) {
         const result= await response.json()
+        console.log(result);
 
         window.location.href = result.redirecturl
+        
     }else{
 
         const mssg= await response.json()

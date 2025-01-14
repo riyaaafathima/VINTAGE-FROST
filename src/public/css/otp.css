@@ -93,7 +93,7 @@ nav ul li a::after {
 
 .main{
     width: 100%;
-    height: calc(100vh - 123px);
+    height: calc(100vh);
     background:wheat;
     display: flex;
     flex-direction: column;
