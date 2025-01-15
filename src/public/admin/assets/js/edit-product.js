@@ -15,7 +15,7 @@ const img3_input = document.querySelector("#img-3");
 const img_preview1 = document.querySelector("#img-1preview");
 const img_preview2 = document.querySelector("#img-2preview");
 const img_preview3 = document.querySelector("#img-3preview");
-const productId=document.getElementById('_id')
+const productId=document.querySelector('._id')
 
 const addpriceBtn_el = document.querySelector("#add-pricebtn");
 const addbtn_el = document.querySelector("#add-btn");
@@ -40,9 +40,9 @@ let editedImage={};
         getImageFile(img_preview3.src)])
 
         editedImage={
-            img_preview1:image1Blob,
-            img_preview2:image2Blob,
-            img_preview3:image3Blob
+            [img_preview1.id]:image1Blob,
+            [img_preview2.id]:image2Blob,
+            [img_preview3.id]:image3Blob
         }
 })()
 
@@ -134,13 +134,13 @@ for(let key in editedImage ){
     i++
 }
 
-  const response= await fetch(`/admin/edit-product/${productId.value}`,{
+  const response= await fetch(`/admin/edit-product/${productId.id}`,{
     method:'PUT',
     // headers:{
     //     'Content-Type':'application/json'
     // },
     body:formData
-
+                                            
 })
 });
 
@@ -256,7 +256,7 @@ savebtn_el.addEventListener('click',(e)=>{
 
            croppedImages.push(blob)
 
-           editedImage[selectedImage]=blob
+           editedImage[selectedImage.id]=blob
 
 
 

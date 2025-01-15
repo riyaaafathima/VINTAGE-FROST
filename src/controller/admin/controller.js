@@ -1,6 +1,8 @@
 const userModel = require("../../model/user/user");
 const productModel = require("../../model/admin/product");
 const categoryModel= require('../../model/admin/category')
+const path=require('path')
+const fs= require('fs')
 
 
 const dashboardRender = (req, res) => {
@@ -10,6 +12,8 @@ const dashboardRender = (req, res) => {
     console.log(error);
   }
 };
+
+
 
 const addCategory=async(req,res)=>{
 
@@ -36,7 +40,8 @@ const addCategory=async(req,res)=>{
 
 const getAllCategory= async(req,res)=>{
   try {
-    res.render('admin/add-category')
+    const allCategory= await categoryModel.find({})
+    res.render('admin/add-category',{allCategory})
     
   } catch (error) {
     
@@ -105,47 +110,57 @@ const editProduct= async(req,res)=>{
 
     const product = await productModel.findById(productId)
 
-   res.render('admin/edit-product',{product})
+    const category= await categoryModel.find({})
+
+   res.render('admin/edit-product',{product,category})  
  }catch(error){
   console.log(error);
   
  }
   }
 
-  const updateProduct= async(req,res)=>{
+  const updateProduct = async (req, res) => {
     try {
       const { productName, price, stock, category, description, quantity } =
-      req.body;
-
-      const{id}=req.params
-
+        req.body;
+      console.log(req.body);
+  
+      const { id } = req.params;
+  
+      console.log(req.files);
+      const allImages = req.files.map((item) => {
+        return item.filename;
+      });
+  
+      const exisitingProduct= await productModel.findById(id)
+      const exisitingImages  = exisitingProduct.image
+      console.log("exisitingImages",exisitingImages);
       
-
-    console.log(req.files);
-    const allImages = req.files.map((item) => {
-      return item.filename;
-    });
-    
-
-    const updateProduct= await productModel.findByIdAndUpdate(id,{$set:{
-      productName,
-      price:JSON.parse(price),
-      stock,
-      category,
-      description,
-      quantity,
-      images:allImages  
-
-    }
-
-    })
+      const filePath = path.join(__dirname, "../../../public/uploads", exisitingImages[0])
+      console.log("filepath",filePath);
       
-      
+      const updateProduct = await productModel.findByIdAndUpdate(id, {
+        $set: {
+          productName,
+          price: JSON.parse(price),
+          stock,
+          category:category || exisitingProduct.category ,
+          description,
+          quantity,
+          image: allImages,
+        },
+      });
+      if(exisitingProduct.productName !== productName){
+        exisitingImages.forEach(img=>{
+          const filePath = path.join(__dirname, "../../../src/public/uploads",img)
+          fs.unlink(filePath,(err)=> console.log(err)
+          )
+        })
+      }
     } catch (error) {
       console.log(error);
-      
-    }
-  }
+    }
+  };
 
 const blockuser = async (req, res) => {
   try {

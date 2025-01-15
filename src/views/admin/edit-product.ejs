@@ -396,15 +396,17 @@
                         <div class="form-group">
                             <label>Category</label>
                             <select class="form-control" id="category" required>
-                                <option value="">All category</option>
-                                <option value="birthday cake">birthday cake</option>
-                                <option value="wedding cake">wedding cake</option>
+                                <option value="" >All category</option>
+                                <% category.forEach(category=>  { %>
+                                <option value="<%=category._id%>"><%=category.categoryName%></option>
+                                <% }) %>
+                                
                             </select>
                         </div>
     
                         <div class="form-group">
                             <label>Stock</label>
-                            <input type="number"  value="<%=product.stock%>" id="stock" class="form-control" required>
+                             <input type="number"  value="<%=product.stock%>" id="stock" class="form-control" required>
                         </div>
     
                         <div class="form-group">
@@ -478,7 +480,7 @@
                     </div>
                     <button type="button" id="add-btn" class="btn btn-secondary">Add Product</button>
                    
-                    <span id="_id" ><%=product._id%></span>
+                    <span id="<%=product._id%>" class="_id" ></span>
     
     
     

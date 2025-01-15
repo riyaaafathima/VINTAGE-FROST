@@ -21,6 +21,8 @@ router.get("/dashboard",preventNavigation, dashboardRender);
 
 router.route('/add-category').get(getAllCategory).post(addCategory);
 
+router.get('/edit-category/:id')
+
 router.get('/edit-product/:id',editProduct)
 
 router.get('/getAllproducts',getAllproducts);

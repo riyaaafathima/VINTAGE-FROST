@@ -388,11 +388,13 @@
                         <div class="form-group">
                             <label>Product Name</label>
                             <input type="text" id="productName" class="form-control" required>
+                           
                         </div>
     
                         <div class="form-group">
                             <label>Category</label>
                             <select class="form-control" id="category" required>
+                               
                                 <option value="" >All category</option>
                                 <% allCategory.forEach(category=>  { %>
                                 <option value="<%=category._id%>"><%=category.categoryName%></option>
@@ -404,11 +406,13 @@
                         <div class="form-group">
                             <label>Stock</label>
                             <input type="number" id="stock"  class="form-control" required>
+                            
                         </div>
     
                         <div class="form-group">
                             <label>Quantity</label>
                             <input type="number"  id="quantity" class="form-control" required>
+                          
                                 <!-- <option value="active"></option>
                                 <option value="archived">Archived</option> -->
                             </select>
@@ -421,10 +425,12 @@
                             <div style="flex: 1;">
                                 <label>Weight (kg)</label>
                                 <input type="number"  id="Weight" class="form-control" required>
+                               
                             </div>
                             <div style="flex: 1;">
                                 <label>Price ($)</label>
                                 <input type="number"id="price" class="form-control" required>
+                                
                             </div>
                             <button type="button" id="remove-btn" class="btn btn-secondary">Remove</button>
                         </div>
@@ -434,6 +440,7 @@
                     <div class="form-group">
                         <label>Description</label>
                         <textarea class="form-control" id="description"></textarea>
+                        
                     </div>
     
                     <div class="form-group">

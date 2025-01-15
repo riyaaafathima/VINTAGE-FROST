@@ -2,6 +2,7 @@ const sendMail = require("../../service/email/service");
 const generateOtp = require("../../service/otp/service");
 const userModel = require("../../model/user/user");
 const bcrypt = require("bcrypt");
+const productModel=require('../../model/admin/product')
 
 const signupRender = (req, res) => {
   try {
@@ -9,13 +10,41 @@ const signupRender = (req, res) => {
   } catch (error) {}
 };
 
-const homePageRender = (req, res) => {
+const homePageRender =  async(req, res) => {
+  const allProducts= await productModel.find({})
   try {
-    res.render("user/homepage");
+    res.render("user/homepage",{allProducts});
   } catch (error) {
     console.log(error);
   }
 };
+const productPageRender= async(req,res)=>{
+ try {
+
+  const allProducts= await productModel.find({})
+  res.render('user/allProduct',{allProducts})
+  
+ } catch (error) {
+  console.log(error);
+  
+ }
+}
+
+ const productView= async(req,res)=>{
+  try{
+
+    
+    const {id}=req.params
+    const product= await productModel.findById(id)
+    res.render('user/singleProduct',{product})
+
+  }catch(error){
+    console.log(error);
+    
+
+  }
+ 
+}
 const loginRender = (req, res) => {
   try {
     res.render("user/login");
@@ -159,4 +188,6 @@ module.exports = {
   verifyOtpController,
   loginRender,
   loginController,
+  productPageRender,
+  productView
 };

@@ -15,16 +15,16 @@ const img3_input = document.querySelector("#img-3");
 const img_preview1 = document.querySelector("#img-1preview");
 const img_preview2 = document.querySelector("#img-2preview");
 const img_preview3 = document.querySelector("#img-3preview");
-
 const addpriceBtn_el = document.querySelector("#add-pricebtn");
 const addbtn_el = document.querySelector("#add-btn");
+
+
 
 let selectedImage = null;
 
 let cropper = null;
 
 let croppedImages=[]
-
 
 
 // console.log(
@@ -43,22 +43,94 @@ let croppedImages=[]
 addbtn_el.addEventListener("click", async(e) => {
   e.preventDefault();
 
-//   const productDetails = {
-//     productName: productName_el.value,
-//     price: [
-//       {
-//         kg: weight_el.value,
+  let isValid=true
 
-//         price: price_el.value,
-//       },
-//     ],
-//     stock: stock_el.value,
+  const createErrElAfter =(element,err)=>{
+    if(element?.nextElementSibling?.id == 'erro_el' ){
+      element.nextElementSibling.remove()
+    }
+    const new_el = document.createElement('p')
+    new_el.setAttribute("id","erro_el")
+    new_el.style.color = "red"
+    new_el.innerHTML = err
+    element.after(new_el)
+  }
 
-//     category: category_el.value,
 
-//     description: description_el.value,
-//   };
-//   console.log(productDetails);
+  if(productName_el?.value == ""){
+    createErrElAfter(productName_el,"product name can not be empty")
+   isValid=false
+ }
+ 
+ if(productName_el?.value.length >= 20){
+   createErrElAfter(productName_el,"product name can not be longer than 20")
+   
+ }
+  if(category_el?.value == ""){
+    createErrElAfter(category_el,"product name can not be empty")
+    
+ }
+ 
+ 
+  if(stock_el?.value == ""){
+    createErrElAfter(stock_el,"product name can not be empty")
+    
+ }
+ 
+ if(stock_el?.value.length >= 20){
+   createErrElAfter(stock_el,"product name can not be longer than 20")
+  
+ }
+  if(quantity_el?.value == ""){
+    createErrElAfter(quantity_el,"add quantity")
+   
+ }
+ 
+ if(quantity_el?.value.length >= 20){
+   createErrElAfter(quantity_el,"product name can not be longer than 20")
+   
+ }
+  if(weight_el?.value == ""){
+    createErrElAfter(weight_el,"product name can not be empty")
+    
+ }
+ 
+ 
+  if(price_el?.value == ""){
+    createErrElAfter(price_el,"product name can not be empty")
+  
+ }
+ 
+
+  if(description_el?.value == ""){
+    createErrElAfter(description_el,"add description")
+   
+ }
+ 
+
+  if(img1_input?.value == ""){
+    createErrElAfter(img1_input,"Add image")
+    
+ }
+ 
+
+  if(img2_input?.value == ""){
+    createErrElAfter(img2_input,"Add image")
+    
+ }
+ 
+
+  if(img3_input?.value == ""){
+    createErrElAfter(img3_input,"add image")
+    
+ }
+ 
+ if(weight_el?.value.length >= 20){
+   createErrElAfter(weight_el,"Add weight")
+  
+ }
+
+
 
 const formData = new FormData();
 
@@ -77,7 +149,6 @@ for (let i = 0; i < croppedImages.length; i++) {
     formData.append('images', croppedImages[i],`${productName_el.value}${i+1}.png`);
     }
 
-  
 }
   const response= await fetch('/admin/add-product',{
     method:'POST',
@@ -88,8 +159,6 @@ for (let i = 0; i < croppedImages.length; i++) {
 
 })
 });
-
-
 
 img1_input.addEventListener("change", (e) => {
   const file = event.target.files[0];
@@ -179,7 +248,6 @@ cropbtn_el.addEventListener("click", (e) => {
 
 });
 
-
 savebtn_el.addEventListener('click',(e)=>{
 
   if (!selectedImage||!cropper) {
@@ -197,8 +265,6 @@ savebtn_el.addEventListener('click',(e)=>{
            selectedImage.src = blobUrl;  // and we put the blobed image into selectredimage
 
            croppedImages.push(blob)
-
-
 
     
     cropper.destroy();
