@@ -24,7 +24,9 @@ const productSchema= new mongoose.Schema({
 
     },
     category:{
-        type:mongoose.Schema.Types.ObjectId,ref:'category',required:true
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'categories',
+        required:true
 
     },
     description:{
@@ -34,6 +36,10 @@ const productSchema= new mongoose.Schema({
     image:{
         type:[]
     },  
+    isActive:{
+        type:Boolean,
+        default:true
+    }
 
 },{
      timestamps:true

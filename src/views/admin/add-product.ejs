@@ -22,8 +22,8 @@
         <style>
      
             body {
-                background-color: rgb(173, 145, 112);
-                color:wheat;
+                background-color:white;
+                color:#E4D7CE;
             }
     
             .main-content {
@@ -41,11 +41,11 @@
     
             .page-title {
                 font-size: 24px;
-                color:#7b6545;
+                color:#3E3C31;
             }
     
             .subtitle {
-                color: #7b6545;
+                color: #E4D7CE;
                 font-size: 14px;
                 margin-top: 4px;
             }
@@ -60,7 +60,7 @@
             }
     
             .btn-primary {
-                background-color: #7b6545;
+                background-color:#E4D7CE;
                 color: white;
             }
     
@@ -71,7 +71,7 @@
             }
     
             .card {
-                background:#bdb09a;
+                background:#E4D7CE;
                 border-radius: 8px;
                 box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             }
@@ -93,7 +93,7 @@
             .form-group label {
                 display: block;
                 margin-bottom: 8px;
-                color: rgb(93, 67, 36);
+                color: black;
                 font-size: 14px;
                 font-weight: 500;
             }
@@ -108,7 +108,7 @@
     
             .form-control:focus {
                 outline: none;
-                border-color: #7b6545;
+                border-color:#E4D7CE;
             }
     
             .images-container {
@@ -117,9 +117,9 @@
                 gap: 16px;
                 margin-top: 10px;
             }
-    
+     
             .image-upload-box {
-                border: 2px dashed wheat;
+                border: 2px dashed #E4D7CE;
                 border-radius: 6px;
                 padding: 20px;
                 text-align: center;
@@ -246,140 +246,14 @@
 
     <body>
         <div class="screen-overlay"></div>
-        <aside class="navbar-aside" id="offcanvas_aside">
-            <div class="aside-top">
-                <a href="index.html" class="brand-wrap">
-                    <img src="assets/imgs/theme/logo.svg" class="logo" alt="Nest Dashboard" />
-                </a>
-                <div>
-                    <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i></button>
-                </div>
-            </div>
-            <nav>
-                <ul class="menu-aside">
-                    <li class="menu-item active">
-                        <a class="menu-link" href="index.html">
-                            <i class="icon material-icons md-home"></i>
-                            <span class="text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-products-list.html">
-                            <i class="icon material-icons md-shopping_bag"></i>
-                            <span class="text">Products</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-products-list.html">Product List</a>
-                            <a href="page-products-grid.html">Product grid</a>
-                            <a href="page-products-grid-2.html">Product grid 2</a>
-                            <a href="page-categories.html">Categories</a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Orders</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-orders-1.html">Order list 1</a>
-                            <a href="page-orders-2.html">Order list 2</a>
-                            <a href="page-orders-detail.html">Order detail</a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-sellers-cards.html">
-                            <i class="icon material-icons md-store"></i>
-                            <span class="text">Sellers</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-sellers-cards.html">Sellers cards</a>
-                            <a href="page-sellers-list.html">Sellers list</a>
-                            <a href="page-seller-detail.html">Seller profile</a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-form-product-1.html">
-                            <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-form-product-1.html">Add product 1</a>
-                            <a href="page-form-product-2.html">Add product 2</a>
-                            <a href="page-form-product-3.html">Add product 3</a>
-                            <a href="page-form-product-4.html">Add product 4</a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-transactions-1.html">
-                            <i class="icon material-icons md-monetization_on"></i>
-                            <span class="text">Transactions</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-transactions-1.html">Transaction 1</a>
-                            <a href="page-transactions-2.html">Transaction 2</a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="#">
-                            <i class="icon material-icons md-person"></i>
-                            <span class="text">Account</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-account-login.html">User login</a>
-                            <a href="page-account-register.html">User registration</a>
-                            <a href="page-error-404.html">Error 404</a>
-                        </div>
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="page-reviews.html">
-                            <i class="icon material-icons md-comment"></i>
-                            <span class="text">Reviews</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i> <span class="text">Brands</span> </a>
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" disabled href="#">
-                            <i class="icon material-icons md-pie_chart"></i>
-                            <span class="text">Statistics</span>
-                        </a>
-                    </li>
-                </ul>
-                <hr />
-                <ul class="menu-aside">
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="#">
-                            <i class="icon material-icons md-settings"></i>
-                            <span class="text">Settings</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="page-settings-1.html">Setting sample 1</a>
-                            <a href="page-settings-2.html">Setting sample 2</a>
-                        </div>
-                    </li>
-                    <li class="menu-item">
-                        <a class="menu-link" href="page-blank.html">
-                            <i class="icon material-icons md-local_offer"></i>
-                            <span class="text"> Starter page </span>
-                        </a>
-                    </li>
-                </ul>
-                <br />
-                <br />
-            </nav>
-        </aside>
+        <%- include('partials/navbar-aside') %>
         <div class="main-content">
             <div class="header">
                 <div>
                     <h1 class="page-title">Add Product</h1>
-                    <p class="subtitle">Lorem ipsum dolor sit amet.</p>
+                    
                 </div>
-                <div class="header-buttons">
-                    <button class="btn btn-secondary">Import</button>
-                    <button class="btn btn-secondary">Export</button>
-                    <button type="submit" form="productForm" class="btn btn-primary">Create new</button>
-                </div>
+              
             </div>
     
             <div class="card">
@@ -410,8 +284,8 @@
                         </div>
     
                         <div class="form-group">
-                            <label>Quantity</label>
-                            <input type="number"  id="quantity" class="form-control" required>
+                            <!-- <label>Quantity</label> -->
+                            <!-- <input type="number"  id="quantity" class="form-control" required> -->
                           
                                 <!-- <option value="active"></option>
                                 <option value="archived">Archived</option> -->
@@ -432,9 +306,9 @@
                                 <input type="number"id="price" class="form-control" required>
                                 
                             </div>
-                            <button type="button" id="remove-btn" class="btn btn-secondary">Remove</button>
+                            <!-- <button type="button" id="remove-btn" class="btn btn-secondary">Remove</button> -->
                         </div>
-                        <button type="button" id="add-pricebtn" class="btn btn-secondary">Add Price Variant</button>
+                        <!-- <button type="button" id="add-pricebtn" class="btn btn-secondary">Add Price Variant</button> -->
                     </div>
     
                     <div class="form-group">
@@ -496,6 +370,8 @@
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
         <script src="assets/js/custom-chart.js" type="text/javascript"></script>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <script src="assets/js/add-product.js"></script>
     </body>
 

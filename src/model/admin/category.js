@@ -7,8 +7,8 @@ const categorySchema = new mongoose.Schema({
         required:true
     },
     isActive:{
-        type:String,
-        default:'Active'
+        type:Boolean,
+        default:true
     },
 },{timestamps:true,
     

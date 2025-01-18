@@ -90,6 +90,7 @@ console.log(
 addbtn_el.addEventListener("click", async(e) => {
   e.preventDefault();
 
+
 //   const productDetails = {
 //     productName: productName_el.value,
 //     price: [
@@ -142,6 +143,11 @@ for(let key in editedImage ){
     body:formData
                                             
 })
+if (response.ok) {
+console.log('okeoke');
+
+window.location.href='/admin/getAllproducts'
+}
 });
 
 console.log('hi ia riya');

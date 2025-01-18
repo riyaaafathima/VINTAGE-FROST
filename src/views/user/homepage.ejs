@@ -115,7 +115,7 @@
                              <% allProducts.forEach(product=>  { %>
                               <div class="product product-11 text-center">
                                   <figure class="product-media">
-                                      <a href="product.html">
+                                      <a href="/product/<%=product._id%>">
                                           <img src="/uploads/<%=product.image[0]%>" alt="Product image" class="product-image">
                                           <img src="/uploads/<%=product.image[1]%>" alt="Product image" class="product-image-hover">
                                       </a>
@@ -127,7 +127,7 @@
                                   </figure><!-- End .product-media -->
   
                                   <div class="product-body">
-                                      <h3 class="product-title"><a href="product.html"><%=product.productName%></a></h3><!-- End .product-title -->
+                                      <h3 class="product-title"><a href="/product/<%=product._id%>"><%=product.productName%></a></h3><!-- End .product-title -->
                                       <div class="product-price">
                                         <%=product.price[0].price%>.rs  
                                       </div><!-- End .product-price -->

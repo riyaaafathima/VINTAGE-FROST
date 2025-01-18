@@ -1,6 +1,6 @@
 const app = require("./index");
 (function init() {
-    const PORT= 3001
+    const PORT= 4000
 
     app.listen(PORT,()=>{
         // console.log(`server is running 👽 ${PORT}`);
@@ -10,5 +10,5 @@ const app = require("./index");
     })  
     
 })()
-   
-
+    
+     

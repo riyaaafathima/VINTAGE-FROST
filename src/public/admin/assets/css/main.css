@@ -248,7 +248,7 @@ table .form-check {
 }
 
 .bg-brand-2 {
-  background-color: #FDC040;
+  background-color:#9F8E7C;
 }
 
 .text-primary {
@@ -718,7 +718,7 @@ b {
   padding: 10px 40px;
   color: #ffffff;
   border: none;
-  background-color: #3BB77E;
+  background-color:#5D4324;
   border-radius: 4px;
 }
 
@@ -729,7 +729,7 @@ b {
 }
 
 .btn.btn-primary:hover {
-  background-color: #29A56C;
+  background-color:#E4D7CE;
 }
 
 .btn.btn-secondary {
@@ -737,7 +737,7 @@ b {
   font-weight: 500;
   padding: 10px 40px;
   color: #fff;
-  background-color: #6c757d;
+  background-color:#5D4324;
   border: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -889,7 +889,7 @@ b {
 }
 
 .btn-brand:hover {
-  background-color: #29A56C;
+  background-color: #E4D7CE;
   color: #fff;
 }
 
@@ -912,7 +912,7 @@ b {
 }
 
 .form-control, .form-select {
-  background-color: #f4f5f9;
+  background-color: white;
   border: 2px solid #f4f5f9;
   font-size: 13px;
   -webkit-box-shadow: none;
@@ -925,8 +925,8 @@ b {
 }
 
 .form-control:focus, .form-select:focus {
-  background: transparent;
-  border-color: #f4f5f9;
+  background: white;
+  border-color: wheat;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -964,11 +964,11 @@ textarea.form-control {
 }
 
 .searchform button:hover {
-  background-color: #3BB77E;
+  background-color: #E4D7CE;
 }
 
 .searchform button:hover i {
-  color: #fff;
+  color:black;
 }
 
 .searchform .btn-light {
@@ -1356,7 +1356,7 @@ textarea.form-control {
 }
 
 .progress-bar {
-  background-color: #3BB77E;
+  background-color: #E4D7CE;
 }
 
 .new-member-list {
@@ -1439,7 +1439,7 @@ textarea.form-control {
 
 .badge.bg-primary[href]:focus,
 .badge.bg-primary[href]:hover {
-  background-color: #3BB77E !important;
+  background-color: #E4D7CE !important;
 }
 
 .badge.bg-light {
@@ -1491,7 +1491,7 @@ textarea.form-control {
 
 .badge.bg-success[href]:focus,
 .badge.bg-success[href]:hover {
-  background-color: #30b383 !important;
+  background-color: #E4D7CE !important;
 }
 
 .badge.bg-light {
@@ -1504,15 +1504,15 @@ textarea.form-control {
 }
 
 .badge-soft-success {
-  color: #34c38f;
+  color: #E4D7CE;
   background-color: rgba(52, 195, 143, 0.18);
 }
 
 .badge-soft-success[href]:focus,
 .badge-soft-success[href]:hover {
-  color: #34c38f;
+  color: #E4D7CE;
   text-decoration: none;
-  background-color: rgba(52, 195, 143, 0.4);
+  background-color: #E4D7CE;
 }
 
 .badge.bg-info[href]:focus,
@@ -1791,7 +1791,7 @@ a[class*='card'] {
 }
 
 a[class*='card']:hover .title {
-  color: #3BB77E;
+  color: #E4D7CE;
 }
 
 /* ITEM LIST */
@@ -1841,7 +1841,7 @@ a[class*='card']:hover .title {
 }
 
 .itemside a.title:hover {
-  color: #3BB77E;
+  color: #E4D7CE;
 }
 
 a.itemside {
@@ -1895,7 +1895,7 @@ a.itemside:hover .title {
 }
 
 .card-product-grid a.title:hover {
-  color: #3BB77E;
+  color: #E4D7CE;
 }
 
 .card-product-grid:hover {
@@ -2038,7 +2038,7 @@ ul.row, ul.row-sm {
   width: 7px;
   border-radius: 100%;
   height: 7px;
-  background: #3BB77E;
+  background: #E4D7CE;
 }
 
 .list-check {
@@ -2056,7 +2056,7 @@ ul.row, ul.row-sm {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900;
   font-size: 12px;
-  color: #3ed092;
+  color: #E4D7CE;
   position: absolute;
   top: 2px;
   left: 0;
@@ -2075,7 +2075,7 @@ ul.row, ul.row-sm {
 
 .list-normal li:before {
   content: "\2022";
-  color: #3BB77E;
+  color: #E4D7CE;
   display: inline-block;
   width: 1em;
   margin-left: -1em;
@@ -2096,7 +2096,7 @@ ul.row, ul.row-sm {
 }
 
 .list-menu a:hover {
-  color: #3BB77E;
+  color: #E4D7CE;
 }
 
 .cols-two {
@@ -3669,7 +3669,7 @@ body.offcanvas-active {
   bottom: 0;
   width: 100%;
   overflow-y: auto;
-  background-color: #fff;
+  background-color:#E4D7CE;
   -webkit-box-shadow: none;
           box-shadow: none;
   z-index: 10;
@@ -3740,7 +3740,7 @@ body.offcanvas-active {
   line-height: 17px;
   display: block;
   padding: 0;
-  background-color: #3BB77E;
+  background-color: #E4D7CE;
 }
 
 .main-header .nav-item.dropdown {
@@ -3749,7 +3749,7 @@ body.offcanvas-active {
 
 .main-header .nav-link:hover {
   background-color: transparent;
-  color: #3BB77E;
+  color: #E4D7CE;
 }
 
 .main-header .col-search {
@@ -3777,7 +3777,7 @@ body.offcanvas-active {
 }
 
 .nav-item img.rounded-circle:hover {
-  border-color: #3BB77E;
+  border-color:#E4D7CE;
 }
 
 .content-header {

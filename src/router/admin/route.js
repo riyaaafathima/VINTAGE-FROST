@@ -8,7 +8,11 @@ const {
   addCategory,
   getAllCategory,
   editProduct,
-  updateProduct
+  updateProduct,
+  editCategory,
+  updateCategory,
+  softDelete,
+  deleteCategory
 } = require("../../controller/admin/controller");
 const multer =require('multer');
 const preventNavigation = require("../../middleware/preventNavigation");
@@ -21,9 +25,15 @@ router.get("/dashboard",preventNavigation, dashboardRender);
 
 router.route('/add-category').get(getAllCategory).post(addCategory);
 
-router.get('/edit-category/:id')
+router.get('/edit-category/:id',editCategory)
+
+router.put('/update-category',updateCategory)
+
+router.put('/delete-category/:id',deleteCategory)
 
 router.get('/edit-product/:id',editProduct)
+
+router.put('/soft-delete/:id',softDelete)
 
 router.get('/getAllproducts',getAllproducts);
 

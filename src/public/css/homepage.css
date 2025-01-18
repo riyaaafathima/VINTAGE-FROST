@@ -130,14 +130,14 @@ main .cake-list .sml-cnt1 {
 
 main .cake-list .sml-cnt2 {
   flex: 1;
-  /* background-image: url(/img/download\\(2\)jpg); */
+  background-image: url(/img/Lovely_Princess_Cake_Sticker)jpg;
   background-position: center;
   background-size: cover;
   border: 1px solid lightgray;
 }
 main .cake-list .sml-cnt3 {
   flex: 1;
-  background-image: url(/img/_Lovely\ Princess\ Cake\ _3_\ Sticker\ for\ Sale\ by\ ShewyOranges.jpg);
+  background-image: url(/img/download.jpg);
   background-position: center;
   background-size: cover;
   border: 1px solid lightgray;

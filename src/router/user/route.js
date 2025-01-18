@@ -12,6 +12,7 @@ const {
 } = require("../../controller/user/controller");
 const preventNavigation = require("../../middleware/preventNavigation");
 
+
 const router = require("express").Router();
 
 router.get("/home-page", homePageRender);

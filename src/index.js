@@ -1,9 +1,12 @@
 const express = require("express");
 const multer=require('multer')
 const session = require("express-session");
+const googleRouter= require('./router/user/google')
 const userRouter = require("./router/user/route");
 const adminRouter=require('./router/admin/route')
 const connectDb = require("./config/db/dbConnection");
+const passport=require('passport')
+
 
 const path = require("path");
 
@@ -11,7 +14,7 @@ const app = express();
 
 const upload=multer()
 
-// app.use(upload.none())
+// app.use(upload.none())           
 
 
 app.use(
@@ -25,6 +28,11 @@ app.use(
     },
   })
 );
+
+app.use(passport.initialize());
+
+app.use(passport.session());
+
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
@@ -49,6 +57,7 @@ app.use((req, res, next) => {
     
 app.use('/admin',adminRouter);
 app.use(userRouter);
+app.use('/auth',googleRouter)
 
 connectDb();
 

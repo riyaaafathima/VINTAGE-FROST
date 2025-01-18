@@ -2,7 +2,8 @@ const sendMail = require("../../service/email/service");
 const generateOtp = require("../../service/otp/service");
 const userModel = require("../../model/user/user");
 const bcrypt = require("bcrypt");
-const productModel=require('../../model/admin/product')
+const productModel = require("../../model/admin/product");
+const category = require("../../model/admin/category");
 
 const signupRender = (req, res) => {
   try {
@@ -10,41 +11,44 @@ const signupRender = (req, res) => {
   } catch (error) {}
 };
 
-const homePageRender =  async(req, res) => {
-  const allProducts= await productModel.find({})
+const homePageRender = async (req, res) => {
+  const allProducts = await productModel.find({});
   try {
-    res.render("user/homepage",{allProducts});
+    res.render("user/homepage", { allProducts });
   } catch (error) {
     console.log(error);
   }
 };
-const productPageRender= async(req,res)=>{
- try {
-
-  const allProducts= await productModel.find({})
-  res.render('user/allProduct',{allProducts})
-  
- } catch (error) {
-  console.log(error);
-  
- }
-}
-
- const productView= async(req,res)=>{
-  try{
-
-    
-    const {id}=req.params
-    const product= await productModel.findById(id)
-    res.render('user/singleProduct',{product})
-
-  }catch(error){
+const productPageRender = async (req, res) => {
+  try {
+    const allProducts = await productModel.find({});
+    res.render("user/allProduct", { allProducts });
+  } catch (error) {
     console.log(error);
+  }
+};
+
+const productView = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await productModel.findById(id).populate("category");
+
+    const categoryId = product.category._id;
+    const relatedProducts = await productModel.find({
+      category: categoryId, // Match products with the same category
+      _id: { $ne: id },     // Exclude the current product by its ID
+    });
     
 
+
+
+    console.log(relatedProducts);
+
+    res.render("user/singleProduct", { product, relatedProducts });
+  } catch (error) {
+    console.log(error);
   }
- 
-}
+};
 const loginRender = (req, res) => {
   try {
     res.render("user/login");
@@ -72,13 +76,12 @@ const loginController = async (req, res) => {
 
     if (isMailExist.isAdmin) {
       req.session.isAdmin = isMailExist;
-     
-      
+
       return res.status(200).json({ redirecturl: "/admin/dashboard" });
     }
     req.session.user = isMailExist;
     console.log(req.session);
-    
+
     res.status(200).json({ redirecturl: "/home-page" });
   } catch (error) {
     res.status(500).json(error);
@@ -160,7 +163,7 @@ const verifyOtpController = async (req, res) => {
       const isFirstDoc = users.length == 0;
 
       const user = new userModel({
-        username,  
+        username,
         password: password,
         email,
         isAdmin: isFirstDoc ? true : false,
@@ -189,5 +192,5 @@ module.exports = {
   loginRender,
   loginController,
   productPageRender,
-  productView
+  productView,
 };
