@@ -59,7 +59,7 @@ app.use('/admin',adminRouter);
 app.use(userRouter);
 app.use('/auth',googleRouter)
 
-connectDb();
+connectDb();     
 
 module.exports = app;
     

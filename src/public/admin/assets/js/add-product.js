@@ -174,7 +174,7 @@ addbtn_el.addEventListener("click", async (e) => {
   let i=0
 for(let key in editedImage ){
 
-    formData.append('images', editedImage[key],`${productName_el.value}${i+1}.png`);
+    formData.append('images', editedImage[key],`${productName_el.value}${i+1}.png`);  
 
     i++
 }
@@ -198,9 +198,9 @@ for(let key in editedImage ){
   }
 });
 
-img1_input.addEventListener("change", (e) => {   // 
-  const file = event.target.files[0];
-  editedImage[img1_input]=file
+img1_input.addEventListener("change", (e) => {   
+  const file = event.target.files[0]; 
+  editedImage[img_preview1.id]=file 
   const imgUrl = URL.createObjectURL(file);
   img_preview1.src = imgUrl;
 
@@ -208,7 +208,7 @@ img1_input.addEventListener("change", (e) => {   //
 });
 img2_input.addEventListener("change", (e) => {
   const file = event.target.files[0];
-  editedImage[img2_input]=file
+  editedImage[img_preview2.id]=file
 
   const imgUrl = URL.createObjectURL(file);
   img_preview2.src = imgUrl;
@@ -217,7 +217,7 @@ img2_input.addEventListener("change", (e) => {
 });
 img3_input.addEventListener("change", (e) => {
   const file = event.target.files[0];
-  editedImage[img3_input]=file
+  editedImage[img_preview3.id]=file
 
   const imgUrl = URL.createObjectURL(file);
 
@@ -227,7 +227,7 @@ img3_input.addEventListener("change", (e) => {
 });
 
 img_preview1.addEventListener("click", () => {
-  if (selectedImage) {
+  if (selectedImage) {      // if we click the img it has img so , making the selected img null for the currnt img
     selectedImage = null;
   }
   if (cropper) {
