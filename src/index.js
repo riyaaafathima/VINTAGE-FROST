@@ -59,6 +59,12 @@ app.use('/admin',adminRouter);
 app.use(userRouter);
 app.use('/auth',googleRouter)
 
+app.get("*",(req,res)=>{
+  res.render('common/404')
+})
+
+
+
 connectDb();     
 
 module.exports = app;

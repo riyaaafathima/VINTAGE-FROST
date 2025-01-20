@@ -43,6 +43,20 @@ btn_el.addEventListener("click", async (e) => {
     err_password_el.innerHTML = "password must be atleast 6 characters";
     isValid = false;
   }
+  // const hasNumbers = /\d/.test(input);
+  // const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(input);
+  // const hasLetters = /[a-zA-Z]/.test(input);
+  // const isOnlySpaces = /^\s*$/.test(input); 
+
+  // if (!/[a-zA-Z]/.test(password_el.value)) {
+  //   err_password_el.innerHTML = "special character needed";
+  //   isValid = false;
+  // }
+
+  // if (/^\s*$/.test(password_el.value)) {
+  //   err_password_el.innerHTML = "space not allowed";
+  //   isValid = false;   
+  // }
 
   if (!isValid) return;
 

@@ -58,7 +58,7 @@ addbtn_el.addEventListener("click", async (e) => {
     isValid = false;
   }
 
-  if (productName_el?.value.length >= 20) {
+  if (productName_el?.value.length >= 50) {
     createErrElAfter(productName_el, "product name can not be longer than 20");
     isValid = false;
   }

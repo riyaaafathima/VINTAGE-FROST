@@ -39,7 +39,7 @@ const editCategory = async (req, res) => {
     const { id } = req.params;
 
     if (!mongoose.isValidObjectId(id)) {
-      console.log("404");
+      res.render("commmon/404");
     }
 
     const category = await categoryModel.findById(id);
@@ -66,14 +66,16 @@ const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
 
-  
+    if (!mongoose.isValidObjectId(id)) {
+      res.render("commmon/404");
+    }
+
     const preCategory = await categoryModel.findById(id);
 
     if (!preCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
 
-    
     const oldValue = preCategory.isActive;
     await categoryModel.findByIdAndUpdate(
       id,
@@ -81,17 +83,25 @@ const deleteCategory = async (req, res) => {
       { new: true } // Return the updated document
     );
 
-    return res.status(200).json({ message: 'Category status updated successfully' });
+    return res
+      .status(200)
+      .json({ message: "Category status updated successfully" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'An error occurred while updating the category status' });
+    return res.status(500).json({
+      message: "An error occurred while updating the category status",
+    });
   }
 };
-
 
 const softDelete = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      res.render("commmon/404");
+    }
+
     const oldProduct = await productModel.findById(id);
     const oldValue = oldProduct.isActive;
     await productModel.findByIdAndUpdate(
@@ -112,7 +122,6 @@ const getAllCategory = async (req, res) => {
     res.render("admin/add-category", { allCategory });
   } catch (error) {}
 };
-
 
 const getAllproducts = async (req, res) => {
   try {
@@ -180,6 +189,10 @@ const editProduct = async (req, res) => {
   try {
     const productId = req.params.id;
 
+    if (!mongoose.isValidObjectId(productId)) {
+      res.render("commmon/404");
+    }
+
     const product = await productModel.findById(productId);
 
     const category = await categoryModel.find({});
@@ -197,6 +210,10 @@ const updateProduct = async (req, res) => {
     console.log(req.body);
 
     const { id } = req.params;
+
+    if (!mongoose.isValidObjectId(id)) {
+      res.render("commmon/404");
+    }
 
     console.log(req.files);
     const allImages = req.files.map((item) => {
@@ -244,19 +261,25 @@ const updateProduct = async (req, res) => {
 
 const blockuser = async (req, res) => {
   try {
-    const userId = req.param.id;
+    const userId = req.params.id;
 
-    const updateUser = await user.findByIdAndUpdate(
+    // if (!mongoose.Types.isValidObjectId(userId)) {
+    //   return res.render("common/404");
+    // }
+
+    const exisitingUser = await userModel.findById(userId);
+    const updateUser = await userModel.findByIdAndUpdate(
       userId,
-      { $set: { status: false } },
+      { $set: { status: !exisitingUser.status } },
       { new: true } // new return updated doc
-    );
+    ); 
 
     if (!updateUser) {
-      return res.status(404).json({ message: "user not found" });
-    }
+      res.status(404).json({ message: "user not found" });
+      return;
+    }  
 
-    const action = status ? "blocked" : "unblocked";
+    const action = updateUser.status ? "blocked" : "unblocked";
     res
       .status(200)
       .json({ message: `user succesfully ${action}`, user: updateUser });
@@ -281,5 +304,5 @@ module.exports = {
   editCategory,
   updateCategory,
   softDelete,
-  deleteCategory
+  deleteCategory,
 };
