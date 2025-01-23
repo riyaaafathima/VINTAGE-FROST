@@ -11,7 +11,7 @@ header {
   height: 90px;
   width: 100%;
   border-bottom: 1px solid lightgrey;
-  background: #ad9170;
+  
 }
 
 header .logo {
@@ -26,18 +26,27 @@ header .logo img {
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  margin-left: 40px;
+  margin-left: 40px;   
 }
 
 header .icons {
   flex: 1;
   display: flex;
-  gap: 30px;
   justify-content: end;
   margin-right: 10%;
   align-items: center;
   font-weight: 300;
   color: #4a2d26;
+  gap: 20px; /* Add this line for icon spacing */
+}
+header .icons i {
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+header .icons i:hover {
+  color: #ad9170;
 }
 nav {
   margin-top: 1px;
@@ -160,33 +169,29 @@ padding: 7px 10px !important;
 }
 }
 
-main .cake-list .sml-cnt {
-  /* background-image: url(/img/Lovely_Princess_Cake_Sticker.jpg);  */
-}
+/* main .cake-list .sml-cnt {
+  
+} */
 
-main .cake-list .sml-cnt1 {
+/* main .cake-list .sml-cnt1 { */
   /* max-width: 40%;
   border-radius: 50%;  */
-}
+/* } */
 
 /* Repeat for other divs */
-
+/* 
 main .cake-list .sml-cnt2 {
-  flex: 1;
-  /* background-image: url(/img/Lovely_Princess_Cake_Sticker) jpg;
-  background-position: center;
-  background-size: cover;
-  border: 1px solid lightgray; */
+  
 }
 main .cake-list .sml-cnt3 {
-  flex: 1;
+ 
 }
 main .cake-list .sml-cnt4 {
-  flex: 1;
+ 
 }
 main .cake-list .sml-cnt5 {
-  flex: 1;
-}
+ 
+} */
 
 main .banner {
   /* flex: 1; */

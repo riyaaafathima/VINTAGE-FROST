@@ -277,15 +277,15 @@
                             </select>
                         </div>
     
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label>Stock</label>
                             <input type="number" id="stock"  class="form-control" required>
                             
-                        </div>
+                        </div> -->
     
                         <div class="form-group">
-                            <!-- <label>Quantity</label> -->
-                            <!-- <input type="number"  id="quantity" class="form-control" required> -->
+                            <label>preperation hour</label>
+                            <input type="number"  id="preperation-hour" class="form-control" required>
                           
                                 <!-- <option value="active"></option>
                                 <option value="archived">Archived</option> -->
@@ -293,29 +293,35 @@
                         </div>
                     </div>
     
-                    <div class="form-group">
+                    <div class="form-group" id="price-cnt">
                         <label>Price Variants</label>
                         <div class="price-variant">
                             <div style="flex: 1;">
                                 <label>Weight (kg)</label>
-                                <input type="number"  id="Weight" class="form-control" required>
+                                <input type="number"  id="Weight" class="form-control weight-inputs" required>
                                
                             </div>
                             <div style="flex: 1;">
                                 <label>Price ($)</label>
-                                <input type="number"id="price" class="form-control" required>
-                                
+                                <input type="number"id="price" class="form-control price-inputs" required>  
                             </div>
-                            <!-- <button type="button" id="remove-btn" class="btn btn-secondary">Remove</button> -->
+                            <div style="flex: 1;">
+                                <label>stock</label>
+                                <input type="number"id="stock" class="form-control stock-inputs" required>  
+                            </div>
+                            <button type="button" id="remove-btn" class="btn btn-secondary">Remove</button>
                         </div>
-                        <!-- <button type="button" id="add-pricebtn" class="btn btn-secondary">Add Price Variant</button> -->
+
                     </div>
+                    <button type="button" id="add-pricebtn" class="btn btn-secondary">Add Price Variant</button>
     
                     <div class="form-group">
                         <label>Description</label>
                         <textarea class="form-control" id="description"></textarea>
                         
                     </div>
+
+                   
     
                     <div class="form-group">
                         <label>Product Images</label>

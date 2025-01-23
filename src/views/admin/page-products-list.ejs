@@ -163,8 +163,7 @@
             <p>Lorem ipsum dolor sit amet.</p>
           </div>
           <div>
-            <a href="#" class="btn btn-light rounded font-md">Export</a>
-            <a href="#" class="btn btn-light rounded font-md">Import</a>
+           
             <a href="/admin/add-Product" class="btn btn-primary btn-sm rounded"
               >Create new</a
             >
@@ -240,7 +239,7 @@
                   </a>
                 </div>
                 <div class="col-lg-2 col-sm-2 col-4 col-price">
-                  <span><%=product.price[0].price%>.rs</span>
+                  <span><%=product.varients[0]?.price%>.rs</span>
                 </div>
                 <div class="col-lg-2 col-sm-2 col-4 col-status">
                   <% if (product.isActive) { %>

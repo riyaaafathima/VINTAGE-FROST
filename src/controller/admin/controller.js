@@ -140,7 +140,7 @@ const addProduct = async (req, res) => {
 const addProductController = async (req, res) => {
   try {
     console.log(req.body, "this is req.body");
-    const { productName, price, stock, category, description, quantity } =
+    const { productName, varients, category, description,preperationHour } =
       req.body;
 
     const isProductExist = await productModel.findOne({
@@ -158,11 +158,10 @@ const addProductController = async (req, res) => {
 
     const newProduct = new productModel({
       productName,
-      price: JSON.parse(price),
-      stock,
+      varients: JSON.parse(varients),
       category,
       description,
-      quantity,
+      preperationHour,
       image: allImages,
     });
     await newProduct.save();
@@ -175,8 +174,8 @@ const addProductController = async (req, res) => {
 
 const userDetailsRender = async (req, res) => {
   try {
-    const allUser = await userModel.find({});
-
+    const allUser = await userModel.find({isAdmin:false})
+   
     res.render("admin/page-user-list", {
       allUser,
     });
@@ -193,9 +192,9 @@ const editProduct = async (req, res) => {
       res.render("commmon/404");
     }
 
-    const product = await productModel.findById(productId);
+    const product = await productModel.findById(productId).populate('category')
 
-    const category = await categoryModel.find({});
+    const category = await categoryModel.find({isActive:true});
 
     res.render("admin/edit-product", { product, category });
   } catch (error) {
@@ -205,7 +204,7 @@ const editProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { productName, price, stock, category, description, quantity } =
+    const { productName, varients,category, description} =
       req.body;
     console.log(req.body);
 
@@ -234,11 +233,10 @@ const updateProduct = async (req, res) => {
     const updateProduct = await productModel.findByIdAndUpdate(id, {
       $set: {
         productName,
-        price: JSON.parse(price),
-        stock,
+        varients: JSON.parse(varients),
         category: category || exisitingProduct.category,
         description,
-        quantity,
+        
         image: allImages,
       },
     });
@@ -289,7 +287,7 @@ const blockuser = async (req, res) => {
     res.status(500).json({ message: "server error" });
   }
 };
-
+     
 module.exports = {
   dashboardRender,
   userDetailsRender,

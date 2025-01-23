@@ -9,7 +9,7 @@ const {
   resendOtp,
   productPageRender,
   productView,
-  logoutUser
+  logoutUser,
 } = require("../../controller/user/controller");
 const preventNavigation = require("../../middleware/preventNavigation");
 const {verifyUser,isBock} = require("../../middleware/requireUser")
@@ -31,7 +31,9 @@ router
   .post(loginController);
 router.get('/logout',logoutUser)
 router.get("/all-products", productPageRender);
+
 router.get("/product/:id", productView);
 router.put("/resendotp", resendOtp);
+   
 
 module.exports = router;

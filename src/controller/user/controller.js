@@ -3,7 +3,7 @@ const generateOtp = require("../../service/otp/service");
 const userModel = require("../../model/user/user");
 const bcrypt = require("bcrypt");
 const productModel = require("../../model/admin/product");
-const category = require("../../model/admin/category");
+const categoryModel = require("../../model/admin/category");
 const { default: mongoose } = require("mongoose");
 
 const signupRender = (req, res) => {
@@ -23,17 +23,54 @@ const homePageRender = async (req, res) => {
     }
 
     res.render("user/homepage", { allProducts, user });
-  } catch (error) {
+  } catch (error) { 
     console.log(error);
   }
 };
 const productPageRender = async (req, res) => {
   try {
-    const allProducts = await productModel.find({});
-    res.render("user/allProduct", { allProducts });
+
+    const { page = 1, category,minprice, maxprice } = req.query; 
+    const currentPage = parseInt(page, 10) || 1;
+    const limit = 9
+
+    let filter = {isActive:true}
+
+filter['varients.price'] = { $gte: 100, $lte: 7000 };
+
+    if (category) {
+    filter.category={$in:category}
+    }
+    if (minprice || maxprice) {
+      filter['varients.price'] = {}; // Use dot notation to target price within the array
+      if (minprice) filter['varients.price'].$gte = parseFloat(minprice);
+      if (maxprice) filter['varients.price'].$lte = parseFloat(maxprice);
+    }
+   
+    console.log(filter);
+    
+    
+    const totalProducts = await productModel.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const skip = (currentPage - 1) * limit;
+
+    const allProducts = await productModel.find(filter).skip(skip).limit(limit);
+
+    const categories = await categoryModel.find({isActive:true})
+
+    let user = null;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+    }
+
+    res.render("user/allProduct", { allProducts, totalPages, currentPage,totalProducts,categories, selectedCategory: category,user });
+
   } catch (error) {
-    console.log(error);
-  }
+    console.log(error);   
+  }         
 };
 
 const productView = async (req, res) => {
@@ -127,9 +164,35 @@ const signupconteroller = async (req, res) => {
       res.status(200).json("success");
     }
   } catch (error) {
+    console.log(error);    
     res.status(500).json(error.message);
   }
 };
+
+// const validateOtp = (req, res) => {
+//   try { 
+//     const { inputData } = req.body; // The OTP entered by the user
+//     const storedOtp = req.session.otpUsersData.otp;
+//     const otpTimestamp = req.session.otpUsersData.otpTimestamp;
+
+//     // Check if OTP exists and if it is expired (30 seconds timeout)
+//     if (!storedOtp || Date.now() > otpTimestamp + 30000) {
+//       return res.status(400).json("OTP expired or not generated");
+//     }
+
+//     // Check if OTP matches
+//     if (inputData !== storedOtp) {
+//       return res.status(400).json("Incorrect OTP");
+//     }
+
+//     // OTP is valid
+//     req.session.otpUsersData.otp = null;  // Clear OTP after validation
+//     res.status(200).json("OTP validated successfully");
+//   } catch (error) {    
+//     console.log(error);
+//     res.status(500).json("Error validating OTP");
+//   }
+// };
 
 const resendOtp = (req, res) => {
   try {
@@ -138,10 +201,11 @@ const resendOtp = (req, res) => {
     sendMail(email, resendOtp);
 
     req.session.otpUsersData.otp = resendOtp;
-    console.log("new otp", resendOtp);
+    req.session.otpUsersData.otpTimestamp = Date.now();  // Store the timestamp when OTP is generated
+    console.log("New OTP", resendOtp);
 
     setTimeout(() => {
-      req.session.otpUsersData.otp = null;
+      req.session.otpUsersData.otp = null;  // Expire OTP after 30 seconds
     }, 30000);
 
     res.status(200).json("success");
@@ -150,6 +214,7 @@ const resendOtp = (req, res) => {
     res.status(500).json("error");
   }
 };
+
 
 const serveOtpController = (req, res) => {
   try {
@@ -195,7 +260,7 @@ const verifyOtpController = async (req, res) => {
 const logoutUser = (req, res) => {
   try {
     req.session.user = null;
-    res.redirect('/home-page')
+    res.redirect("/home-page");
   } catch (error) {}
 };
 
