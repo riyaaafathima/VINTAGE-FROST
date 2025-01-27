@@ -1,6 +1,5 @@
 const productName_el = document.querySelector("#productName");
 const category_el = document.querySelector("#category");
-const stock_el = document.querySelector("#stock");
 const preperationHour_el=document.querySelector('#preperation-hour')
 const priceVariant_el = document.querySelector(".price-variant");
 const description_el = document.querySelector("#description");
@@ -166,7 +165,7 @@ addbtn_el.addEventListener("click", async (e) => {
   });
   document.querySelectorAll(".stock-inputs").forEach((inputs) => {
     if (inputs?.value == "") {
-      createErrElAfter(inputs, "please add a price");
+      createErrElAfter(inputs, "please add stock ");
       isValid = false;
     }
 
@@ -179,8 +178,8 @@ addbtn_el.addEventListener("click", async (e) => {
       isValid = false;
     }
 
-    if (inputs?.value < 1) {
-      createErrElAfter(inputs, "price can't be less than 0");
+    if (inputs?.value < 0) {
+      createErrElAfter(inputs, "stock can't be less than 0");
       isValid = false;
     }
   });

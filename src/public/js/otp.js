@@ -65,6 +65,8 @@ btn_el.addEventListener("click", async (e) => {
     window.location.href = "/home-page";
   } else {
     const mssg = await response.json();
+    console.log("mess",mssg);
+    
     swal.fire(mssg);
   }
 });
@@ -94,10 +96,15 @@ resend_otp_el.addEventListener("click", async (e) => {
     if (response.ok) {
       swal.fire("OTP sent successfully!");
     } else {
+      let mess = response.json()
+      console.log("ree",mess);
+      
       swal.fire("Error sending OTP.");
     }
   } else {
-    swal.fire("No more attempts left.");
+    swal.fire("No more attempts left.").then(()=>{
+      window.location.href="/signup"
+    })
   }
 });
 

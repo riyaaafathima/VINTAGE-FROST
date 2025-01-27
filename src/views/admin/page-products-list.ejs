@@ -163,7 +163,6 @@
             <p>Lorem ipsum dolor sit amet.</p>
           </div>
           <div>
-           
             <a href="/admin/add-Product" class="btn btn-primary btn-sm rounded"
               >Create new</a
             >
@@ -216,7 +215,7 @@
 
             <!-- itemlist  .// -->
             <!-- itemlist  .// -->
-            <% allProducts.forEach(product=> { %>
+            <% allProducts.forEach((product,index)=> { %>
             <article class="itemlist">
               <div class="row align-items-center">
                 <div class="col col-check flex-grow-0">
@@ -243,9 +242,15 @@
                 </div>
                 <div class="col-lg-2 col-sm-2 col-4 col-status">
                   <% if (product.isActive) { %>
-                  <span class="badge rounded-pill alert-success">Active</span>
+                  <span
+                    class="badge rounded-pill isActive-<%=index%> alert-success"
+                    >Active</span
+                  >
                   <% } else { %>
-                  <span class="badge rounded-pill alert-danger">Archive</span>
+                  <span
+                    class="badge rounded-pill isActive-<%=index%> alert-danger"
+                    >Archive</span
+                  >
                   <% } %>
                 </div>
                 <div class="col-lg-1 col-sm-2 col-4 col-date"></div>
@@ -259,7 +264,7 @@
                   <% if (product.isActive) { %>
                   <button
                     id="<%=product._id%>"
-                    class="btn btn-sm font-sm btn-light rounded delete-btn"
+                    class="btn btn-sm font-sm btn-light rounded delete-btn isActive-<%=index%>"
                   >
                     <i class="material-icons md-delete_forever"></i> Delete
                   </button>
@@ -267,7 +272,7 @@
                   <% } else { %>
                   <button
                     id="<%=product._id%>"
-                    class="btn btn-sm font-sm btn-light rounded delete-btn"
+                    class="btn btn-sm font-sm btn-light rounded delete-btn isActive-<%=index%>" 
                   >
                     <i class="material-icons md-delete_forever"></i> Activate
                   </button>
@@ -333,12 +338,12 @@
     <script>
       // Select all delete buttons
       const deleteBtns = document.querySelectorAll(".delete-btn");
-
+    
       // Loop through each button and add an event listener
       deleteBtns.forEach((deleteBtn) => {
         deleteBtn.addEventListener("click", async (e) => {
           e.preventDefault();
-
+    
           Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -349,30 +354,53 @@
             confirmButtonText: "Yes, delete it!",
           }).then(async (result) => {
             if (result.isConfirmed) {
-              const response = await fetch(
-                `/admin/soft-delete/${deleteBtn.id}`,
-                {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                }
-              );
-
+              const response = await fetch(`/admin/soft-delete/${deleteBtn.id}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+    
               // Check the response status
               if (response.ok) {
-                swal.fire("successfull").then(() => {
-                  window.location.reload();
-                });
-
-                deleteBtn.closest(".itemlist").remove();
+                const result = await response.json();
+    
+                // Extract the isActive class dynamically
+                const isActiveClass = [...deleteBtn.classList].find((cls) =>
+                  cls.startsWith("isActive-")
+                );
+    
+                // Update the badge dynamically
+                if (isActiveClass) {
+                  const badge = document.querySelector(`.${isActiveClass}`);
+                  if (badge) {
+                    badge.classList.remove("alert-success", "alert-danger");
+                    badge.classList.add(
+                      result.isActive ? "alert-success" : "alert-danger"
+                    );
+                    badge.textContent = result.isActive ? "Active" : "Archive";
+                  }  
+                }
+    
+                // Update the button text and class dynamically
+                deleteBtn.textContent = result.isActive ? "Delete" : "Activate";
+                deleteBtn.classList.toggle("btn-danger", result.isActive);
+                deleteBtn.classList.toggle("btn-success", !result.isActive);
+    
+                Swal.fire("Successful", "The status has been updated.", "success");
               } else {
                 console.log("Error occurred while deleting");
+                Swal.fire(
+                  "Error",
+                  "An error occurred while processing your request. Please try again.",
+                  "error"
+                );
               }
             }
           });
         });
       });
     </script>
+    
   </body>
 </html>

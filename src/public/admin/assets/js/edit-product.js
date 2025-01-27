@@ -179,7 +179,7 @@ addbtn_el.addEventListener("click", async (e) => {
   });
   document.querySelectorAll(".stock-inputs").forEach((inputs) => {
     if (inputs?.value == "") {
-      createErrElAfter(inputs, "please add a price");
+      createErrElAfter(inputs, "please add stock ");
       isValid = false;
     }
 
@@ -188,12 +188,12 @@ addbtn_el.addEventListener("click", async (e) => {
       isValid = false;
     }
     if (/^\s*$/.test(inputs.value)) {
-      createErrElAfter(inputs, "this price field cannot be empty");
+      createErrElAfter(inputs, "this field cannot be empty");
       isValid = false;
     }
 
-    if (inputs?.value < 1) {
-      createErrElAfter(inputs, "price can't be less than 0");
+    if (inputs?.value < 0) {
+      createErrElAfter(inputs, "stock cannot be lessthan 0");
       isValid = false;
     }
   });
@@ -213,7 +213,7 @@ addbtn_el.addEventListener("click", async (e) => {
   document.querySelectorAll(".stock-inputs").forEach((stock, index) => {
     Varient[index].stock = stock.value;
   });
-  console.log(Varient);
+  console.log("kjjhj",Varient);
 
   const formData = new FormData();
 
@@ -254,9 +254,17 @@ addbtn_el.addEventListener("click", async (e) => {
     body: formData,
   });
   if (response.ok) {
-    console.log("okeoke");
+    console.log("sucess");
+    
+    swal.fire("product edited successfully").then(() => {
+      window.location.href = "/admin/getAllproducts";
+    });
+  }else{
+    console.log("error");
 
-    window.location.href = "/admin/getAllproducts";
+    const mssg=await response.json()
+
+    swal.fire(mssg)
   }
 });
 

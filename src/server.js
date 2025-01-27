@@ -4,11 +4,9 @@ const app = require("./index");
 
     app.listen(PORT,()=>{
         // console.log(`server is running 👽 ${PORT}`);
-        console.log(`server is start on http://localhost:${PORT}`);
-        
-        
+        console.log(`server is start on http://localhost:${PORT}/home-page`); 
     })  
     
 })()            
     
-      
+       

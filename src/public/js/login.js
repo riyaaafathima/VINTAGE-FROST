@@ -14,19 +14,50 @@ console.log(err_password_el,password_el,btn_el);
 btn_el.addEventListener('click', async(e)=>{
     e.preventDefault()
 
-    const userCredential={
+let isValid=true
+
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+if (!emailRegex.test(email_el.value)) {
+  err_email_el.innerHTML = "please enter a valid  email";
+  isValid = false;
+}
+
+    if (!/[a-z]/.test(password_el.value)) {
+        err_password_el.innerHTML='Include at least one lowercase letter.'
+        isValid=false
+      }
+    
+      if (!/[A-Z]/.test(password_el.value)) {
+       err_password_el.innerHTML='Include at least one uppercase letter.'
+       isValid=false
+      }
+      
+      // Check for at least one digit
+      if (!/\d/.test(password_el.value)) {
+        err_password_el.innerHTML='Include at least one number.'
+        isValid=false
+      }
+      
+      // Check for at least one special character
+      if (!/[@$!%*?&]/.test(password_el.value)) {
+        err_password_el.innerHTML='Include at least one special character (@, $, !, %, *, ?, &).'
+        isValid=false
+      }
+      
+      // Check for minimum length of 6 characters
+      if (password_el.value.length < 6) {
+        err_password_el.innerHTML='Password must be at least 6 characters long.'
+        isValid=false
+      }
+    
+      if (!isValid) {
+        return
+      }
+      const userCredential={
         email:email_el.value,
         password:password_el.value
     }
     
-    
-    if (password_el.value.length<6) {
-     err_password_el.innerHTML='please enter your password'
-     
-        
-    }   
-
-
 
     const response =  await fetch('/login',{
         method:'POST',

@@ -120,15 +120,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
-                                    
-                                   
-                                    
-                                    
-                                   
-                                    
-                                    
-                                    <% allUser.forEach(user=> { %>
+                                    <% allUser.forEach((user,index)=> { %>
                                     <tr>
                                       
                                         <td width="40%">
@@ -143,19 +135,30 @@
                                             </a>
                                         </td>
                                         <td><%=user.email%></td>
-
-                                        <td><span class="badge rounded-pill alert-success">Active</span></td>
-                                        
-                                        <td>08.07.2020
-
-                                        </td> 
                                         <td>
                                             <% if (user.status) { %>
-                                                <button id="<%=user._id%>"  id="<%=user._id%>" class="btn btn-sm font-sm rounded delete-btn"> <i class="material-icons md-edit" id="edit-btn"></i>block</button>
-                                                <% } else { %>
-                                                <button  id="<%=user._id%>" class="btn btn-sm font-sm btn-light rounded delete-btn"  ><i class="material-icons md-delete_forever"></i> unblock </button>
-                                                <% } %>
-                                        </td>
+                                              <span class="badge rounded-pill alert-success isActive-<%= index %>">Active</span>
+                                            <% } else { %>
+                                              <span class="badge rounded-pill alert-danger isActive-<%= index %>">Inactive</span>
+                                            <% } %>
+                                          </td>
+                                          
+                                          <td>
+                                            <%= new Date(user.createdAt).toLocaleDateString() %>
+                                          </td>
+                                          
+                                          <td>
+                                            <% if (user.status) { %>
+                                              <button id="<%= user._id %>" class="btn btn-sm font-sm rounded delete-btn isActive-<%= index %>"> 
+                                                <i class="material-icons md-edit" id="edit-btn"></i> Block
+                                              </button>
+                                            <% } else { %>
+                                              <button id="<%= user._id %>" class="btn btn-sm font-sm btn-light rounded delete-btn isActive-<%= index %>">
+                                                <i class="material-icons md-delete_forever"></i> Unblock
+                                              </button>
+                                            <% } %>
+                                          </td>
+                                          
                                         
 
                                         <td class="text-end">

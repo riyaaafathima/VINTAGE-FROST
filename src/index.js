@@ -16,7 +16,7 @@ const upload=multer()
 
 // app.use(upload.none())           
 
-
+ 
 app.use(
   session({
     secret: "hihellobrry",
@@ -29,7 +29,7 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
+app.use(passport.initialize());  
 
 app.use(passport.session());
 

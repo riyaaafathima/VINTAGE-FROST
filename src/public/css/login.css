@@ -54,7 +54,7 @@ header .btn-signup{
     color: #AD9170;
 
 }
-nav{
+/* nav{
     margin-top:1px;
     display: flex;
     width: 100%;
@@ -97,10 +97,10 @@ nav ul li a::after {
     transition: all 0.5s ease-in;
     transform-origin: center;
     
-}
+} */
 
 .main-container{
-    height: calc(100vh - 123px);
+    height: calc(100vh - 80px);
     width: 100%;
     background:#D0BCA1;
     display: flex;
@@ -184,6 +184,20 @@ color: beige;
     border: none;
     color:white;
     background-color:rgb(93, 67, 36);
+    
+
+}
+
+.main-container .form-container form .signup-btn{
+    
+    
+    padding: 10px 20px;
+    align-self: center;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    color:rgb(173, 145, 112);
+    background-color:white ;
     
 
 }

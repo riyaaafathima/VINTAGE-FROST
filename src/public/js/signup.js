@@ -12,7 +12,7 @@ const err_password_el = document.getElementById("err-password");
 
 const btn_el = getElement("btn");
 
-console.log(err_email_el, err_password_el, err_username_el, "fghjklcvbnm,");
+console.log(err_email_el, err_password_el, err_username_el);
 
 function getElement(id) {
   return document.getElementById(`${id}`);
@@ -28,7 +28,7 @@ btn_el.addEventListener("click", async (e) => {
 
   let isValid = true;
 
-  if (username_el.value.length == 0) {
+  if (username_el.value.trim().length == 0) {
     err_username_el.innerHTML = "please fill your  username";
     isValid = false;
   }
@@ -39,9 +39,32 @@ btn_el.addEventListener("click", async (e) => {
     isValid = false;
   }
 
+  if (!/[a-z]/.test(password_el.value)) {
+    err_password_el.innerHTML='Include at least one lowercase letter.'
+    isValid=false
+  }
+
+  if (!/[A-Z]/.test(password_el.value)) {
+   err_password_el.innerHTML='Include at least one uppercase letter.'
+   isValid=false
+  }
+  
+  // Check for at least one digit
+  if (!/\d/.test(password_el.value)) {
+    err_password_el.innerHTML='Include at least one number.'
+    isValid=false
+  }
+  
+  // Check for at least one special character
+  if (!/[@$!%*?&]/.test(password_el.value)) {
+    err_password_el.innerHTML='Include at least one special character (@, $, !, %, *, ?, &).'
+    isValid=false
+  }
+  
+  // Check for minimum length of 6 characters
   if (password_el.value.length < 6) {
-    err_password_el.innerHTML = "password must be atleast 6 characters";
-    isValid = false;
+    err_password_el.innerHTML='Password must be at least 6 characters long.'
+    isValid=false
   }
   // const hasNumbers = /\d/.test(input);
   // const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(input);

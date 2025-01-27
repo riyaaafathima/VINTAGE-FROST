@@ -2,38 +2,44 @@ const {
   signupRender,
   signupconteroller,
   serveOtpController,
-  homePageRender,
   verifyOtpController,
   loginRender,
   loginController,
   resendOtp,
+  logoutUser,
+} = require("../../controller/user/authController");
+
+const {
+  homePageRender,
   productPageRender,
   productView,
-  logoutUser,
-} = require("../../controller/user/controller");
-const preventNavigation = require("../../middleware/preventNavigation");
-const {verifyUser,isBock} = require("../../middleware/requireUser")
+} = require("../../controller/user/productController");    
+
+const {
+  verifyUser,
+  isBlock,
+  isOtpUser,
+} = require("../../middleware/requireUser");
 const router = require("express").Router();
 
-router.get("/home-page",isBock, homePageRender);
+router.get("/home-page", isBlock, homePageRender);
 
 //authentication route//
-router.get("/signup",verifyUser, signupRender);
+router.get("/signup", verifyUser, isBlock, isOtpUser, signupRender);
 router.post("/signup", signupconteroller);
 router
   .route("/otp-page")
-  .get(verifyUser,serveOtpController)
+  .get(verifyUser, serveOtpController)
   .post(verifyOtpController);
-     
+
 router
   .route("/login")
-  .get(verifyUser, loginRender)
+  .get(verifyUser, isBlock, loginRender)
   .post(loginController);
-router.get('/logout',logoutUser)
-router.get("/all-products", productPageRender);
+router.get("/logout", logoutUser);
+router.get("/all-products", isBlock, productPageRender);
 
-router.get("/product/:id", productView);
-router.put("/resendotp", resendOtp);
-   
+router.get("/product/:id", isBlock, productView);
+router.put("/resendotp", resendOtp);  
 
 module.exports = router;

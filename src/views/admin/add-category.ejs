@@ -130,21 +130,21 @@
                                             </tr>
                                         </thead>
                                         <% allCategory.forEach((category,index)=>  { %>
-                                        <tbody>
-                                          
+                                        <tbody class="index">
+
                                             <tr>
                                                 <td class="text-center">
                                                     <div class="form-check">
                                                         <input class="form-check-input"  type="checkbox" value="iohiyiu" />
                                                     </div>
                                                 </td>
-                                                <td><%=index%></td>
+                                                <td><%=index+1%></td>
                                                 <td><b><%=category.categoryName%></b></td>
                                                 <td>
                                                     <%if(category.isActive){%>
-                                                    <span class="badge rounded-pill alert-success">Active</span>
+                                                    <span class="badge rounded-pill alert-success  isActive-<%=index%>">Active</span>
                                                     <%}else {%>
-                                                  <span class="badge rounded-pill alert-danger">Archive</span>
+                                                  <span class="badge rounded-pill alert-danger isActive-<%=index%>">Archive</span>
                                                   <%}%>
                                                 </td>
                                                 
@@ -154,9 +154,9 @@
                                                         <a href="/admin/edit-category/<%=category._id%>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit" id="edit-btn"></i> Edit </a>
 
                                                         <% if (category.isActive) { %>
-                                                        <button id="<%=category._id%>"  id="<%=category._id%>" class="btn btn-sm font-sm rounded delete-btn"> <i class="material-icons md-edit" id="edit-btn"></i>Delete</button>
+                                                        <button id="<%=category._id%>"  id="<%=category._id%>" class="btn btn-sm font-sm rounded delete-btn isActive-<%=index%>"> <i class="material-icons md-edit" id="edit-btn"></i>Delete</button>
                                                         <% } else { %>
-                                                        <button  id="<%=category._id%>" class="btn btn-sm font-sm btn-light rounded delete-btn"  ><i class="material-icons md-delete_forever"></i> Activate </button>
+                                                        <button  id="<%=category._id%>" class="btn btn-sm font-sm btn-light rounded delete-btn isActive-<%=index%>"  ><i class="material-icons md-delete_forever"></i> Activate </button>
                                                         <% } %>
                                                     </div>  
                                                     <!-- dropdown //end -->
