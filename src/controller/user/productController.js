@@ -28,7 +28,7 @@ const homePageRender = async (req, res) => {
 
 const productPageRender = async (req, res) => {
   try {
-    const { page = 1, category, minprice, maxprice } = req.query;
+    const { page = 1, category, minprice, maxprice,search,sort} = req.query;
     const currentPage = parseInt(page, 10) || 1;
     const limit = 9;
 
@@ -44,6 +44,11 @@ const productPageRender = async (req, res) => {
       if (minprice) filter["varients.price"].$gte = parseFloat(minprice);
       if (maxprice) filter["varients.price"].$lte = parseFloat(maxprice);
     }
+    if (search) {
+      filter.search = { $regex: new RegExp(search, "i")  };
+    }
+    
+    
 
     console.log(filter);
 

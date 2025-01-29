@@ -523,7 +523,7 @@
                   <!-- End .dropdown-cart-total -->
 
                   <div class="dropdown-cart-action">
-                    <a href="cart.html" class="btn btn-primary">View Cart</a>
+                    <a href="/cart" class="btn btn-primary">View Cart</a>
                     <a href="checkout.html" class="btn btn-outline-primary-2"
                       ><span>Checkout</span><i class="icon-long-arrow-right"></i
                     ></a>
@@ -656,7 +656,13 @@
 
                 <div class="col-md-6">
                   <div class="product-details">
-                    <h1 class="product-title"><%=product.productName%></h1>
+                    <h1
+                      class="product-title"
+                      id="productname"
+                      data-id="<%=product._id%>"
+                    >
+                      <%=product.productName%>
+                    </h1>
                     <!-- End .product-title -->
                     <% if(product.varients.stock==0){%>
 
@@ -697,10 +703,10 @@
                             data-stock="<%=product.varients[0].stock%>"
                             selected="selected"
                           >
-                            <%=product.varients[0].kg%>
+                            select your kg
                           </option>
-                          <%product.varients.forEach((varients,index)=>{%> <%
-                          if(index!=0){%>
+                          <%product.varients.forEach((varients,index)=>{%>
+
                           <option
                             value="<%=varients.kg%>"
                             data-stock="<%=varients.stock%>"
@@ -709,7 +715,7 @@
                             <%=varients.kg%>
                           </option>
 
-                          <% }%> <% })%>
+                          <% })%>
                         </select>
                       </div>
                       <!-- End .select-custom -->
@@ -726,13 +732,45 @@
                           required
                         />
                       </div>
+
+  
+                
+
                       <!-- End .product-details-quantity -->
                     </div>
+                    <div class="product-details-action">
+                      <label>
+                        <input type="radio" name="eggPreference" value="EGG" checked> EGG
+                      </label>
+                      <div class="details-action-wrapper">
+                        <label>
+                          <input type="radio" name="eggPreference" value="EGGLESS"> EGGLESS
+                        </label>
+                      </div>
+                    </div>
+                   
+                    
                     <!-- End .details-filter-row -->
+                    <div class="product-details-action">
+                      <textarea
+                        name="instruction"
+                        placeholder="instruction"
+                        id="instruction-el"
+                      ></textarea>
+
+                      <div class="details-action-wrapper">
+                        <textarea
+                          name="message"
+                          placeholder="message"
+                          id="message-el"
+                        ></textarea>
+                      </div>
+                      <!-- End .details-action-wrapper -->
+                    </div>
 
                     <div class="product-details-action">
-                      <a href="#" class="btn-product btn-cart"
-                        ><span>add to cart</span></a
+                      <a href="/cart" class="btn-product btn-cart"
+                        ><span id="addcart-btn">add to cart</span></a
                       >
 
                       <div class="details-action-wrapper">
@@ -1727,7 +1765,10 @@
     <script src="/card-assets/js/jquery.elevateZoom.min.js"></script>
     <script src="/card-assets/js/bootstrap-input-spinner.js"></script>
     <script src="/card-assets/js/jquery.magnific-popup.min.js"></script>
-    <script src="/js/single-product.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
+    <script type="module" src="/js/single-product.js"></script>
     <!-- Main JS File -->
     <script src="/card-assets/js/main.js"></script>
   </body>

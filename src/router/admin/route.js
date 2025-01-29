@@ -42,7 +42,7 @@ router.get("/edit-category/:id", preventNavigation, editCategory);
 
 router.put("/update-category", preventNavigation, updateCategory);
 
-router.put("/delete-category/:id", preventNavigation, deleteCategory);
+router.put("/delete-category/:id", deleteCategory);
 
 router.get("/edit-product/:id", preventNavigation, editProduct);
 

@@ -20,6 +20,8 @@ const {
   isBlock,
   isOtpUser,
 } = require("../../middleware/requireUser");
+
+const {addToCart, renderCart,updatesCartQuantity}=require('../../controller/user/cartController')
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -41,5 +43,10 @@ router.get("/all-products", isBlock, productPageRender);
 
 router.get("/product/:id", isBlock, productView);
 router.put("/resendotp", resendOtp);  
+
+
+router.post('/addTo-cart',addToCart)
+router.get('/cart',renderCart)
+router.post('/update-cart',updatesCartQuantity)
 
 module.exports = router;
