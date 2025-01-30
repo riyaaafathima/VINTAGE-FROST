@@ -96,6 +96,8 @@
   </head>
 
   <body>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <div class="page-wrapper" style="min-height: 23%">
       <header>
         <div class="logo">
@@ -110,9 +112,12 @@
           <i class="fas fa-search"></i>
           <% if (user) { %>
             <i class="fas fa-heart"></i>
-            <i class="fas fa-shopping-cart">
-              
-            </i>
+            <a href="/cart">
+              <i class="fas fa-shopping-cart">
+
+              </i>
+            </a>
+            
           <div class="dropdown">
             <i
               class="fas fa-person dropdown-toggle"
