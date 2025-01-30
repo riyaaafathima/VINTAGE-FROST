@@ -21,7 +21,7 @@ const {
   isOtpUser,
 } = require("../../middleware/requireUser");
 
-const {addToCart, renderCart,updatesCartQuantity}=require('../../controller/user/cartController')
+const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController')
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -48,5 +48,6 @@ router.put("/resendotp", resendOtp);
 router.post('/addTo-cart',addToCart)
 router.get('/cart',renderCart)
 router.post('/update-cart',updatesCartQuantity)
+router.post('/remove-cart',removeCart)
 
 module.exports = router;

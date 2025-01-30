@@ -621,9 +621,9 @@
           <td class="total-col"><%= item.price * item.quantity %> Rs</td>
 
           <td class="remove-col">
-            <button class="btn-remove" data-id="<%= item.product._id %>">
-              <i class="icon-close"></i>
-            </button>
+            <!-- <button class="btn-remove" data-id="<%= item.product._id %>"> -->
+              <i class="icon-close btn-remove " data-id="<%= item.product._id %>" ></i>
+            <!-- </button> -->
           </td>
         </tr>
       <% }) %>
@@ -1098,7 +1098,7 @@
     <script src="card-assets/js/owl.carousel.min.js"></script>
     <script src="card-assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->
-     
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="card-assets/js/main.js"></script>
