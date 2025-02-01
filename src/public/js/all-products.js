@@ -1,5 +1,6 @@
 const radioButtons = document.querySelectorAll(".custom-control-input");
 const clearAll_el=document.getElementById('clear-btn')
+ const sort_input_el=document.querySelector('#sortby')
 
 document.querySelectorAll(".page-link").forEach((btn) => {
   btn.addEventListener("click", async (e) => {
@@ -16,6 +17,7 @@ document.querySelectorAll(".page-link").forEach((btn) => {
     } else {
       params.set("page", id);
     }
+
     window.location.href = `/all-products?${params.toString()}`;
   });
 });
@@ -49,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
   }
 
-  // Get initial values from the URL or set defaults
   const urlParams = new URLSearchParams(window.location.search);
   const initialMinPrice = parseInt(urlParams.get('minprice')) || 100; // Default min price if url has no min price it already set as 100
   const initialMaxPrice = parseInt(urlParams.get('maxprice')) || 7000; // Default max price
@@ -91,7 +92,14 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+sort_input_el.addEventListener('change',async(e)=>{
+  
+  const selectedOption=e.target.options[e.target.selectedIndex]
+    
+  window.location.href=`/all-products?sort=${selectedOption.value}`  
+  
 
+})
 
 
 

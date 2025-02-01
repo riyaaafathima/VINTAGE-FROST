@@ -30,7 +30,20 @@
     <link rel="stylesheet" href="css/userProfile.css">
 </head>
 
+<style>
+    /* Custom CSS for the modal */
+#addAddressModal .modal-dialog {
+  max-width: 600px;
+}
 
+#addAddressModal .modal-body {
+  padding: 20px;
+}
+
+#addAddressModal .form-group {
+  margin-bottom: 15px;
+}
+</style>
 <body>
     <div class="page-wrapper">
         <header class="header">
@@ -539,17 +552,17 @@
 	                	<div class="row">
 	                		<aside class="col-md-4 col-lg-3">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-                                    <li class="nav-item">
-								        <a class="nav-link active" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+								    <li class="nav-item">
+								        <a class="nav-link"  href="/user-profile" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								        <a class="nav-link" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Recent password</a>
+								        <a class="nav-link" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Recent password</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link"  href="/user-address" role="tab" >Adresses</a>
+								        <a class="nav-link active" id="tab-address-link" data-toggle="tab" href="/user-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
 
 								    <li class="nav-item">
@@ -560,78 +573,116 @@
 
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
-								 
-                                    
-                                  
-								    <div class="tab-pane fade show active" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form>
-			                				<div class="row">
-			                					<div class="col-sm-6">
-                                                      <div class="form-fields">
-                                                        <!-- Existing form fields -->
-                                                        
-                                                        <!-- Other form fields -->
-                                                      </div>
+								
+                             <!-- /////////////////////////////////////////////////////////////////////////////////////// -->
 
 
-                                                      <div class="profile-photo-container">
-                                                        <img id="img_preview" src="uploads/user/<%=userDetails.image%>" alt="Profile Photo"  class="profile-photo" >
-                                                        <label for="profile-photo-input" class="edit-photo-btn">
-                                                          <i class="edit-icon"></i> <h6>Edit</h6>
-                                                        </label>
-                                                        <input type="file" id="profile-photo-input" class="profile-photo-input" accept="image/*">
-                                                      </div>
-                                                      
-                                                      <div class="form-fields">
-                                                        <!-- Existing form fields -->
-                                                        <div class="field">
-                                                        
-                                                        </div>
-                                                        <!-- Other form fields -->
-                                                      </div>
-			                					</div><!-- End .col-sm-6 -->
-
-			                					<div class="col-sm-6">
-			                						
-                                                      
-                                                      <div class="form-fields">
-                                                        <!-- Existing form fields -->
-                                                        <div class="field">
-                                                         
-                                                        </div>
-                                                        <!-- Other form fields -->
-                                                      </div> 
-			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
-
-		            						<label>Display Name *</label>
-		            						<input type="text"   value="<%=userDetails.username%>" id="name-inpt" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-		                					<label>Email address *</label>
-		        							<input type="email" readonly value="<%=userDetails.email%>" id="email-input" class="form-control" required>
 
 
-		            						<!-- <label> password (leave blank to leave unchanged)</label>
-		            						<input type="password" value="<%=userDetails.password%>"" class="form-control"> -->
+								    <div class="tab-pane fade  show active" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+                                        <button id="add-Address-button">Add address</button>
+                                <%if(!userAddress||userAddress?.addresses?.length==0){%>
+                                                 <p>address not added</p>
+                                              <%}else{%>
+                                        <div class="row">
+                                        <%userAddress.addresses.forEach(adress=>{%>
+								    		<div class="col-lg-6">
+								    			<div class="card card-dashboard">
+								    				<div class="card-body">
+								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
-		            						
+														<p>userA<br>
+														User Company<br>
+														John str<br>
+														New York, NY 10001<br>
+														1-234-987-6543<br>
+														yourmail@mail.com<br>
+														<a href="#">Edit <i class="icon-edit"></i></a></p>
+								    				</div>
+								    			</div>
+								    		</div>
+                                            <% })%>
+								    		<!-- <div class="col-lg-6">
+								    			<div class="card card-dashboard">
+								    				<div class="card-body">
+								    					<h3 class="card-title">Shipping Address</h3>
 
-		                					<button type="button" class="btn btn-outline-primary-2" id="save-btn">
-			                					<span>SAVE CHANGES</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
-			                			</form>
+														<p>You have not set up this type of address yet.<br>
+														<a href="#">Edit <i class="icon-edit"></i></a></p>
+								    				</div>
+								    			</div>
+								    		</div> -->
+                                            
+                                            <!-- End .col-lg-6 -->
+								    	</div>
 								    </div><!-- .End .tab-pane -->
-
-								</div>
-	                		</div><!-- End .col-lg-9 -->
-	                	</div><!-- End .row -->
-	                </div><!-- End .container -->
-                </div><!-- End .dashboard -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
-
+                               <%}%>
+                                </div>
+                                </div>
+                        
+               
+                                <!-- /////////////////modal  ////////////////-->
+                                 <!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addAddressForm">
+            <div class="form-group">
+              <label for="place">Place</label>
+              <input type="text" class="form-control" id="place" name="place" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" class="form-control" id="state" name="state" required>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="landMark">Landmark</label>
+              <input type="text" class="form-control" id="landMark" name="landMark">
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode</label>
+              <input type="number" class="form-control" id="pincode" name="pincode" required>
+            </div>
+            <div class="form-group">
+              <label for="adressType">Address Type</label>
+              <select class="form-control" id="adressType" name="adressType" required>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="locality">Locality</label>
+              <input type="text" class="form-control" id="locality" name="locality">
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+        </div>
+      </div>
+    </div>
+  </div>
+						
         <footer class="footer">
         	<div class="footer-middle">
 	            <div class="container">
@@ -1002,13 +1053,115 @@
     <script src="card-assets/js/jquery.waypoints.min.js"></script>
     <script src="card-assets/js/superfish.min.js"></script>
     <script src="card-assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Main JS File -->
     <script src="card-assets/js/main.js"></script>
-    <script src="js/userProfile.js"></script>
 </body>
 
+<script>
 
+
+const place_el=document.querySelector('#place')
+const state_el=document.querySelector('#state')
+const phone_el=document.querySelector('#phoneNumber')
+const landMark_el=document.querySelector('#landMark')
+const address_el=document.querySelector('#address')
+const address_type_el=document.querySelector('#adressType')
+const pincode_el=document.querySelector('#pincode')
+const locality_el=document.querySelector('#locality')
+const city_el=document.querySelector('#city')
+const save_address_btn=document.querySelector('#saveAddressBtn')
+
+
+    // Open the modal when the "Add address" button is clicked
+    document.querySelector('#add-Address-button').addEventListener('click', function () {
+      $('#addAddressModal').modal('show');
+    });
+  
+    // Handle form submission
+    document.getElementById('saveAddressBtn').addEventListener('click', function () {
+      const form = document.getElementById('addAddressForm');
+      if (form.checkValidity()) {
+        const formData = new FormData(form);
+        const addressData = {};
+        formData.forEach((value, key) => {
+          addressData[key] = value;
+        });
+  
+        // Send the data to the server (you can use fetch or axios)
+        fetch('/save-address', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(addressData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert('Address saved successfully!');
+              $('#addAddressModal').modal('hide');
+              location.reload(); // Reload the page to show the new address
+            } else {
+              alert('Failed to save address.');
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      } else {
+        form.reportValidity();
+      }
+    });
+
+    save_address_btn.addEventListener('click',async(e)=>{
+        console.log(save_address_btn);
+        
+       const addressDetails={
+        place:place_el.value,
+        state:state_el.value,
+        phone:phone_el.value,
+        landmark:landMark_el.value,
+        address:address_el.value,
+        addressType:address_type_el.value,
+        pincode:pincode_el.value,
+         locality:locality_el.value,
+         city:city_el.value
+
+       }
+         try{
+
+
+       const response=await fetch('/edit-address',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body:JSON.stringify(addressDetails),
+       })
+
+       if (response.ok) {
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "saved changes",
+            showConfirmButton: false,
+            timer: 1500
+          });
+          $('#addAddressModal').modal('hide');
+          location.reload();
+        
+       }else{
+        alert('failed to save address')
+
+       }
+    }catch (error){
+   console.log(error);
+   
+    }
+    
+    })
+  </script>
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
 </html>

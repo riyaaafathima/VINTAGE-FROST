@@ -1,18 +1,16 @@
-
 const userModel = require("../../model/user/user");
 const productModel = require("../../model/admin/product");
 const categoryModel = require("../../model/admin/category");
 const { default: mongoose } = require("mongoose");
 
-
 const homePageRender = async (req, res) => {
   try {
-  const Products = await productModel
-    .find({ isActive: true })
-    .populate({ path: "category", match: { isActive: true } });
+    const Products = await productModel
+      .find({ isActive: true })
+      .populate({ path: "category", match: { isActive: true } });
 
     const allProducts = Products.filter((product) => product.category);
-    
+
     let user = null;
     if (req.session?.user) {
       const id = req.session?.user?._id;
@@ -28,7 +26,7 @@ const homePageRender = async (req, res) => {
 
 const productPageRender = async (req, res) => {
   try {
-    const { page = 1, category, minprice, maxprice,search,sort} = req.query;
+    const { page = 1, category, minprice, maxprice, search, sort } = req.query;
     const currentPage = parseInt(page, 10) || 1;
     const limit = 9;
 
@@ -40,31 +38,42 @@ const productPageRender = async (req, res) => {
       filter.category = { $in: category };
     }
     if (minprice || maxprice) {
-      filter["varients.price"] = {}; // Use dot notation to target price within the array
+      filter["varients.price"] = {};
       if (minprice) filter["varients.price"].$gte = parseFloat(minprice);
       if (maxprice) filter["varients.price"].$lte = parseFloat(maxprice);
     }
     if (search) {
-      filter.search = { $regex: new RegExp(search, "i")  };
+      filter.productName = { $regex: new RegExp(search, "i") };
     }
-    
-    
 
-    console.log(filter);
-
-    const totalProducts = await productModel.countDocuments();
+    let sortOptions = {};
+    if (sort === "LowtoHigh") {
+      sortOptions["varients.price"] = 1; // Sort by price in ascending order
+    } else if (sort === "HightoLow") {
+      sortOptions["varients.price"] = -1; // Sort by price in descending order
+    } else if (sort === "Newest") {
+      sortOptions.createdAt = -1; // Sort by creation date in descending order
+    } else if (sort === "aToz") {
+      sortOptions.productName = 1; // Sort by product name in ascending order
+    } else if (sort === "zToa") {
+      sortOptions.productName = -1; // Sort by product name in descending order
+    }
+    const totalProducts = await productModel.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
     const skip = (currentPage - 1) * limit;
 
-    const Products = await productModel.find(filter).populate({
-      path: "category",
-      match: { isActive: true }, // Ensure only active categories are populated
-    }).skip(skip)
-    .limit(limit);
+    const Products = await productModel
+      .find(filter)
+      .populate({
+        path: "category",
+        match: { isActive: true }, // Ensure only active categories are populated
+      })
+      .sort(sortOptions) // Apply sorting here
+      .skip(skip)
+      .limit(limit);
 
-
-    const allProducts = Products.filter(product => product.category !== null);
+    const allProducts = Products.filter((product) => product.category !== null);
 
     const categories = await categoryModel.find({ isActive: true });
 
@@ -123,10 +132,7 @@ const productView = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
- 
   homePageRender,
   productPageRender,
   productView,

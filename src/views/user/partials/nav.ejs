@@ -60,6 +60,7 @@
     <link rel="stylesheet" href="card-assets/css/plugins/nouislider/nouislider.css"> -->
     <link rel="stylesheet" href="css/allproduct.css" />
     <link rel="stylesheet" href="css/homepage.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -108,8 +109,26 @@
           />
           <h3>CAKE CHIEF</h3>
         </div>
-        <div class="icons">
-          <i class="fas fa-search"></i>
+        <div class="icons" style="padding-left: 89px;">
+          <div class="header-right">
+            <div class="header-search">
+              <a href="#" class="search-toggle" role="button" title="Search"
+                ><i class="icon-search"></i
+              ></a>
+              <form action="/all-products" method="get">
+                <div class="header-search-wrapper">
+                  <label for="q" class="sr-only">Search</label>
+                  <input 
+                    type="search"
+                    class="form-control"
+                    name="search"
+                    id="search-input"
+                    placeholder="Search in..."
+                    required
+                  />
+                </div>
+              </form>
+      </div>
           <% if (user) { %>
             <i class="fas fa-heart"></i>
             <a href="/cart">
@@ -147,6 +166,7 @@
       </nav>
 
       <script>
+        const search_input_el=document.querySelector('#search-input')
         const logout_btn_el = document.querySelector("#logout");
 
         logout_btn_el.addEventListener("click", async (e) => {
@@ -184,8 +204,22 @@
             }
           }
         };
+
+// search_input_el.addEventListener('keypress', async (e) => {
+//     if (e.key === 'Enter') { 
+//         e.preventDefault();
+//         console.log(search_input_el.value);
+        
+//         window.location.href = `/all-products?search=${search_input_el.value}`;
+//     }
+// });
+
+
+
   
       </script>
     </div>
   </body>
 </html>
+
+

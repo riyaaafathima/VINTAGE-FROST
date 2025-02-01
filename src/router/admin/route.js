@@ -27,7 +27,7 @@ const {
 
 const multer = require("multer");
 const preventNavigation = require("../../middleware/preventNavigation");
-const upload = require("../../config/multer/multer");
+const {upload} = require("../../config/multer/multer");
 
 const router = require("express").Router();
 

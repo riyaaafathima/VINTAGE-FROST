@@ -19,9 +19,13 @@ const {
   verifyUser,
   isBlock,
   isOtpUser,
+  requireUser,
 } = require("../../middleware/requireUser");
 
-const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController')
+const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController');
+const { userProfileRender, editUserProfile, userAddressRender, editUserAddress } = require("../../controller/user/userProfileController");
+
+const {userUpload}=require('../../config/multer/multer')
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -39,7 +43,7 @@ router
   .get(verifyUser, isBlock, loginRender)
   .post(loginController);
 router.get("/logout", logoutUser);
-router.get("/all-products", isBlock, productPageRender);
+router.get("/all-products", productPageRender);
 
 router.get("/product/:id", isBlock, productView);
 router.put("/resendotp", resendOtp);  
@@ -50,4 +54,8 @@ router.get('/cart',renderCart)
 router.post('/update-cart',updatesCartQuantity)
 router.post('/remove-cart',removeCart)
 
+router.get('/user-profile',requireUser,userProfileRender)
+router.post('/edit-profile',userUpload.single("image"),editUserProfile)
+router.get('/user-address',requireUser,userAddressRender)
+router.post('/edit-address',editUserAddress)
 module.exports = router;

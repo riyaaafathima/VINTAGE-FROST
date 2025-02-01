@@ -15,6 +15,10 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    image:{
+        type:String,
+        default:"ef14ce73-49fe-49c8-bb07-6acfb1cb6fa5.jpg"
+    },
     status:{
         type:Boolean,
         default:true

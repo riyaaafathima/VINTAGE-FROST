@@ -551,6 +551,7 @@ blockquote.text-white cite span {
 .header-right {
   margin-left: auto;
   align-self: stretch;
+  gap: 20px;
 }
 .header-center {
   margin-left: auto;
@@ -1045,6 +1046,7 @@ blockquote.text-white cite span {
   line-height: 1;
   padding: 0;
   border: none;
+  margin-right:40px;
 }
 .header-search .header-search-wrapper {
   position: absolute;
