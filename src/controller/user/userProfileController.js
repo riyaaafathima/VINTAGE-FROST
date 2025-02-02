@@ -54,35 +54,34 @@ const userAddressRender = async (req, res) => {
   try {
     const userId = req.session?.user?._id;
 
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
     const userAddress = await addressModel.findOne({ user: userId });
-    console.log("addreass", userAddress);
 
     res.render("user/address", { userAddress });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
+
 const editUserAddress = async (req, res) => {
-    console.log('edit ');
-    
   try {
-    const {
-      place,
-      state,
-      phone,
-      landmark,
-      addressType,
-      pincode,
-      locality,
-      city,
-      address,
-    } = req.body;
+    const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
     const userId = req.session?.user?._id;
 
-    const userAddress = await addressModel.findOne({ user: userId });
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    let userAddress = await addressModel.findOne({ user: userId });
+
     if (!userAddress) {
-      const address = new addressModel({
+      // Create a new address document if the user has no saved addresses
+      userAddress = new addressModel({
         user: userId,
         addresses: [
           {
@@ -98,36 +97,34 @@ const editUserAddress = async (req, res) => {
           },
         ],
       });
+
       await userAddress.save();
-
-      return res.status(200).json('address is added');
+      return res.status(200).json({ message: "Address added successfully" });
     } else {
-   const address=  {
-    place,
-    state,
-    phoneNumber: phone,
-    landMark: landmark,
-    address,
-    addressType,
-    pincode,
-    locality,
-    city,
-  }
-  userAddress.addresses.push(address);
+      // Add a new address to the existing document
+      userAddress.addresses.push({
+        place,
+        state,
+        phoneNumber: phone,
+        landMark: landmark,
+        address,
+        addressType,
+        pincode,
+        locality,
+        city,
+      });
 
-  await userAddress.save()
-  console.log(userAddress);
-  
-  return res.status(200).json('address added successfully')
-}
-    
+      await userAddress.save();
+      return res.status(200).json({ message: "Address added successfully" });
+    }
   } catch (error) {
-console.log(error);
-
+    console.log("Error updating address:", error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
-module.exports = {
+
+module.exports = {   
   userProfileRender,
   editUserProfile,
   userAddressRender,

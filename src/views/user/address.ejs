@@ -591,12 +591,15 @@
 								    				<div class="card-body">
 								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
-														<p>userA<br>
-														User Company<br>
-														John str<br>
-														New York, NY 10001<br>
-														1-234-987-6543<br>
-														yourmail@mail.com<br>
+                                                       <%= adress.place%><br>
+														<%=adress.state%><br>
+														<%=adress.phone%><br>
+														<%=adress.landMark%><br>
+                                                        <%=	adress.address%><br>
+														<%=adress.pincode%><br>
+														<%=adress.addressType%><br>
+														<%=adress.locality%><br>
+														<%=adress.city%><br>
 														<a href="#">Edit <i class="icon-edit"></i></a></p>
 								    				</div>
 								    			</div>
@@ -636,7 +639,7 @@
           <form id="addAddressForm">
             <div class="form-group">
               <label for="place">Place</label>
-              <input type="text" class="form-control" id="place" name="place" required>
+              <input type="text" value="" class="form-control" id="place" name="place" required>
             </div>
             <div class="form-group">
               <label for="state">State</label>
@@ -667,7 +670,7 @@
             </div>
             <div class="form-group">
               <label for="locality">Locality</label>
-              <input type="text" class="form-control" id="locality" name="locality">
+              <input type="text" value="" class="form-control" id="locality" name="locality">
             </div>
             <div class="form-group">
               <label for="city">City</label>
@@ -1116,6 +1119,8 @@ const save_address_btn=document.querySelector('#saveAddressBtn')
     });
 
     save_address_btn.addEventListener('click',async(e)=>{
+
+
         console.log(save_address_btn);
         
        const addressDetails={
@@ -1139,7 +1144,7 @@ const save_address_btn=document.querySelector('#saveAddressBtn')
             'Content-Type':'application/json',
         },
         body:JSON.stringify(addressDetails),
-       })
+       })    
 
        if (response.ok) {
         Swal.fire({
