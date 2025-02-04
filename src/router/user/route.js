@@ -23,7 +23,7 @@ const {
 } = require("../../middleware/requireUser");
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController');
-const { userProfileRender, editUserProfile, userAddressRender, editUserAddress } = require("../../controller/user/userProfileController");
+const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, getEditAddress } = require("../../controller/user/userProfileController");
 
 const {userUpload}=require('../../config/multer/multer')
 const router = require("express").Router();
@@ -57,5 +57,8 @@ router.post('/remove-cart',removeCart)
 router.get('/user-profile',requireUser,userProfileRender)
 router.post('/edit-profile',userUpload.single("image"),editUserProfile)
 router.get('/user-address',requireUser,userAddressRender)
-router.post('/edit-address',editUserAddress)
+router.post('/edit-address',getUserAddress)
+router.put('/edit-address/:id',editAddress)
+// router.get('/getedit-address/:id',getEditAddress); 
 module.exports = router;
+   

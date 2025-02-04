@@ -68,10 +68,11 @@ const userAddressRender = async (req, res) => {
 };
 
 
-const editUserAddress = async (req, res) => {
-  try {
+const getUserAddress = async (req, res) => {
+  try {                                    
     const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
     const userId = req.session?.user?._id;
+console.log( req.body);
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized request" });
@@ -80,11 +81,10 @@ const editUserAddress = async (req, res) => {
     let userAddress = await addressModel.findOne({ user: userId });
 
     if (!userAddress) {
-      // Create a new address document if the user has no saved addresses
       userAddress = new addressModel({
         user: userId,
         addresses: [
-          {
+          {    
             place,
             state,
             phoneNumber: phone,
@@ -101,7 +101,6 @@ const editUserAddress = async (req, res) => {
       await userAddress.save();
       return res.status(200).json({ message: "Address added successfully" });
     } else {
-      // Add a new address to the existing document
       userAddress.addresses.push({
         place,
         state,
@@ -122,11 +121,79 @@ const editUserAddress = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
+    
+const editAddress = async (req, res) => {
+  try {
+    const { id } = req.params; 
+    const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
+
+    const userAddress = await addressModel.findOne({ 'addresses._id': id, user: req.session?.user?._id });
+
+    if (!userAddress) {
+      return res.status(404).json({ message: 'Address not found' });
+    }
+
+   
+    const updatedAddress = userAddress.addresses.id(id);
+    console.log(updatedAddress,'updated adress');
+    
+
+    if (! updatedAddress) {
+      return res.status(404).json('address not found');
+    }
+
+    updatedAddress.place = place;
+    updatedAddress.state = state;
+    updatedAddress.phoneNumber = phone;
+    updatedAddress.landMark = landmark;
+    updatedAddress.address = address;
+    updatedAddress.adressType = addressType;
+    updatedAddress.pincode = pincode;
+    updatedAddress.locality = locality;
+    updatedAddress.city = city;
+
+    await userAddress.save();
+
+    return res.status(200).json({ message: 'Address updated successfully', userAddress });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+// const getEditAddress = async (req, res) => {
+//   try {
+//     const { id } = req.params; // Get address ID from URL params
+//     const userId = req.session?.user?._id;
+
+//     if (!userId) {
+//       return res.status(401).json({ message: 'Unauthorized request' });
+//     }
+
+//     const userAddress = await addressModel.findOne({ 'addresses._id': id, user: userId });
+
+//     if (!userAddress) {
+//       return res.status(404).json({ message: 'Address not found' });
+//     }
+
+//     const address = userAddress.addresses.id(id); // Fetch the specific address by ID
+//     return res.status(200).json(address); // Send the address data as response
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
+
 
 
 module.exports = {   
   userProfileRender,
   editUserProfile,
   userAddressRender,
-  editUserAddress,
+  getUserAddress,
+  editAddress,
+  
 };
+   

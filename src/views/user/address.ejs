@@ -43,6 +43,19 @@
 #addAddressModal .form-group {
   margin-bottom: 15px;
 }
+
+    /* Custom CSS for the modal */
+    #editAddressModal .modal-dialog {
+  max-width: 600px;
+}
+
+#editAddressModal .modal-body {
+  padding: 20px;
+}
+
+#editAddressModal .form-group {
+  margin-bottom: 15px;
+}
 </style>
 <body>
     <div class="page-wrapper">
@@ -585,22 +598,22 @@
                                                  <p>address not added</p>
                                               <%}else{%>
                                         <div class="row">
-                                        <%userAddress.addresses.forEach(adress=>{%>
+                                        <%userAddress.addresses.forEach((adress,index)=>{%>
 								    		<div class="col-lg-6">
 								    			<div class="card card-dashboard">
 								    				<div class="card-body">
 								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
-                                                       <%= adress.place%><br>
-														<%=adress.state%><br>
-														<%=adress.phone%><br>
-														<%=adress.landMark%><br>
-                                                        <%=	adress.address%><br>
-														<%=adress.pincode%><br>
-														<%=adress.addressType%><br>
-														<%=adress.locality%><br>
-														<%=adress.city%><br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
+                                                        <span id="place-<%=index%>" ><%= adress.place%>  </span>  <br>
+														<span id="state-<%=index%>" ><%=adress.state%></span><br>
+														<span id="phone-<%=index%>" ><%=adress.phoneNumber%></span><br>
+														<span id="landMark-<%=index%>"><%=adress.landMark%></span><br>
+                                                        <span id="address-<%=index%>"><%=adress.address%></span><br>
+														<span id="pincode-<%=index%>"><%=adress.pincode%></span><br>
+														<span id="addressType-<%=index%>"><%=adress.addressType%></span><br>
+														<span id="locality-<%=index%>"><%=adress.locality%></span><br>
+														<span id="city-<%=index%>"><%=adress.city%></span><br>
+                                                        <a style="cursor: pointer;" data-index="<%=index%>" data-id="<%=adress._id%>" class="edit-button">Edit <i class="icon-edit edit-btn" data-id="<%=adress._id%>"></i></a>
 								    				</div>
 								    			</div>
 								    		</div>
@@ -661,7 +674,7 @@
               <label for="pincode">Pincode</label>
               <input type="number" class="form-control" id="pincode" name="pincode" required>
             </div>
-            <div class="form-group">
+            <div class="form-group">    
               <label for="adressType">Address Type</label>
               <select class="form-control" id="adressType" name="adressType" required>
                 <option value="home">Home</option>
@@ -669,12 +682,14 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="locality">Locality</label>
+              <label for="locality">Nationality</label>
               <input type="text" value="" class="form-control" id="locality" name="locality">
             </div>
             <div class="form-group">
               <label for="city">City</label>
               <input type="text" class="form-control" id="city" name="city" required>
+              <input type="hidden" id="addressId" />
+
             </div>
           </form>
         </div>
@@ -685,7 +700,70 @@
       </div>
     </div>
   </div>
-						
+
+  <!-- ///////////////////////////edit addressModal////////////////////////////////////////////////////////// -->
+  <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddressModalLabel">Edit Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addAddressForm">
+            <div class="form-group" >
+              <label for="place">Place</label>
+              <input type="text" value="g" class="form-control" id="edit-place" name="place" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" class="form-control" id="edit-state" name="state" required>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control" id="edit-phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="landMark">Landmark</label>
+              <input type="text" class="form-control" id="edit-landMark" name="landMark">
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea class="form-control" id="edit-address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode</label>
+              <input type="number" class="form-control" id="edit-pincode" name="pincode" required>
+            </div>
+            <div class="form-group">    
+              <label for="adressType">Address Type</label>
+              <select class="form-control" id="edit-adressType" name="adressType" required>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="locality">Nationality</label>
+              <input type="text" value="" class="form-control" id="edit-locality" name="locality">
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="edit-city" name="city" required>
+              <input type="hidden" id="addressId" />
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveEditAddressBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
         <footer class="footer">
         	<div class="footer-middle">
 	            <div class="container">
@@ -1060,113 +1138,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="card-assets/js/main.js"></script>
+    <script src="js/address.js"></script>
 </body>
 
-<script>
 
-
-const place_el=document.querySelector('#place')
-const state_el=document.querySelector('#state')
-const phone_el=document.querySelector('#phoneNumber')
-const landMark_el=document.querySelector('#landMark')
-const address_el=document.querySelector('#address')
-const address_type_el=document.querySelector('#adressType')
-const pincode_el=document.querySelector('#pincode')
-const locality_el=document.querySelector('#locality')
-const city_el=document.querySelector('#city')
-const save_address_btn=document.querySelector('#saveAddressBtn')
-
-
-    // Open the modal when the "Add address" button is clicked
-    document.querySelector('#add-Address-button').addEventListener('click', function () {
-      $('#addAddressModal').modal('show');
-    });
-  
-    // Handle form submission
-    document.getElementById('saveAddressBtn').addEventListener('click', function () {
-      const form = document.getElementById('addAddressForm');
-      if (form.checkValidity()) {
-        const formData = new FormData(form);
-        const addressData = {};
-        formData.forEach((value, key) => {
-          addressData[key] = value;
-        });
-  
-        // Send the data to the server (you can use fetch or axios)
-        fetch('/save-address', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(addressData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert('Address saved successfully!');
-              $('#addAddressModal').modal('hide');
-              location.reload(); // Reload the page to show the new address
-            } else {
-              alert('Failed to save address.');
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-      } else {
-        form.reportValidity();
-      }
-    });
-
-    save_address_btn.addEventListener('click',async(e)=>{
-
-
-        console.log(save_address_btn);
-        
-       const addressDetails={
-        place:place_el.value,
-        state:state_el.value,
-        phone:phone_el.value,
-        landmark:landMark_el.value,
-        address:address_el.value,
-        addressType:address_type_el.value,
-        pincode:pincode_el.value,
-         locality:locality_el.value,
-         city:city_el.value
-
-       }
-         try{
-
-
-       const response=await fetch('/edit-address',{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-        },
-        body:JSON.stringify(addressDetails),
-       })    
-
-       if (response.ok) {
-        Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "saved changes",
-            showConfirmButton: false,
-            timer: 1500
-          });
-          $('#addAddressModal').modal('hide');
-          location.reload();
-        
-       }else{
-        alert('failed to save address')
-
-       }
-    }catch (error){
-   console.log(error);
-   
-    }
-    
-    })
-  </script>
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
 </html>
