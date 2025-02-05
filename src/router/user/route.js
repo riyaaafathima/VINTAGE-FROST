@@ -57,8 +57,8 @@ router.post('/remove-cart',removeCart)
 router.get('/user-profile',requireUser,userProfileRender)
 router.post('/edit-profile',userUpload.single("image"),editUserProfile)
 router.get('/user-address',requireUser,userAddressRender)
-router.post('/edit-address',getUserAddress)
-router.put('/edit-address/:id',editAddress)
+router.post('/save-address',getUserAddress)
+router.put('/edit-address',editAddress)
 // router.get('/getedit-address/:id',getEditAddress); 
 module.exports = router;
    

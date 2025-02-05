@@ -124,10 +124,11 @@ console.log( req.body);
     
 const editAddress = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
+    // const { id } = req.params; 
+    const { place, state, phone, landmark, addressType, pincode, locality, city, address,id } = req.body;
 
     const userAddress = await addressModel.findOne({ 'addresses._id': id, user: req.session?.user?._id });
+console.log("userAdd",userAddress);
 
     if (!userAddress) {
       return res.status(404).json({ message: 'Address not found' });
