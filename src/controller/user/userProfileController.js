@@ -124,7 +124,6 @@ console.log( req.body);
     
 const editAddress = async (req, res) => {
   try {
-    // const { id } = req.params; 
     const { place, state, phone, landmark, addressType, pincode, locality, city, address,id } = req.body;
 
     const userAddress = await addressModel.findOne({ 'addresses._id': id, user: req.session?.user?._id });
@@ -164,29 +163,15 @@ console.log("userAdd",userAddress);
 
 
 
-// const getEditAddress = async (req, res) => {
-//   try {
-//     const { id } = req.params; // Get address ID from URL params
-//     const userId = req.session?.user?._id;
 
-//     if (!userId) {
-//       return res.status(401).json({ message: 'Unauthorized request' });
-//     }
 
-//     const userAddress = await addressModel.findOne({ 'addresses._id': id, user: userId });
-
-//     if (!userAddress) {
-//       return res.status(404).json({ message: 'Address not found' });
-//     }
-
-//     const address = userAddress.addresses.id(id); // Fetch the specific address by ID
-//     return res.status(200).json(address); // Send the address data as response
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
+const recentPasswordPage=(req,res)=>{
+  try {
+    res.render('user/recentPassword')
+  } catch (error) {
+    
+  }
+}
 
 
 module.exports = {   
@@ -195,6 +180,7 @@ module.exports = {
   userAddressRender,
   getUserAddress,
   editAddress,
+  recentPasswordPage
   
 };
    

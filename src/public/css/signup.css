@@ -173,3 +173,116 @@ color: beige;
 
 }
 
+.main-container .form-container form h2 {
+    text-align: center;
+    font-weight: 100;
+    color: beige;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.main-container .form-container form h2::before,
+.main-container .form-container form h2::after {
+    content: '';
+    height: 1px;
+    width: 60px;
+    background-color: rgba(245, 245, 220, 0.5); 
+    display: inline-block;
+}
+
+.google #gle-btn {
+    color: white;
+    background-color: rgb(173, 145, 112);
+    padding: 12px 30px;
+    border-radius: 10px; 
+    border: 1px solid rgb(93, 67, 36);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.google #gle-btn:hover {
+    background-color: rgb(163, 135, 102);
+}
+
+.google #gle-btn i {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+#err-email,
+#err-password {
+    color: #ff6b6b;
+    font-size: 12px;
+    margin-top: -8px;
+}
+.main-container .form-container form a{
+    color: #4a2d26;
+}
+
+
+
+.main-container .form-container form input{
+ 
+    padding:  10px 0;
+    padding-left: 20px;
+    border-radius: 10px;
+    border: none;
+    background: white;
+    color: #4a2d26;
+
+
+
+}
+.main-container .form-container form .signup-btn{
+    
+    
+    padding: 10px 70px;
+    align-self: center;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    color:white;
+    background-color:rgb(93, 67, 36);
+    
+
+}
+
+.main-container .form-container form .signup-btn{
+    
+    
+    padding: 10px 20px;
+    align-self: center;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    color:rgb(173, 145, 112);
+    background-color:white ;
+    
+
+}
+.google #gle-btn {
+    color: white;
+    background-color: rgb(173, 145, 112);
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: solid rgb(93, 67, 36);
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    margin: 0 auto;        
+}
+
+#a{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+} 
