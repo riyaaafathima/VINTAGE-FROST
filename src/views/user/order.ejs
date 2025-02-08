@@ -30,7 +30,33 @@
     <link rel="stylesheet" href="css/userProfile.css">
 </head>
 
+<style>
+    /* Custom CSS for the modal */
+#addAddressModal .modal-dialog {
+  max-width: 600px;
+}
 
+#addAddressModal .modal-body {
+  padding: 20px;
+}
+
+#addAddressModal .form-group {
+  margin-bottom: 15px;
+}
+
+    /* Custom CSS for the modal */
+    #editAddressModal .modal-dialog {
+  max-width: 600px;
+}
+
+#editAddressModal .modal-body {
+  padding: 20px;
+}
+
+#editAddressModal .form-group {
+  margin-bottom: 15px;
+}
+</style>
 <body>
     <div class="page-wrapper">
         <header class="header">
@@ -540,20 +566,18 @@
 	                		<aside class="col-md-4 col-lg-3">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 								    <li class="nav-item">
-								        <a class="nav-link " id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+								        <a class="nav-link"  href="/user-profile" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								        <a class="nav-link active"  href="/order" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link active" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Recent password</a>
+								        <a class="nav-link" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Recent password</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								        <a class="nav-link " id="tab-address-link" data-toggle="tab" href="/user-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
-								    </li>
+
 								    <li class="nav-item">
 								        <a class="nav-link" href="#">Sign Out</a>
 								    </li>
@@ -562,40 +586,143 @@
 
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
-								  
-
-								    
-
-
-           <!-- /////////////////////////////////////////////////////////////////////////////////////// -->
+								
+                             <!-- /////////////////////////////////////////////////////////////////////////////////////// -->
 
 
 
-								    <div class="tab-pane fade show active" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" id="new-password" class="form-control">
-                                            <span id="err-confirm" style="color: red;"></span>
 
-		            						<label>Confirm new password</label>
-		            						<input type="password" id="confirmed-password" class="form-control mb-2">
-                                            <span id="err-new" style="color: red;"></span>
+							
+                                </div>
+                                </div>
+                        
+               
+                                <!-- /////////////////modal  ////////////////-->
+                                 <!-- Add Address Modal -->
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addAddressForm">
+            <div class="form-group">
+              <label for="place">Place</label>
+              <input type="text" value="" class="form-control" id="place" name="place" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" class="form-control" id="state" name="state" required>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="landMark">Landmark</label>
+              <input type="text" class="form-control" id="landMark" name="landMark">
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode</label>
+              <input type="number" class="form-control" id="pincode" name="pincode" required>
+            </div>
+            <div class="form-group">    
+              <label for="adressType">Address Type</label>
+              <select class="form-control" id="adressType" name="adressType" required>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="locality">Nationality</label>
+              <input type="text" value="" class="form-control" id="locality" name="locality">
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="city" name="city" required>
+              <input type="hidden" id="addressId" />
 
-								    	<a href="category.html" id="save-btn" class="btn btn-outline-primary-2"><span>Save Changes</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-								    	<p>The following addresses will be used on the checkout page by default.</p>
+  <!-- ///////////////////////////edit addressModal////////////////////////////////////////////////////////// -->
+  <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addAddressModalLabel">Edit Address</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addAddressForm">
+            <div class="form-group" >
+              <label for="place">Place</label>
+              <input type="text" value="g" class="form-control" id="edit-place" name="place" required>
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" class="form-control" id="edit-state" name="state" required>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Phone Number</label>
+              <input type="text" class="form-control" id="edit-phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="landMark">Landmark</label>
+              <input type="text" class="form-control" id="edit-landMark" name="landMark">
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea class="form-control" id="edit-address" name="address" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pincode">Pincode</label>
+              <input type="number" class="form-control" id="edit-pincode" name="pincode" required>
+            </div>
+            <div class="form-group">    
+              <label for="adressType">Address Type</label>
+              <select class="form-control" id="edit-adressType" name="adressType" required>
+                <option value="home">Home</option>
+                <option value="work">Work</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="locality">Nationality</label>
+              <input type="text" value="" class="form-control" id="edit-locality" name="locality">
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" class="form-control" id="edit-city" name="city" required>
+              <input type="hidden" id="addressId" />
 
-                                    
-                                  
-								  
-								</div>
-	                		</div><!-- End .col-lg-9 -->
-	                	</div><!-- End .row -->
-	                </div><!-- End .container -->
-                </div><!-- End .dashboard -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="saveEditAddressBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
         <footer class="footer">
         	<div class="footer-middle">
@@ -906,7 +1033,7 @@
                                                     <i class="icon-facebook-f"></i>
                                                     Login With Facebook
                                                 </a>
-                                            </div><!-- End .col-6 --> 
+                                            </div><!-- End .col-6 -->
                                         </div><!-- End .row -->
                                     </div><!-- End .form-choice -->
                                 </div><!-- .End .tab-pane -->
@@ -967,110 +1094,12 @@
     <script src="card-assets/js/jquery.waypoints.min.js"></script>
     <script src="card-assets/js/superfish.min.js"></script>
     <script src="card-assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Main JS File -->
     <script src="card-assets/js/main.js"></script>
-
-
+    <script src="js/address.js"></script>
 </body>
-<script>
-    const new_password_el=document.getElementById('new-password')
-    const err_newpassword_el=document.getElementById('err-new')
-    const confirmed_password_el=document.getElementById('confirmed-password')
-    const err_confirm_el=document.getElementById('err-confirm')
-    const save_btn_el=document.getElementById('save-btn')
-
-    save_btn_el.addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    let isValid=true
-
-
-    if (!/[a-z]/.test(new_password_el.value)) {
-        err_newpassword_el.innerHTML='Include at least one lowercase letter.'
-        isValid=false
-      }
-    
-      if (!/[A-Z]/.test(new_password_el.value)) {
-       err_newpassword_el.innerHTML='Include at least one uppercase letter.'
-       isValid=false
-      }
-      
-      // Check for at least one digit
-      if (!/\d/.test(new_password_el.value)) {
-        err_password_el.innerHTML='Include at least one number.'
-        isValid=false
-      }
-      
-      // Check for at least one special character
-      if (!/[@$!%*?&]/.test(new_password_el.value)) {
-        err_newpassword_el.innerHTML='Include at least one special character (@, $, !, %, *, ?, &).'
-        isValid=false
-      }
-      
-      // Check for minimum length of 6 characters
-      if (new_password_el.value.length < 6) {
-        err_newpassword_el.innerHTML='Password must be at least 6 characters long.'
-        isValid=false
-      }
-
-
-    if (!new_password_el.value) {
-        err_newpassowrd_el.innerHTML = 'Password cannot be empty.';
-         isValid=false   
-         }
-
-    if (!confirmed_password_el.value) {
-        err_confirm_el.innerHTML = 'Confirm Password cannot be empty.';
-       isValid=false
-    }
-
-    if (new_password_el.value !== confirmed_password_el.value) {
-        err_confirm_el.innerHTML = 'Passwords do not match.';
-        isValid=false
-    }
-    if (!isValid) {
-     return   
-    }
-
-    const updatedPassword = { newPassword: new_password_el.value };
-
-    try {
-        const response = await fetch('/recent-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedPassword),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "password updated",
-            showConfirmButton: false,
-            timer: 1500
-          });
-        } else {
-            alert(data.message || 'Something went wrong!');
-        }
-    } catch (error) {
-        console.error('Error updating password:', error);
-        alert('An error occurred. Please try again.');
-    }
-});
-
-new_password_el.addEventListener('focus',(e)=>{
-    err_newpassword_el.innerHTML='';
-
-})
-confirmed_password_el.addEventListener('focus',(e)=>{
-    err_confirm_el.innerHTML='';
-
-})
-
-</script>
 
 
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->

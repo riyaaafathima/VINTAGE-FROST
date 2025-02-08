@@ -197,4 +197,5 @@ const removeCart = async (req, res) => {
   }
 };
 
+
 module.exports = { addToCart, renderCart, updatesCartQuantity, removeCart };

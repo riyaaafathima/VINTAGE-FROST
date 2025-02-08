@@ -591,20 +591,22 @@
 
 
 
+                             <button id="add-Address-button" style="display: flex; align-content: end;justify-content: end;">Add address</button>
 
 								    <div class="tab-pane fade  show active" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-                                        <button id="add-Address-button">Add address</button>
                                 <%if(!userAddress||userAddress?.addresses?.length==0){%>
                                                  <p>address not added</p>
                                               <%}else{%>
                                         <div class="row">
                                         <%userAddress.addresses.forEach((adress,index)=>{%>
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
+								    		<div class="col-lg-6" id="address-container">
+                                                <div class="card card-dashboard address-items" data-id="<%=adress._id%>">
+                                                    <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                                    <div class="card-body">
 								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
                                                         <span id="place-<%=index%>" ><%= adress.place%>  </span>  <br>
+
 														<span id="state-<%=index%>" ><%=adress.state%></span><br>
 														<span id="phone-<%=index%>" ><%=adress.phoneNumber%></span><br>
 														<span id="landMark-<%=index%>"><%=adress.landMark%></span><br>

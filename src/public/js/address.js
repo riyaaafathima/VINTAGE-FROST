@@ -8,6 +8,7 @@ const pincode_el = document.querySelector("#pincode");
 const locality_el = document.querySelector("#locality");
 const city_el = document.querySelector("#city");
 const save_address_btn = document.querySelector("#saveAddressBtn");
+const remove_btn_el=document.querySelectorAll('.btn-remove')
 
 //edit modal input elements
 const edit_place_el = document.getElementById("edit-place");
@@ -170,46 +171,6 @@ save_address_btn.addEventListener("click", async function (e) {
 
 });
 
-// save_address_btn.addEventListener("click", async (e) => {
-//   console.log(save_address_btn);
-
-//   const addressDetails = {
-//     place: place_el.value,
-//     state: state_el.value,
-//     phone: phone_el.value,
-//     landmark: landMark_el.value,
-//     address: address_el.value,
-//     addressType: address_type_el.value,
-//     pincode: pincode_el.value,
-//     locality: locality_el.value,
-//     city: city_el.value,
-//   };
-//   try {
-//     const response = await fetch("/edit-address", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(addressDetails),
-//     });
-
-//     if (response.ok) {
-//       Swal.fire({
-//         position: "center",
-//         icon: "success",
-//         title: "saved changes",
-//         showConfirmButton: false,
-//         timer: 1500,
-//       });
-//       $("#addAddressModal").modal("hide");
-//       location.reload();
-//     } else {
-//       alert("failed to save address");
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 const editBtns = document.querySelectorAll(".edit-button");
 
@@ -296,3 +257,76 @@ save_EditAddress_Btn.addEventListener("click", async (e) => {
     console.log(error);
   }
 });
+
+
+remove_btn_el.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    let addressId = e.target.closest(".address-items")?.getAttribute("data-id");
+
+    console.log("Deleting Address ID:", addressId); // Debugging
+
+    if (!addressId) {
+      Swal.fire("Error", "Address ID not found!", "error");
+      return;
+    }
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to delete the address?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch("/delete-address", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: addressId }),
+          });
+
+          if (response.ok) {
+            Swal.fire({
+              title: "Successfully deleted address",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "OK",
+            }).then(() => {
+              removeAddressFromDOM(addressId);
+            });
+          } else {
+            Swal.fire({
+              title: "Something went wrong",
+              icon: "error",
+              confirmButtonColor: "#3085d6",
+            });
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+          Swal.fire("Error", "Failed to delete address", "error");
+        }
+      }
+    });
+  });
+});
+
+function removeAddressFromDOM(id) {
+  const addressItem = document.querySelector(`.address-items[data-id="${id}"]`);
+  if (addressItem) {
+    addressItem.remove();
+    if (document.querySelectorAll(".address-items").length === 0) {
+      document.querySelector("#address-container").innerHTML = `
+        <div id="no-address-alert" class="alert alert-warning text-center" role="alert">
+          No address found!
+        </div>
+      `;
+    }
+  }
+}
+

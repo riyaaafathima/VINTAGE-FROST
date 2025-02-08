@@ -1,5 +1,6 @@
 const userModel = require("../../model/user/user");
 const addressModel = require("../../model/user/address");
+const bcrypt = require('bcrypt'); 
 
 const userProfileRender = async (req, res) => {
   try {
@@ -72,7 +73,6 @@ const getUserAddress = async (req, res) => {
   try {                                    
     const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
     const userId = req.session?.user?._id;
-console.log( req.body);
 
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized request" });
@@ -127,7 +127,6 @@ const editAddress = async (req, res) => {
     const { place, state, phone, landmark, addressType, pincode, locality, city, address,id } = req.body;
 
     const userAddress = await addressModel.findOne({ 'addresses._id': id, user: req.session?.user?._id });
-console.log("userAdd",userAddress);
 
     if (!userAddress) {
       return res.status(404).json({ message: 'Address not found' });
@@ -135,7 +134,6 @@ console.log("userAdd",userAddress);
 
    
     const updatedAddress = userAddress.addresses.id(id);
-    console.log(updatedAddress,'updated adress');
     
 
     if (! updatedAddress) {
@@ -147,7 +145,7 @@ console.log("userAdd",userAddress);
     updatedAddress.phoneNumber = phone;
     updatedAddress.landMark = landmark;
     updatedAddress.address = address;
-    updatedAddress.adressType = addressType;
+    updatedAddress.addressType = addressType;
     updatedAddress.pincode = pincode;
     updatedAddress.locality = locality;
     updatedAddress.city = city;
@@ -161,7 +159,40 @@ console.log("userAdd",userAddress);
   }
 };
 
+const deleteAddress = async (req, res) => {
+  try {
 
+    const { id } = req.body;   
+    const userId = req.session?.user?._id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized request" });
+    }
+
+    const userAddress = await addressModel.findOne({ userId });
+    if (!userAddress) {
+      return res.status(404).json({ error: "User address not found" });
+    }
+
+    console.log(userAddress.addresses,'existing adress');
+    
+    const addressIndex = userAddress.addresses.findIndex(
+      (address) => address._id.toString() === id
+    );
+
+    if (addressIndex === -1) {
+      return res.status(404).json({ error: "Address not found" });
+    }
+
+    userAddress.addresses.splice(addressIndex, 1);
+    await userAddress.save();
+
+    return res.status(200).json({ message: "Address deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting address:", error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
 
 
 
@@ -173,6 +204,27 @@ const recentPasswordPage=(req,res)=>{
   }
 }
 
+const updatePassword= async (req,res)=>{
+  try {
+    const userId=req.session?.user?._id
+    const{newPassword}=req.body
+
+    if (!userId ) {
+    return res.status(400).json({message:'please login'})
+      
+    }
+
+    const hashedpassword=await bcrypt.hash(newPassword,10);
+    
+    await userModel.findByIdAndUpdate(userId,{password:hashedpassword})
+    res.status(200).json({message:'password updated successfully'})
+
+  } catch (error) {
+    res.status(500).json({message:'error in updating',error})
+    
+  }
+}
+
 
 module.exports = {   
   userProfileRender,
@@ -180,7 +232,9 @@ module.exports = {
   userAddressRender,
   getUserAddress,
   editAddress,
-  recentPasswordPage
+  deleteAddress,
+  recentPasswordPage,
+  updatePassword
   
 };
    

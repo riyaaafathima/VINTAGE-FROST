@@ -1,6 +1,6 @@
 const app = require("./index");
 (function init() {
-    const PORT= 4000
+    const PORT= 3000
 
 
     app.listen(PORT,()=>{

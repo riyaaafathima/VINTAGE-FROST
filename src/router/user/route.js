@@ -23,7 +23,8 @@ const {
 } = require("../../middleware/requireUser");
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController');
-const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, getEditAddress, recentPasswordPage } = require("../../controller/user/userProfileController");
+const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
+const{orderPageRender}=require('../../controller/user/orderController')
 
 const {userUpload}=require('../../config/multer/multer')
 const router = require("express").Router();
@@ -56,11 +57,18 @@ router.post('/remove-cart',removeCart)
 
 router.get('/user-profile',requireUser,userProfileRender)
 router.post('/edit-profile',userUpload.single("image"),editUserProfile)
+
+
 router.get('/user-address',requireUser,userAddressRender)
 router.post('/save-address',getUserAddress)
 router.put('/edit-address',editAddress)
+router.delete('/delete-address',deleteAddress)
 
-router.get('/recent-password',recentPasswordPage)
-// router.get('/getedit-address/:id',getEditAddress); 
+
+router.get('/order',orderPageRender)
+
+
+router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
+
 module.exports = router;
    
