@@ -263,11 +263,12 @@ remove_btn_el.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
 
-    let addressId = e.target.closest(".address-items")?.getAttribute("data-id");
+    let id = e.target.closest(".address-items")?.getAttribute("data-id");
 
-    console.log("Deleting Address ID:", addressId); // Debugging
+    console.log(id);
+    
 
-    if (!addressId) {
+    if (!id) {  
       Swal.fire("Error", "Address ID not found!", "error");
       return;
     }
@@ -283,12 +284,11 @@ remove_btn_el.forEach((btn) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch("/delete-address", {
+          const response = await fetch(`/delete-address/${id}`, {  
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id: addressId }),
           });
 
           if (response.ok) {
@@ -298,7 +298,7 @@ remove_btn_el.forEach((btn) => {
               confirmButtonColor: "#3085d6",
               confirmButtonText: "OK",
             }).then(() => {
-              removeAddressFromDOM(addressId);
+              removeAddressFromDOM(id);
             });
           } else {
             Swal.fire({
@@ -318,6 +318,8 @@ remove_btn_el.forEach((btn) => {
 
 function removeAddressFromDOM(id) {
   const addressItem = document.querySelector(`.address-items[data-id="${id}"]`);
+  console.log(addressItem);
+  
   if (addressItem) {
     addressItem.remove();
     if (document.querySelectorAll(".address-items").length === 0) {

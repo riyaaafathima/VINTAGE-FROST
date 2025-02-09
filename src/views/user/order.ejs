@@ -566,16 +566,16 @@
 	                		<aside class="col-md-4 col-lg-3">
 	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 								    <li class="nav-item">
-								        <a class="nav-link"  href="/user-profile" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+								        <a class="nav-link"  href="/user-profile" role="tab">Account Details</a>
 								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link active"  href="/order" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Recent password</a>
+								        <a class="nav-link" href="/recent-password" role="tab">Recent password</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link " id="tab-address-link" data-toggle="tab" href="/user-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								        <a class="nav-link " href="/user-address" role="tab">Adresses</a>
 								    </li>
 
 								    <li class="nav-item">
@@ -586,10 +586,12 @@
 
 	                		<div class="col-md-8 col-lg-9">
 	                			<div class="tab-content">
-								
-                             <!-- /////////////////////////////////////////////////////////////////////////////////////// -->
 
 
+                                     <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<p>No order has been made yet.</p>
+								    	<a href="/all-products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div><!-- .End .tab-pane -->
 
 
 							
@@ -597,132 +599,8 @@
                                 </div>
                         
                
-                                <!-- /////////////////modal  ////////////////-->
-                                 <!-- Add Address Modal -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="addAddressForm">
-            <div class="form-group">
-              <label for="place">Place</label>
-              <input type="text" value="" class="form-control" id="place" name="place" required>
-            </div>
-            <div class="form-group">
-              <label for="state">State</label>
-              <input type="text" class="form-control" id="state" name="state" required>
-            </div>
-            <div class="form-group">
-              <label for="phoneNumber">Phone Number</label>
-              <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
-            </div>
-            <div class="form-group">
-              <label for="landMark">Landmark</label>
-              <input type="text" class="form-control" id="landMark" name="landMark">
-            </div>
-            <div class="form-group">
-              <label for="address">Address</label>
-              <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="pincode">Pincode</label>
-              <input type="number" class="form-control" id="pincode" name="pincode" required>
-            </div>
-            <div class="form-group">    
-              <label for="adressType">Address Type</label>
-              <select class="form-control" id="adressType" name="adressType" required>
-                <option value="home">Home</option>
-                <option value="work">Work</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="locality">Nationality</label>
-              <input type="text" value="" class="form-control" id="locality" name="locality">
-            </div>
-            <div class="form-group">
-              <label for="city">City</label>
-              <input type="text" class="form-control" id="city" name="city" required>
-              <input type="hidden" id="addressId" />
+                         
 
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ///////////////////////////edit addressModal////////////////////////////////////////////////////////// -->
-  <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addAddressModalLabel">Edit Address</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="addAddressForm">
-            <div class="form-group" >
-              <label for="place">Place</label>
-              <input type="text" value="g" class="form-control" id="edit-place" name="place" required>
-            </div>
-            <div class="form-group">
-              <label for="state">State</label>
-              <input type="text" class="form-control" id="edit-state" name="state" required>
-            </div>
-            <div class="form-group">
-              <label for="phoneNumber">Phone Number</label>
-              <input type="text" class="form-control" id="edit-phoneNumber" name="phoneNumber" required>
-            </div>
-            <div class="form-group">
-              <label for="landMark">Landmark</label>
-              <input type="text" class="form-control" id="edit-landMark" name="landMark">
-            </div>
-            <div class="form-group">
-              <label for="address">Address</label>
-              <textarea class="form-control" id="edit-address" name="address" rows="3" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="pincode">Pincode</label>
-              <input type="number" class="form-control" id="edit-pincode" name="pincode" required>
-            </div>
-            <div class="form-group">    
-              <label for="adressType">Address Type</label>
-              <select class="form-control" id="edit-adressType" name="adressType" required>
-                <option value="home">Home</option>
-                <option value="work">Work</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="locality">Nationality</label>
-              <input type="text" value="" class="form-control" id="edit-locality" name="locality">
-            </div>
-            <div class="form-group">
-              <label for="city">City</label>
-              <input type="text" class="form-control" id="edit-city" name="city" required>
-              <input type="hidden" id="addressId" />
-
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="saveEditAddressBtn">Save Changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
         <footer class="footer">
         	<div class="footer-middle">

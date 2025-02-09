@@ -62,7 +62,7 @@ router.post('/edit-profile',userUpload.single("image"),editUserProfile)
 router.get('/user-address',requireUser,userAddressRender)
 router.post('/save-address',getUserAddress)
 router.put('/edit-address',editAddress)
-router.delete('/delete-address',deleteAddress)
+router.delete('/delete-address/:id',deleteAddress)
 
 
 router.get('/order',orderPageRender)

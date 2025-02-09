@@ -159,10 +159,14 @@ const editAddress = async (req, res) => {
   }
 };
 
-const deleteAddress = async (req, res) => {
+const deleteAddress = async (req, res) => {   
   try {
 
     const { id } = req.body;   
+    if (!id) {
+      return res.status(400).json({error:'address id is required'})
+      
+    }
     const userId = req.session?.user?._id;
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized request" });
@@ -173,17 +177,18 @@ const deleteAddress = async (req, res) => {
       return res.status(404).json({ error: "User address not found" });
     }
 
-    console.log(userAddress.addresses,'existing adress');
     
     const addressIndex = userAddress.addresses.findIndex(
       (address) => address._id.toString() === id
     );
+
 
     if (addressIndex === -1) {
       return res.status(404).json({ error: "Address not found" });
     }
 
     userAddress.addresses.splice(addressIndex, 1);
+
     await userAddress.save();
 
     return res.status(200).json({ message: "Address deleted successfully" });

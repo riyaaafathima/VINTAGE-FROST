@@ -13809,13 +13809,15 @@ button:focus {
   opacity: 1;
 }
 .card-dashboard {
-  margin-bottom: 3rem;
+  margin-bottom: 10px;
   background-color: #f9f9f9;
   border: 0.1rem solid #ebebeb;
+  margin-top: 30px;
 }
 .card-dashboard .card-title {
   letter-spacing: 0;
   margin-bottom: 0.5rem;
+  margin-top: 30px;
 }
 .card-dashboard .card-body {
   padding: 4rem 2.8rem 2rem;
