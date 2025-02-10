@@ -7,7 +7,7 @@ const userProfileRender = async (req, res) => {
     const userId = req.session?.user?._id;
 
     const userDetails = await userModel.findById(userId);
-    res.render("user/userProfile", { userDetails });
+    res.render("user/userProfile", { userDetails, user:userDetails });
   } catch (error) {
     console.log(error);
   }
@@ -61,7 +61,7 @@ const userAddressRender = async (req, res) => {
 
     const userAddress = await addressModel.findOne({ user: userId });
 
-    res.render("user/address", { userAddress });
+    res.render("user/address", { userAddress ,user:true });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error", error });
@@ -162,7 +162,7 @@ const editAddress = async (req, res) => {
 const deleteAddress = async (req, res) => {   
   try {
 
-    const { id } = req.body;   
+    const { id } = req.params;  
     if (!id) {
       return res.status(400).json({error:'address id is required'})
       
@@ -172,14 +172,16 @@ const deleteAddress = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized request" });
     }
 
-    const userAddress = await addressModel.findOne({ userId });
+    const userAddress = await addressModel.findOne({ user:userId });    
+    console.log(userAddress,'useradresss == ');
+    
     if (!userAddress) {
       return res.status(404).json({ error: "User address not found" });
     }
 
     
     const addressIndex = userAddress.addresses.findIndex(
-      (address) => address._id.toString() === id
+      (address) => address._id.toString() === id      
     );
 
 
@@ -203,7 +205,8 @@ const deleteAddress = async (req, res) => {
 
 const recentPasswordPage=(req,res)=>{
   try {
-    res.render('user/recentPassword')
+    
+    res.render('user/recentPassword',{user:true})
   } catch (error) {
     
   }
@@ -212,19 +215,32 @@ const recentPasswordPage=(req,res)=>{
 const updatePassword= async (req,res)=>{
   try {
     const userId=req.session?.user?._id
-    const{newPassword}=req.body
+    const{newPassword,currentPassword}=req.body
 
     if (!userId ) {
     return res.status(400).json({message:'please login'})
+      
+    }
+    const userData=await userModel.findById(userId)
+    console.log(userData);
+    
+
+   const isValidPassword= await bcrypt.compare(currentPassword,userData.password)
+
+    if (!isValidPassword) {
+    return  res.status(400).json({message:'incorrect password'})
       
     }
 
     const hashedpassword=await bcrypt.hash(newPassword,10);
     
     await userModel.findByIdAndUpdate(userId,{password:hashedpassword})
+
     res.status(200).json({message:'password updated successfully'})
 
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({message:'error in updating',error})
     
   }

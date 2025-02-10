@@ -66,9 +66,11 @@ save_btn_el.addEventListener("click", async (e) => {
             title: "saved changes",
             showConfirmButton: false,
             timer: 1500
-          });
+          }).then(()=>{
+            window.location.reload();
+
+          })
         
-        // window.location.reload();
       } else {
         console.error("Failed to update profile.");
       }

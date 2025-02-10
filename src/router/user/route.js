@@ -51,7 +51,7 @@ router.put("/resendotp", resendOtp);
 
 
 router.post('/addTo-cart',addToCart)
-router.get('/cart',renderCart)
+router.get('/cart',requireUser,renderCart)
 router.post('/update-cart',updatesCartQuantity)
 router.post('/remove-cart',removeCart)
 
@@ -65,7 +65,7 @@ router.put('/edit-address',editAddress)
 router.delete('/delete-address/:id',deleteAddress)
 
 
-router.get('/order',orderPageRender)
+router.get('/order',requireUser,orderPageRender)
 
 
 router.route('/recent-password').get(recentPasswordPage).post(updatePassword)

@@ -57,6 +57,8 @@ const addToCart = async (req, res) => {
       const oldItem = isCartAvailable.items.find(
         (item) => item.kg == kg && item.product.toString() === productId
       );
+      console.log("ilde",oldItem,productId);
+      
   
       if (oldItem) {
         try {
@@ -110,7 +112,7 @@ const renderCart = async (req, res) => {
       return render("user/cart", { cart: null });
     }
     console.log(cart, "cart");
-    res.render("user/cart", { cart });
+    res.render("user/cart", { cart,user:true });
   } catch (error) {
     console.error(error);
   }
@@ -165,7 +167,7 @@ const updatesCartQuantity = async (req, res) => {
 
 const removeCart = async (req, res) => {
   try {
-    const { productId } = req.body;
+    const { productId,kg ,quantity} = req.body;
 
     const userId = req.session?.user?._id;
     if (!userId) {
@@ -177,16 +179,17 @@ const removeCart = async (req, res) => {
     if (!cart) {
       return res
         .status(404)
-        .json({ success: false, message: "Cart not found" });
+        .json({ success: false, message: "Cart not found" });    
     }
     cart.items = cart.items.filter(
-      (item) => item.product.toString() !== productId
+      (item) => !(item.product.toString() === productId && item.kg == kg && item.quantity == quantity)
     );
+    
 
     cart.total = cart.items.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
-    );
+    ); 
 
     await cart.save();
 

@@ -158,9 +158,11 @@ save_address_btn.addEventListener("click", async function (e) {
             title: "saved changes",
             showConfirmButton: false,
             timer: 1500,
-          });
-          $("#addAddressModal").modal("hide");
-          location.reload();
+          }).then(()=>{
+            $("#addAddressModal").modal("hide");
+            location.reload();
+          })
+         
         } else {
           alert("failed to save address");
         }
@@ -264,6 +266,7 @@ remove_btn_el.forEach((btn) => {
     e.preventDefault();
 
     let id = e.target.closest(".address-items")?.getAttribute("data-id");
+    
 
     console.log(id);
     

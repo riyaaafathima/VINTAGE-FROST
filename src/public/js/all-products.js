@@ -1,6 +1,7 @@
 const radioButtons = document.querySelectorAll(".custom-control-input");
-const clearAll_el=document.getElementById('clear-btn')
- const sort_input_el=document.querySelector('#sortby')
+const clearAll_el=document.getElementById('clear-btn');
+ const sort_input_el=document.querySelector('#sortby');
+ 
 
 document.querySelectorAll(".page-link").forEach((btn) => {
   btn.addEventListener("click", async (e) => {
