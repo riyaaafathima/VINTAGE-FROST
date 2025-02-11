@@ -22,9 +22,10 @@ const {
   requireUser,
 } = require("../../middleware/requireUser");
 
-const {addToCart, renderCart,updatesCartQuantity, removeCart}=require('../../controller/user/cartController');
+const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
 const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
 const{orderPageRender}=require('../../controller/user/orderController')
+const{checkoutRender}=require('../../controller/user/checkOutController')
 
 const {userUpload}=require('../../config/multer/multer')
 const router = require("express").Router();
@@ -45,7 +46,6 @@ router
   .post(loginController);
 router.get("/logout", logoutUser);
 router.get("/all-products", productPageRender);
-
 router.get("/product/:id", isBlock, productView);
 router.put("/resendotp", resendOtp);  
 
@@ -54,6 +54,8 @@ router.post('/addTo-cart',addToCart)
 router.get('/cart',requireUser,renderCart)
 router.post('/update-cart',updatesCartQuantity)
 router.post('/remove-cart',removeCart)
+router.post('/update-instruction',updateInstruction)
+router.post('/update-message',updateMessage  )
 
 router.get('/user-profile',requireUser,userProfileRender)
 router.post('/edit-profile',userUpload.single("image"),editUserProfile)
@@ -67,6 +69,8 @@ router.delete('/delete-address/:id',deleteAddress)
 
 router.get('/order',requireUser,orderPageRender)
 
+
+router.get('/checkout',checkoutRender)
 
 router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
 

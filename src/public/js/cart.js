@@ -8,8 +8,6 @@ const instruction_el = document.querySelectorAll("#instruction-Btn");
 
 const mssg_el = document.querySelectorAll("#mssg-btn");
 
-
-
 const showErrorToast = (message) => {
   toastr.options = {
     positionClass: "toast-top-center",
@@ -86,23 +84,26 @@ document.querySelectorAll(".quantity-input").forEach((input) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+ 
   const remove_btn_el = document.querySelectorAll(".btn-remove");
 
   remove_btn_el.forEach((btn) => {
     btn.addEventListener("click", async (e) => {
+      e.preventDefault();
       const productId = e.target.dataset.id;
 
-    const parentRow = e.target.closest("tr"); 
-    
-    const kg = parentRow.querySelector(".kg-col").textContent.trim();
-    const quantity = parentRow.querySelector(".quantity-input").value;
-
+      const kg = e.target
+        .closest("tr")
+        .querySelector(".kg-col")
+        .textContent.trim();
+        console.log(kg,productId);
+        
 
       try {
         const response = await fetch("/remove-cart", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productId ,kg,quantity }),
+          body: JSON.stringify({ productId, kg }),
         });
 
         const data = await response.json();
@@ -135,7 +136,6 @@ function closeModal() {
 }
 
 function saveChanges() {
-  // Add your save logic here
   console.log("Saving:", textarea.value);
   closeModal();
 }
@@ -150,24 +150,112 @@ window.onclick = function (event) {
 instruction_el.forEach((el) => {
   el.addEventListener("click", (e) => {
 
-    textarea.innerHTML = el.getAttribute("data-instruction");
+    const row = e.target.closest("tr");
+   
+    const kg = row.querySelector(".kg-col").textContent.trim();
     
+    const productId = row.querySelector(".btn-remove").getAttribute("data-id");
+
+    console.log(kg,productId);
+    textarea.setAttribute("data-type", "instruction");
+    textarea.setAttribute("data-kg", kg);
+    textarea.setAttribute("data-productId", productId);
+    textarea.innerHTML = el.getAttribute("data-instruction");
+
+
     openModal("instruction");
   });
 });
 
 mssg_el.forEach((el) => {
   el.addEventListener("click", (e) => {
-    textarea.innerHTML = el.getAttribute("data-mssg");
 
+    const row = e.target.closest("tr");
+   
+    const kg = row.querySelector(".kg-col").textContent.trim();
+    
+    const productId = row.querySelector(".btn-remove").getAttribute("data-id");
+
+
+    textarea.setAttribute("data-kg", kg);
+    textarea.setAttribute("data-productId", productId);
+    textarea.setAttribute("data-type", "message");
+    textarea.innerHTML = el.getAttribute("data-mssg");
     openModal("message");
   });
 });
 
-// save_btn_el.addEventListener('click',(e)=>{
+save_btn_el.addEventListener("click", async (e) => {
+  e.preventDefault();
 
-// })
+  const kg= textarea.getAttribute('data-kg')
+  const productId= textarea.getAttribute('data-productId')
 
-// checkout_btn_el.addEventListener('click',(e)=>{
-//   e.preventDefault
-// })
+
+/////// message////////////////
+  if (textarea.getAttribute("data-type") == "message") {
+    console.log(kg,productId,"====",textarea.innerHTML);
+    
+    const response = await fetch('/update-message', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({kg,productId,message:textarea.innerHTML})
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "saved your message",
+        showConfirmButton: false,
+        timer: 1500,    
+      }).then(()=>{
+        window.location.reload()
+      })
+    }else{
+      const data=await response.json()
+    alert(data.error)
+    }
+  } else if(textarea.getAttribute("data-type") == "instruction") {
+    const response = await fetch("/update-instruction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body:JSON.stringify({instruction:textarea.innerHTML,kg,productId})
+      
+    });
+
+    if (response.ok) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "saved your instruction",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(()=>{
+        window.location.reload()
+      })
+      
+    }else{
+    const data=await response.json()
+    alert(data.error)
+    }
+  }
+  
+});
+
+checkout_btn_el.addEventListener('click',async(e)=>{
+  e.preventDefault()
+
+const response= await fetch('/checkout',{
+  method:'GET',
+  headers:{
+    'Content-Type':'application/json'
+  }
+})
+
+})
+ 
