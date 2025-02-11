@@ -1,12 +1,17 @@
-const checkoutRender=(req,res)=>{
-    try {
-        res.render('user/checkout')
+const userModel = require("../../model/user/user");
 
-        
-    } catch (error) {
-        console.log(error);
-        
-    }
-}
+const addressModel = require("../../model/user/address");
 
-module.exports={checkoutRender}
+const checkoutRender =async (req, res) => {
+  try {
+    const userId = req.session?.user?._id;
+
+    const address= await addressModel.findOne({user:userId})
+
+    res.render("user/checkout", { user: true });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { checkoutRender };

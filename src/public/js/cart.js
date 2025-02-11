@@ -247,15 +247,15 @@ save_btn_el.addEventListener("click", async (e) => {
   
 });
 
-checkout_btn_el.addEventListener('click',async(e)=>{
-  e.preventDefault()
+// checkout_btn_el.addEventListener('click',async(e)=>{
+//   e.preventDefault()
 
-const response= await fetch('/checkout',{
-  method:'GET',
-  headers:{
-    'Content-Type':'application/json'
-  }
-})
+// const response= await fetch('/checkout',{
+//   method:'GET',
+//   headers:{
+//     'Content-Type':'application/json'
+//   }
+// })
 
-})
+// })
  
