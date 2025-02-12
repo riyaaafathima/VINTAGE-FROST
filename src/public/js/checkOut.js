@@ -1,6 +1,6 @@
 const remove_btns_el = document.querySelectorAll(".btnRemove");
 
-const placeorder_btn_el = document.querySelector("placeorder-btn");
+const placeorder_btn_el = document.querySelector("#placeorder-btn");
 
 remove_btns_el.forEach((btn) => {
   btn.addEventListener("click", (e) => {
@@ -74,17 +74,17 @@ function removeAddressFromDOM(id) {
   }
 }
 placeorder_btn_el.addEventListener("click", async (e) => {
-  const selectedDeliveryAddress = document.querySelector(
+ const selectedDeliveryAddress = document.querySelector(
     'input[name="deliveryAddress"]:checked'
   );
 
   if (selectedDeliveryAddress) {
-    alert(`Selected Payment Method: ${selectedPaymentMethod.value}`);
+    alert(`Selected delivery Address: ${selectedDeliveryAddress.value}`);
   } else {
     alert("Please select a payment method before placing the order.");
   }
 
-  const selectedPaymentMethod = document.querySelector(
+const selectedPaymentMethod = document.querySelector(
     'input[name="paymentMethod"]:checked'
   );
 

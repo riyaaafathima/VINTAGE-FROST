@@ -1,4 +1,6 @@
 const addressModel= require('../../model/user/address');
+
+const cartModel=require('../../model/user/cart');
 const orderPageRender = (req, res) => {
   try {
     res.render("user/order", { user: true });
@@ -18,12 +20,31 @@ const placeOrder = async(req, res) => {
     }
 
     if (!addressId) {
-        res.status(400).json({error:'address required'})
+       return res.status(400).json({error:'address is required'})
          
      }
    
- 
+
+    if (!paymentMethod) {
+       return res.status(400).json({error:'payment method is required'})
+         
+     }
+   
+     const userCart= await cartModel.find({user:userId})
+     const products = userCart.items.map((item) => ({
+        product: item.product,
+        kg: item.kg,
+        actualPrice: item.actualPrice,
+        price: item.price,
+        quantity: item.quantity,
+        message: item.message,
+        instruction: item.instruction,
+        isEggless: item.isEggless,
+
+      }));
+      
     const userAddress= await addressModel.findOne({user:userId})
+
 
     if (!address) {
         res.status(400).json({error:'address required'})
@@ -34,7 +55,26 @@ const placeOrder = async(req, res) => {
         address._id.equals(addressId)
      })
 
+if (!address) {
+res.status(404).json({message:'Address not found'})    
+}
 
+const updatedAddress={
+    ...address,
+     userId
+};
+
+
+
+
+
+const orderData={
+    userId:userId,
+    address:updatedAddress,
+    paymentMethod,
+    totalQuantity
+
+}
    
   } catch (error) {
 
