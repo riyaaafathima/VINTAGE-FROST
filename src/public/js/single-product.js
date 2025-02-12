@@ -1,3 +1,4 @@
+
 const price_el = document.querySelector(".product-price");
 const kg_el = document.querySelector("#kg");
 const stock_el = document.querySelector("#stock");
@@ -105,7 +106,10 @@ cart_btn_el.addEventListener("click", async (e) => {
         title: "Added to cart",
         showConfirmButton: false,
         timer: 1500,
-      }).then(() => {
+      }).then(async() => {
+      const data=await response.json()
+        localStorage.setItem("cart-count",data.cartCount)
+        
         window.location.href = "/cart";
       });
     }

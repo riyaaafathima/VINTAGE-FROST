@@ -121,7 +121,7 @@ const getUserAddress = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
-    
+            
 const editAddress = async (req, res) => {
   try {
     const { place, state, phone, landmark, addressType, pincode, locality, city, address,id } = req.body;

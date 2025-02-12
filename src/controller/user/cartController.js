@@ -11,7 +11,6 @@ async function quantityChecking(productId, kg, quantity) {
 }
 
 const addToCart = async (req, res) => {
-  console.log("cart body", req.body);
   try {
     const { price, kg, eggpeference, instruction, message, productId } =
       req.body;
@@ -19,7 +18,7 @@ const addToCart = async (req, res) => {
     const userId = req.session?.user?._id;
 
     if (!userId) {
-      res.status(200).json("please login");
+      res.status(404).json("please login");
     }
     const isEggless = eggpeference === "EGG" ? true : false;
     const isCartAvailable = await cartModel.findOne({ user: userId });
@@ -49,13 +48,12 @@ const addToCart = async (req, res) => {
       });
 
       await cart.save();
+      return res.status(200).json({message:"items added",cartCount:cart.items.length});
 
-      return res.status(200).json("cart is created");
     } else {
       const oldItem = isCartAvailable.items.find(
         (item) => item.kg == kg && item.product.toString() === productId
       );
-      console.log("ilde", oldItem, productId);
 
       if (oldItem) {
         try {
@@ -69,7 +67,8 @@ const addToCart = async (req, res) => {
         oldItem.quantity++;
         isCartAvailable.total += parseInt(price);
         await isCartAvailable.save();
-        return res.status(200).json("items added");
+
+        return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
       }
 
       const item = {
@@ -87,7 +86,7 @@ const addToCart = async (req, res) => {
       isCartAvailable.total += parseInt(price);
 
       await isCartAvailable.save();
-      return res.status(200).json("items added");
+      return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
     }
   } catch (error) {
     console.log(error);
@@ -132,8 +131,6 @@ const updatesCartQuantity = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Cart not found" });
     }
-    console.log("carrrrrrrrrrrrrt", cart);
-    console.log(productId, kg);
 
     const item = cart.items.find(
       (item) => item.product.toString() === productId && item.kg == kg
@@ -153,7 +150,7 @@ const updatesCartQuantity = async (req, res) => {
     item.quantity = quantity;
     item.price = quantity * item.actualPrice;
 
-    cart.total = cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
     await cart.save();
 
     res.status(200).json({ success: true, message: "Quantity updated", item });
@@ -185,7 +182,7 @@ const removeCart = async (req, res) => {
     );
 
     cart.total = cart.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (sum, item) => sum + item.actualPrice * item.quantity,
       0
     );
 

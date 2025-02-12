@@ -99,9 +99,14 @@
 
 								    <div class="tab-pane fade  show active" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
                                 <%if(!userAddress||userAddress?.addresses?.length==0){%>
-                                                 <p>address not added</p>
+                                    <div id="no-address-alert" class="alert alert-warning text-center" role="alert">
+                                        No address found!
+                                      </div>
                                               <%}else{%>
                                                 <div id="address-container" class="row">
+                                                 
+
+                                                   
                                         <%userAddress.addresses.forEach((adress,index)=>{%>
 								    		<div class="col-lg-6">
                                                 <div class="card card-dashboard address-items" data-id="<%=adress._id%>">
@@ -124,6 +129,8 @@
 								    			</div>
 								    		</div>
                                             <% })%>
+
+                                  
 								    		<!-- <div class="col-lg-6">
 								    			<div class="card card-dashboard">
 								    				<div class="card-body">
@@ -561,6 +568,7 @@
     </div><!-- End .modal -->
 
     <!-- Plugins JS File -->
+
     <script src="card-assets/js/jquery.min.js"></script>
     <script src="card-assets/js/bootstrap.bundle.min.js"></script>
     <script src="card-assets/js/jquery.hoverIntent.min.js"></script>

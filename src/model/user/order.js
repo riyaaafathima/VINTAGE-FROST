@@ -1,101 +1,169 @@
 const mongoose = require("mongoose");
-const orderSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "users",
+const Counter = require("./counter");
+const { Schema } = mongoose;
+
+const AddressSchema = new Schema({
+  name:{
+    type:String,
+    
+  },
+  place: {
+    type: String,
     required: true,
   },
-  items: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "products",
-        required: true,
-      },
-      kg: {
-        type: Number,
-        required: true,
-      },
-      actualPrice: {
-        type: Number,
-        required: true,
-      },
-      price: {
-        type: Number,
-        required: true,   
-      },
+  state: {
+    type: String,
+    required: true,
+  },
 
-      quantity: {
-        type: Number,
-        required: true,
-      },
-      message: {
-        type: String,
-      },
-      instruction: {
-        type: String,
-      },
-      isEggless: {
-        type: Boolean,
-        required: true,
-      },
-    },
-  ],
-  totalAmount: {
+  phoneNumber: {
     type: Number,
     required: true,
   },
-  PaymentMethod: {
+  landMark: {
     type: String,
-    enum: ["credit card", "debit card", "UPI", "COD"],
+  },
+  address: {
+    type: String,
     required: true,
   },
-  PaymentStatus: {
+  pincode: {
+    type: Number,
+    required: true,
+  },
+  addressType: {
+    enum: ["home", "work"],
     type: String,
-    enum: ["Pending", "Completed", "Failed"],
-    default: "Pending",
   },
-  status: {
+  locality: {
     type: String,
-    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-    default: "Pending",
   },
-  shippingAddress: {
-    fullName: {
-        type:String,
-        required:true,
-
-    addressLine1:{
-    type:String,
-    required:true,
-    } ,
-
-    addressLine2:{
-        type:String,
-    } ,
-
-    city:{
-        type:String
-    },
-    state: {
-        type:String,
-        required:true
-    },
-
-    pinCode:{
-     type:String
-    } ,
-
-    country:{
-     type:String
-    } 
+  city: {
+    type: String,
+    required: true,
   },
-  deliveryDate:{
-    type:Date
-  }
-  
-}
 });
 
 
-module.exports=mongoose.model('order',orderSchema)
+
+const ProductSchema = new Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "products",
+    required: true,
+  },
+  kg: {
+    type: Number,
+    required: true,
+  },
+  actualPrice: {
+    type: Number,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,   
+  },
+
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  message: {
+    type: String,
+  },
+  instruction: {
+    type: String,
+  },
+  isEggless: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+const OrderSchema = new Schema(
+  {
+    orderId: {
+      type: Number,
+      unique: true,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    address: AddressSchema,
+    deliveryDate: {
+      type: Date,
+      default: () => {
+        const currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + 7); // For a week
+        return currentDate;
+      },
+    },
+    subTotal: {
+      type: Number,
+    },
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    products: [ProductSchema],
+    paymentMethod: {
+      type: String,
+      required: true,
+      enum: ["COD", "Online", "Wallet"],
+    },
+    totalQuantity: {
+      type: Number,
+      min: 0,
+    },
+    paymentStatus: {
+      type: String,
+      required: true,
+      enum: ["Failed", "Pending", "Success"],
+      default: "Pending",
+    },
+    coupon: {
+      type: mongoose.Types.ObjectId,
+      ref:"coupon",
+    },
+    couponDiscount: {
+      type: Number,
+    },
+    discount: {
+      type: Number,
+    },
+  },
+  { timestamps: true }
+);
+
+// Order ID generation
+OrderSchema.pre("save", async function (next) {
+  if (!this.isNew) {
+    return next();
+  }
+
+  try {
+    const counter = await Counter.findOne({ model: "Order", field: "orderId" });
+
+    // Checking if order counter already exist
+    if (counter) {
+      this.orderId = counter.count + 1;
+      counter.count += 1;
+      await counter.save();
+    } else {
+      await Counter.create({ model: "Order", field: "orderId" });
+      this.orderId = 1000;
+    }
+
+    return next();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+module.exports = mongoose.model("Order", OrderSchema);
+
+
+

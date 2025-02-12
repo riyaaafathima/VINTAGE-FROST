@@ -24,8 +24,8 @@ const {
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
 const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
-const{orderPageRender}=require('../../controller/user/orderController')
-const{checkoutRender}=require('../../controller/user/checkOutController')
+const{orderPageRender, placeOrder}=require('../../controller/user/orderController')
+const{checkoutRender, checkoutAddressRender}=require('../../controller/user/checkOutController')
 
 const {userUpload}=require('../../config/multer/multer')
 const router = require("express").Router();
@@ -69,10 +69,12 @@ router.delete('/delete-address/:id',deleteAddress)
 
 router.get('/order',requireUser,orderPageRender)
 
-
 router.get('/checkout',checkoutRender)
 
 router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
+
+
+router.post('/place-order',placeOrder)
 
 module.exports = router;
    

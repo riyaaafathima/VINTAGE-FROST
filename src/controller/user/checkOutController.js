@@ -1,16 +1,38 @@
 const userModel = require("../../model/user/user");
-
 const addressModel = require("../../model/user/address");
+const cartModel = require("../../model/user/cart");
 
-const checkoutRender =async (req, res) => {
+
+
+
+const checkoutRender = async (req, res) => {
   try {
     const userId = req.session?.user?._id;
 
-    const address= await addressModel.findOne({user:userId})
+    console.log(userId);
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
 
-    res.render("user/checkout", { user: true });
+    const cart = await cartModel.findOne({ user: userId }).populate({
+        path:'items.product',
+    }
+
+    );
+    console.log(cart);
+    
+    if (!cart) {
+      return res.status(400).json({ message: "Cart not found" });
+
+    }
+    let userAddress = await addressModel.findOne({ user: userId });
+
+   res.render('user/checkout',{user:true,userAddress,cart})
+
   } catch (error) {
     console.log(error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 

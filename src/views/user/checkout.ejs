@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="card-assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
         :root {
             --custom-pink: #c96;
@@ -37,7 +39,53 @@
             top: 50%;
             transform: translateY(-50%);
         }
+
+           /* Custom CSS for the modal */
+    #addAddressModal .modal-dialog {
+      max-width: 600px;
+    }
+    
+    #addAddressModal .modal-body {
+      padding: 20px;
+    }
+    
+    #addAddressModal .form-group {
+      margin-bottom: 15px;
+    }
+    
+        /* Custom CSS for the modal */
+        #editAddressModal .modal-dialog {
+      max-width: 600px;
+    }
+    
+    #editAddressModal .modal-body {
+      padding: 20px;
+    }
+    
+    #editAddressModal .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .card-dashboard{
+        margin-top: 40px;
+    
+    }
+    #add-Address-button{
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+    
+    #add-Address-button:hover{
+        background-color: rgb(173, 145, 112);
+        color: antiquewhite;
+    }   
+
     </style>
+    
+     
+    
+   
 </head>
 
 
@@ -169,7 +217,7 @@
 
                       
     </header>
-    <div class="container py-4">
+    <div class="container py-4 ">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
@@ -179,94 +227,288 @@
             </ol>
         </nav>
 
-        <div class="row g-4">
+        <div class="row g-5 pt-3">
             <!-- Left Column - Address -->
-            <div class="col-lg-8">
+            <div class="col-lg-7" >
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Address</h5>
                         
-                        <button class="btn btn-custom mb-4">Add Address</button>
-                        
-                        <div class="address-box position-relative p-3 border rounded mb-3" style="background-color: var(--field-bg);">
+                      
+                        <button class="btn btn-custom mb-4" id="add-Address-button">Add Address</button>
+                      
+                        <%if(!userAddress||userAddress?.addresses?.length==0){%>
+                            <div id="no-address-alert" class="alert alert-warning text-center" role="alert">
+                                No address found!
+                              </div>
+                         <%}else{%>
+                        <%userAddress.addresses.forEach((adress,index)=>{%>
+
+                        <div class="address-box position-relative p-3 border rounded mb-3 address-items" data-id="<%=adress._id%>" style="background-color: var(--field-bg);">
                             <div class="mb-2">
-                                <strong>kumar</strong><br>
-                                123456780
+                                <strong></strong><br>
+                                <strong>No:</strong> <span id="phone-<%=index%>" ><%=adress.phoneNumber%></span> <br>
+                             <strong>Address:</strong>  <span id="address-<%=index%>"><%=adress.address%></span> <br>
+                             <strong>addressType:</strong> <span id="addressType-<%=index%>"><%=adress.addressType%></span>
                             </div>
                             <div class="mb-3">
-                                22, malappuram thur malappuram, kerala - 67345
+                                Place: <span id="place-<%=index%>" ><%= adress.place%>,
+                                    <span id="locality-<%=index%>"><%=adress.locality%></span>,
+                                     <span id="state-<%=index%>" ><%=adress.state%></span>,
+                                     <span id="landMark-<%=index%>"><%=adress.landMark%></span>,
+                                     <span id="city-<%=index%>"><%=adress.city%></span> ,
+                                      <span id="pincode-<%=index%>"><%=adress.pincode%></span>
+                                
                             </div>
                             <div>
-                                <button class="btn btn-sm btn-outline-secondary me-2">Edit Address</button>
-                                <button class="btn btn-sm btn-outline-danger">Delete Address</button>
+                                <button class="btn btn-sm btn-outline-secondary me-2 edit-button" data-index="<%=index%>" data-id="<%=adress._id%>" >Edit Address</button>
+                                <button class="btnRemove btn btn-sm btn-outline-danger " data-id="<%=adress._id%>"   >Delete Address</button>
                             </div>
                             <div class="form-check delivery-radio">
-                                <input class="form-check-input" type="radio" name="deliveryAddress" id="address1">
+                                <input class="form-check-input" type="radio" name="deliveryAddress" value="<%=adress._id%>"  id="address1">
                                 <label class="form-check-label" for="address1">
                                     Deliver Here
                                 </label>
                             </div>
                         </div>
+                        <% })%>
+
+                    <%}%>
+
                     </div>
                 </div>
             </div>
-
             <!-- Right Column - Cart Summary -->
-            <div class="col-lg-4">
+            <div class="col-lg-5">
                 <div class="card mb-4">
+                    <div class="card-header py-3" style="background-color: #B4936E;">
+                        <h5 class="card-title mb-0 text-white" style="text-align: center;">YOUR ORDER</h5>
+                    </div>
                     <div class="card-body">
-                        <h6 class="card-title">Cart Total</h6>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Sub Total</span>
-                            <span>₹ 8255</span>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Kg</th>
+                                        <th>Qty</th>
+                                        <th>price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+<%cart.items.forEach((item,index)=>{%>
+ 
+        <tr>
+        
+            <td><%=item.product.productName%></td>
+            <td><%=item.kg%></td>
+            <td><%=item.quantity%></td>
+            <td><%=item.actualPrice%></td>
+            <td><%=item.price%></td>
+        </tr>
+   
+<%})%>
+                                
+</tbody>
+                            </table>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Shipping Cost</span>
-                            <span>Free</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Discount</span>
-                            <span class="text-success">-₹ 3755</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between fw-bold">
-                            <span>Grand Total</span>
-                            <span>₹ 500</span>
+        
+            
+                        <div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Sub Total</span>
+                                <span class="text-danger">₹<%=cart.total%></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Delivery charges</span>
+                                <span class="text-danger">Free</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Packing charges</span>
+                                <span class="text-danger">₹20.00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-3 border-top pt-3">
+                                <strong>Grand Total</strong>
+                                <strong class="text-danger">₹<%=cart.total+20%></strong>
+                            </div>
                         </div>
                     </div>
                 </div>
-
+            
+                <!-- Payment Methods Card -->
                 <div class="card mb-4">
                     <div class="card-body">
                         <h6 class="card-title mb-3">Payment Methods</h6>
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="paymentMethod" id="online">
+                            <input class="form-check-input online-btn" type="radio" value="Online" name="paymentMethod" id="online">
                             <label class="form-check-label" for="online">
                                 Online
                             </label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="paymentMethod" id="wallet">
+                            <input class="form-check-input wallet-btn" type="radio" value="Wallet" name="paymentMethod" id="wallet">
                             <label class="form-check-label" for="wallet">
                                 Wallet (₹133)
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod">
+                            <input class="form-check-input cod-btn" type="radio" value="Cod" name="paymentMethod" id="cod">
                             <label class="form-check-label" for="cod">
                                 Cash on Delivery
                             </label>
                         </div>
                     </div>
                 </div>
-
-                <button class="btn btn-custom w-100">Place Order</button>
+            
+                <button class="btn text-white w-100" id="placeorder-btn" style="background-color: #B4936E;">Place Order</button>
             </div>
+
+            
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
-</body>       
- <%- include('partials/footer.ejs') %>
 
+
+
+    <!-- ///////////////////////////////////////////// add address////////////////// -->
+
+    <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="addAddressForm">
+                <div class="form-group">
+                  <label for="place">Place</label>
+                  <input type="text" value="" class="form-control" id="place" name="place" required>
+                </div>
+                <div class="form-group">
+                  <label for="state">State</label>
+                  <input type="text" class="form-control" id="state" name="state" required>
+                </div>
+                <div class="form-group">
+                  <label for="phoneNumber">Phone Number</label>
+                  <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                  <label for="landMark">Landmark</label>
+                  <input type="text" class="form-control" id="landMark" name="landMark">
+                </div>
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="pincode">Pincode</label>
+                  <input type="number" class="form-control" id="pincode" name="pincode" required>
+                </div>
+                <div class="form-group">    
+                  <label for="adressType">Address Type</label>
+                  <select class="form-control" id="adressType" name="adressType" required>
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="locality">Nationality</label>
+                  <input type="text" value="" class="form-control" id="locality" name="locality">
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="city" name="city" required>
+                  <input type="hidden" id="addressId" />
+    
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveAddressBtn">Save Address</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+<!-- //////////////////////////edit addresss ////////////////// -->
+
+      <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addAddressModalLabel">Edit Address</h5>
+              <button type="button" class="addModalclose" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form id="addAddressForm">
+                <div class="form-group" >
+                  <label for="place">Place</label>
+                  <input type="text" value="g" class="form-control" id="edit-place" name="place" required>
+                </div>
+                <div class="form-group">
+                  <label for="state">State</label>
+                  <input type="text" class="form-control" id="edit-state" name="state" required>
+                </div>
+                <div class="form-group">
+                  <label for="phoneNumber">Phone Number</label>
+                  <input type="text" class="form-control" id="edit-phoneNumber" name="phoneNumber" required>
+                </div>
+                <div class="form-group">
+                  <label for="landMark">Landmark</label>
+                  <input type="text" class="form-control" id="edit-landMark" name="landMark">
+                </div>
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <textarea class="form-control" id="edit-address" name="address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="pincode">Pincode</label>
+                  <input type="number" class="form-control" id="edit-pincode" name="pincode" required>
+                </div>
+                <div class="form-group">    
+                  <label for="adressType">Address Type</label>
+                  <select class="form-control" id="edit-adressType" name="adressType" required>
+                    <option value="home">Home</option>
+                    <option value="work">Work</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="locality">Nationality</label>
+                  <input type="text" value="" class="form-control" id="edit-locality" name="locality">
+                </div>
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="edit-city" name="city" required>
+                  <input type="hidden" id="addressId" />
+    
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary addModalclose" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveEditAddressBtn">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <script src="card-assets/js/jquery.min.js"></script>
+      <script src="card-assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script> -->
+    <script src="js/address.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
 </html>

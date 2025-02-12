@@ -218,7 +218,7 @@ border:1px solid #AD9170;
                         </div>
                     </td>
 
-                    <td class="price-col"><%= item.price %> Rs</td>
+                    <td class="price-col"><%= item.actualPrice %> Rs</td>
 
 
 
@@ -231,7 +231,7 @@ border:1px solid #AD9170;
                         </div>
                     </td>
 
-                    <td class="total-col"><%= item.price * item.quantity %> Rs</td>
+                    <td class="total-col"><%= item.price %> Rs</td>
 
                     <td class="remove-col">
                         <i class="icon-close btn-remove" data-id="<%= item.product._id %>"></i>
@@ -248,10 +248,6 @@ border:1px solid #AD9170;
     </tbody>
 </table>
 
-
-<div class="cart-summary">
-  <p><strong >Total:</strong> <%= cart.total %> Rs</p>
-</div>
 
 									</tbody>
 								</table><!-- End .table table-wishlist -->
@@ -279,16 +275,18 @@ border:1px solid #AD9170;
                                 </div>
                            
 	                			<div class="cart-bottom">
-			            			<div class="cart-discount">
+
+                                    <!-- ////coupon code///// -->
+			            			<!-- <div class="cart-discount">
 			            				<form action="#">
 			            					<div class="input-group">
 				        						<input type="text" class="form-control" required placeholder="coupon code">
 				        						<div class="input-group-append">
 													<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-												</div><!-- .End .input-group-append -->
-			        						</div><!-- End .input-group -->
+												</div>
+			        						</div>
 			            				</form>
-			            			</div><!-- End .cart-discount -->
+			            			</div> -->
 
 			            			<a href="#" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a>
 		            			</div><!-- End .cart-bottom -->
@@ -310,42 +308,40 @@ border:1px solid #AD9170;
 
 	                						<tr class="summary-shipping-row">
 	                							<td>
-													<div class="custom-control custom-radio">
-														<input type="radio" id="free-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="free-shipping">Free Shipping</label>
+													<div  >
+														<label class="custom-control-label" for="free-shipping">delivery charges</label>
 													</div><!-- End .custom-control -->
 	                							</td>
-	                							<td>$0.00</td>
+	                							<td>Free</td>
 	                						</tr><!-- End .summary-shipping-row -->
 
 	                						<tr class="summary-shipping-row">
 	                							<td>
-	                								<div class="custom-control custom-radio">
-														<input type="radio" id="standart-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="standart-shipping">Standart:</label>
+	                								<div>
+														<label class="custom-control-label" for="standart-shipping">Packing charges:</label>
 													</div><!-- End .custom-control -->
 	                							</td>
-	                							<td>$10.00</td>
+	                							<td>₹20.00</td>
 	                						</tr><!-- End .summary-shipping-row -->
-
 	                						<tr class="summary-shipping-row">
 	                							<td>
-	                								<div class="custom-control custom-radio">
-														<input type="radio" id="express-shipping" name="shipping" class="custom-control-input">
-														<label class="custom-control-label" for="express-shipping">Express:</label>
+	                								<div>
+														<label class="custom-control-label" for="standart-shipping">Discount price</label>
 													</div><!-- End .custom-control -->
 	                							</td>
-	                							<td>$20.00</td>
+	                							<td>-₹0.00</td>
 	                						</tr><!-- End .summary-shipping-row -->
 
-	                						<tr class="summary-shipping-estimate">
+	                
+
+	                						<!-- <tr class="summary-shipping-estimate">
 	                							<td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
 	                							<td>&nbsp;</td>
-	                						</tr><!-- End .summary-shipping-estimate -->
+	                						</tr>End .summary-shipping-estimate -->
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td id="total"><%=cart.total%></td>
+	                							<td id="total"><%=cart.total+20%></td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
@@ -353,7 +349,7 @@ border:1px solid #AD9170;
 	                				<a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block" id="checkout-btn">PROCEED TO CHECKOUT</a>
 	                			</div><!-- End .summary -->
 
-		            			<a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+		            			<a href="/all-products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 	                </div><!-- End .container -->

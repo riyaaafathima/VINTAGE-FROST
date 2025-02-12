@@ -13,7 +13,7 @@ const remove_btn_el=document.querySelectorAll('.btn-remove')
 //edit modal input elements
 const edit_place_el = document.getElementById("edit-place");
 const edit_state_el = document.getElementById("edit-state");
-const edit_phone_el = document.getElementById("edit-phoneNumber");
+const edit_phone_el = document.getElementById("edit-phoneNumber");    
 const edit_landMark_el = document.getElementById("edit-landMark");
 const edit_address_el = document.getElementById("edit-address");
 const edit_pincode_el = document.getElementById("edit-pincode");
@@ -23,11 +23,12 @@ const edit_address_type_el = document.querySelector("#edit-adressType");
 const addressId = document.getElementById("addressId")
 const save_EditAddress_Btn = document.querySelector("#saveEditAddressBtn");
 
-document
-  .querySelector("#add-Address-button")
+document.querySelector("#add-Address-button")
   .addEventListener("click", function () {
     $("#addAddressModal").modal("show");
   });
+
+  
 
 save_address_btn.addEventListener("click", async function (e) {
   e.preventDefault();
