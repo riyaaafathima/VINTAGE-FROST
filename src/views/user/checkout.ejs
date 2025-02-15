@@ -318,7 +318,7 @@
                         <div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Sub Total</span>
-                                <span class="text-danger">₹<%=cart.total%></span>
+                                <span class="text-danger">₹<%=cart.subTotal%></span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Delivery charges</span>
@@ -326,11 +326,11 @@
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Packing charges</span>
-                                <span class="text-danger">₹20.00</span>
+                                <span class="text-danger">₹<%=packagePrice%></span>
                             </div>
                             <div class="d-flex justify-content-between mt-3 border-top pt-3">
                                 <strong>Grand Total</strong>
-                                <strong class="text-danger">₹<%=cart.total+20%></strong>
+                                <strong class="text-danger">₹<%=cart.total+packagePrice%></strong>
                             </div>
                         </div>
                     </div>

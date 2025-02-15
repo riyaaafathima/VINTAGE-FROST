@@ -299,7 +299,7 @@ border:1px solid #AD9170;
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-	                							<td id="sub-total"><%=cart.total%></td>
+	                							<td id="sub-total"><%=cart.subTotal%></td>
 	                						</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
@@ -321,7 +321,7 @@ border:1px solid #AD9170;
 														<label class="custom-control-label" for="standart-shipping">Packing charges:</label>
 													</div><!-- End .custom-control -->
 	                							</td>
-	                							<td>₹20.00</td>
+	                							<td>₹<%=packagePrice%></td>
 	                						</tr><!-- End .summary-shipping-row -->
 	                						<tr class="summary-shipping-row">
 	                							<td>
@@ -341,7 +341,7 @@ border:1px solid #AD9170;
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td id="total"><%=cart.total+20%></td>
+	                							<td id="total"><%=cart.total+packagePrice%></td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->

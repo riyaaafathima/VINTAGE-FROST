@@ -43,6 +43,10 @@ const cartSchema = new mongoose.Schema({
       },
     },
   ],
+  subTotal: {
+    type: Number,
+    required: true,
+  },
   total: {
     type: Number,
     required: true,

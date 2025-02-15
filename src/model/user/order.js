@@ -48,8 +48,7 @@ const AddressSchema = new Schema({
 
 const ProductSchema = new Schema({
   product: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "products",
+    type: String,
     required: true,
   },
   kg: {
@@ -93,14 +92,6 @@ const OrderSchema = new Schema(
       required: true,
     },
     address: AddressSchema,
-    deliveryDate: {
-      type: Date,
-      default: () => {
-        const currentDate = new Date();
-        currentDate.setDate(currentDate.getDate() + 7); // For a week
-        return currentDate;
-      },
-    },
     subTotal: {
       type: Number,
     },
@@ -134,6 +125,9 @@ const OrderSchema = new Schema(
     discount: {
       type: Number,
     },
+    packagingPrice:{
+      type:Number
+    }
   },
   { timestamps: true }
 );

@@ -44,6 +44,7 @@ const addToCart = async (req, res) => {
             quantity: 1,
           },
         ],
+        subTotal:actualPrice,
         total: price,
       });
 
@@ -66,6 +67,7 @@ const addToCart = async (req, res) => {
 
         oldItem.quantity++;
         isCartAvailable.total += parseInt(price);
+        isCartAvailable.subTotal +=parseInt(oldItem.actualPrice)
         await isCartAvailable.save();
 
         return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
@@ -84,6 +86,7 @@ const addToCart = async (req, res) => {
 
       isCartAvailable.items.push(item);
       isCartAvailable.total += parseInt(price);
+      isCartAvailable.subTotal += parseInt(price);
 
       await isCartAvailable.save();
       return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
@@ -109,8 +112,9 @@ const renderCart = async (req, res) => {
     if (!cart) {
       return render("user/cart", { cart: null });
     }
-    console.log(cart, "cart");
-    res.render("user/cart", { cart, user: true });
+    const packagePrice=cart.items.reduce((acc,item)=>
+      acc+= item.quantity*20,0)
+    res.render("user/cart", { cart, user: true,packagePrice });
   } catch (error) {
     console.error(error);
   }
@@ -151,6 +155,7 @@ const updatesCartQuantity = async (req, res) => {
     item.price = quantity * item.actualPrice;
 
     cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
+    cart.subTotal = cart.items.reduce((sum, i) => sum + i.actualPrice * i.quantity, 0);
     await cart.save();
 
     res.status(200).json({ success: true, message: "Quantity updated", item });
@@ -181,10 +186,12 @@ const removeCart = async (req, res) => {
         !(item.product.toString() === productId && item.kg.toString() === kg)
     );
 
-    cart.total = cart.items.reduce(
-      (sum, item) => sum + item.actualPrice * item.quantity,
-      0
-    );
+    // cart.total = cart.items.reduce(
+    //   (sum, item) => sum + item.actualPrice * item.quantity,
+    //   0
+    // );
+    cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
+    cart.subTotal = cart.items.reduce((sum, i) => sum + i.actualPrice * i.quantity, 0);
 
     await cart.save();
 
