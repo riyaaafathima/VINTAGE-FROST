@@ -24,7 +24,7 @@ const {
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
 const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
-const{orderPageRender, placeOrder}=require('../../controller/user/orderController')
+const{orderPageRender, placeOrder, viewOrderDetails}=require('../../controller/user/orderController')
 const{checkoutRender, checkoutAddressRender}=require('../../controller/user/checkOutController')
 
 const {userUpload}=require('../../config/multer/multer')
@@ -75,6 +75,7 @@ router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
 
 
 router.post('/place-order',placeOrder)
+router.get('/view-orderDetails',viewOrderDetails)
 
 module.exports = router;
    

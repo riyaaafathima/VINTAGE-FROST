@@ -1,5 +1,53 @@
 
-
+<style>
+    .order-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: white;
+    }
+    
+    .product-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+    
+    .status-pending {
+        color: #ffc107;
+    }
+    
+    .status-returned {
+        color: #dc3545;
+    }
+    
+    .main-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    
+    .custom-color {
+        color: #AD9170;
+    }
+    
+    .price {
+        color: #AD9170;
+        font-weight: bold;
+    }
+    
+    .view-btn {
+        background-color: #AD9170;
+        border: none;
+        padding: 0.25rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .view-btn:hover {
+        background-color: #8a745a;
+    }
+</style>
 
 <body>
     <div class="page-wrapper">
@@ -49,14 +97,47 @@
 	                		</aside><!-- End .col-lg-3 -->
 
 	                		<div class="col-md-8 col-lg-9">
+                            <h1 class="custom-color">Your Orders</h1>
 	                			<div class="tab-content">
+                                            <%cart.items.forEach((item)=>{%>
+                                                
+                                          
+                                            <div class="order-card">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex gap-3 align-items-center flex-grow-1">
+                                                        <img src="/uploads/<%= item.product.image[0] %>" alt="<%= item.product.productName %>" class="product-img">
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="mb-1"><%=item.product.productName%></h5>
+                                                            <div class="status-pending mb-1">
+                                                                <span>●</span> Pending
+                                                            </div>
+                                                            <div>quantity  : <%=item.quantity%></div>
+                                                            <div>coupon applied. code: Sd%23 discount: 40</div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-5">
+                                                            <span class="price"><%item.price%></span>
+                                                            <a href="/view-orderDetails">
 
-								    <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                                                <button class="btn btn-primary view-btn">View</button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     <%   })%>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+								    <!-- <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
 								    	<p>No order has been made yet.</p>
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+								    </div>.End .tab-pane -->
 
-                                </div>
            <!-- /////////////////////////////////////////////////////////////////////////////////////// -->
 
 

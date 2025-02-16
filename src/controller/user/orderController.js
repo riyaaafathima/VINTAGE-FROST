@@ -13,9 +13,24 @@ async function quantityChecking(productId, kg, quantity) {
   }  
 }
 
-const orderPageRender = (req, res) => {
+const orderPageRender = async(req, res) => {
   try {
-    res.render("user/order", { user: true });
+
+    const userId = req.session?.user?._id;
+
+    console.log(userId);
+
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized request" });
+    }
+
+    const cart = await cartModel.findOne({ user: userId }).populate({
+        path: "items.product",
+      });
+    
+    res.render("user/order", { 
+      user: true, 
+      cart });
   } catch (error) {
     return res.status(400).json({ error: "something went wrong" });
   }
@@ -109,4 +124,21 @@ const placeOrder = async (req, res) => {
   }
 };
 
-module.exports = { orderPageRender, placeOrder };
+const viewOrderDetails=async(req,res)=>{
+  try {
+    const userId=req.session?.user?._id
+
+     const cart = await cartModel.findOne({ user: userId }).populate({
+          path: "items.product",
+        });
+
+    const userAddress=await addressModel.findOne({user:userId})
+
+    res.render('user/userOrder',{userAddress,cart,user:true})
+    
+  } catch (error) {
+    
+  }
+}
+
+module.exports = { orderPageRender, placeOrder ,viewOrderDetails};
