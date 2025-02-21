@@ -1,3 +1,4 @@
+const product = require("../../model/admin/product");
 const addressModel = require("../../model/user/address");
 
 const cartModel = require("../../model/user/cart");
@@ -102,9 +103,9 @@ const placeOrder = async (req, res) => {
     let paymentStatus = "";
 
     if (paymentMethod === "wallet" || paymentMethod === "razorPay") {
-      paymentStatus = "success";
+      paymentStatus = "Success";
     } else {
-      paymentStatus = "pending";
+      paymentStatus = "Pending";
     }
 
     const orderData = {
@@ -118,6 +119,14 @@ const placeOrder = async (req, res) => {
       packagingPrice,
       paymentStatus,
     };
+//
+await quantityChecking(products, kg,);
+
+   const order= await new orderModel(orderData)
+    await order.save()
+    console.log(order);
+    
+res.status(200).json({message:'success'})
 
   } catch (error) {
     console.log(error);
