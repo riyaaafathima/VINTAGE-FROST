@@ -51,6 +51,12 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ["Pending", "Processing", "Delivered","Cancelled"],
+    default:'Pending'
+  },
   kg: {
     type: Number,
     required: true,
@@ -59,6 +65,9 @@ const ProductSchema = new Schema({
     type: Number,
     required: true,
   },
+  image:{
+    type:[]
+    },
   price: {
     type: Number,
     required: true,   

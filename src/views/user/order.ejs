@@ -99,26 +99,27 @@
 	                		<div class="col-md-8 col-lg-9">
                             <h1 class="custom-color">Your Orders</h1>
 	                			<div class="tab-content">
-                                            <%cart.items.forEach((item)=>{%>
+                                            <%allOrders.forEach((item)=>{%>
                                                 
                                           
                                             <div class="order-card">
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="d-flex gap-3 align-items-center flex-grow-1">
-                                                        <img src="/uploads/<%= item.product.image[0] %>" alt="<%= item.product.productName %>" class="product-img">
+                                                        <img src="/uploads/<%= item.image[0] %>" alt="<%= item.productName %>" class="product-img">
                                                         <div class="flex-grow-1">
-                                                            <h5 class="mb-1"><%=item.product.productName%></h5>
+                                                            <h5 class="mb-1"><%=item.productName%></h5>
                                                             <div class="status-pending mb-1">
-                                                                <span>●</span> Pending
+                                                                <span>●</span> <%=item?.status%>
                                                             </div>
-                                                            <div>quantity  : <%=item.quantity%></div>
+                                                            <div>quantity  : <%=item.quantity%> , kg  : <%=item.kg%></div>
+                                                            <div><%=item.actualPrice%></div>
                                                             <div>coupon applied. code: Sd%23 discount: 40</div>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-5">
                                                             <span class="price"><%item.price%></span>
                                                             <a href="/view-orderDetails">
 
-                                                                <button class="btn btn-primary view-btn">View</button>
+                                                                <button data-id="<%=item. orderObjectId%>" product-id="<%=item._id%>" class="btn btn-primary view-btn">View</button>
                                                             </a>
                                                         </div>
                                                     </div>

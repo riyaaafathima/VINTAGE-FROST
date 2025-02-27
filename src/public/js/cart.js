@@ -110,6 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (data.success) {
           window.location.reload();
+          localStorage.setItem('cart-count',data.cartCount)
         } else {
           showWarningToast("Failed to remove product");
         }

@@ -1,22 +1,32 @@
-const product = require("../../model/admin/product");
 const addressModel = require("../../model/user/address");
 
 const cartModel = require("../../model/user/cart");
 
-const orderModel=require('../../model/user/order')
+const orderModel = require("../../model/user/order");
+const productModel = require("../../model/admin/product");
+const userModel = require("../../model/user/user");
+const cart = require("../../model/user/cart");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
   const stockVarient = product.varients.find((item) => item.kg == kg);
 
   if (stockVarient.stock < quantity) {
-    throw new Error("product is insufficient");
-  }  
+    throw new Error(`${product.productName} doesn't have enough stock`);
+  }
+   stockVarient.stock -= quantity;
+
+   await product.save();
+
 }
 
-const orderPageRender = async(req, res) => {
+const orderPageRender = async (req, res) => {
   try {
-
     const userId = req.session?.user?._id;
 
     console.log(userId);
@@ -25,13 +35,25 @@ const orderPageRender = async(req, res) => {
       return res.status(401).json({ message: "Unauthorized request" });
     }
 
-    const cart = await cartModel.findOne({ user: userId }).populate({
-        path: "items.product",
-      });
+    const orders = await orderModel.find({ userId: userId });
+    console.log("orders", orders);
     
-    res.render("user/order", { 
-      user: true, 
-      cart });
+    let allOrders = orders.flatMap(order =>
+      order.products.map(product => ({
+        ...product.toObject(), 
+        orderId: order.orderId,
+        orderObjectId: order._id
+      }))
+    );
+    
+    console.log("allOrders", allOrders[0]);
+    
+    
+
+    res.render("user/order", {
+      user: true,
+      allOrders,
+    });
   } catch (error) {
     return res.status(400).json({ error: "something went wrong" });
   }
@@ -62,6 +84,7 @@ const placeOrder = async (req, res) => {
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
       kg: item.kg,
+      image:item.product.image,
       actualPrice: item.actualPrice,
       price: item.price,
       quantity: item.quantity,
@@ -89,7 +112,7 @@ const placeOrder = async (req, res) => {
     const updatedAddress = {
       ...address.toObject(),
       name: userName,
-    };    
+    };
 
     const totalQuantity = userCart.items.reduce(
       (acc, item) => (acc += item.quantity),
@@ -119,35 +142,40 @@ const placeOrder = async (req, res) => {
       packagingPrice,
       paymentStatus,
     };
-//
-await quantityChecking(products, kg,);
 
-   const order= await new orderModel(orderData)
-    await order.save()
-    console.log(order);
+    const updateProductPromises = userCart.items.map((item) => {
+      return quantityChecking(item.product, item.kg, item.quantity);
+    });
+
+    await Promise.all(updateProductPromises);
+
+    const order = await new orderModel(orderData);
+    await order.save();
+
+    if (order && userCart) {
+      await userCart.deleteOne(); 
+    }
     
-res.status(200).json({message:'success'})
+console.log("bhhjgj");
 
+    res.status(200).json({ order:order });
   } catch (error) {
     console.log(error);
+    res.status(500).json({ error: error.message});
   }
 };
 
-const viewOrderDetails=async(req,res)=>{
+const viewOrderDetails = async (req, res) => {
   try {
-    const userId=req.session?.user?._id
 
-     const cart = await cartModel.findOne({ user: userId }).populate({
-          path: "items.product",
-        });
+    const userId = req.session?.user?._id;
 
-    const userAddress=await addressModel.findOne({user:userId})
 
-    res.render('user/userOrder',{userAddress,cart,user:true})
-    
+
   } catch (error) {
+    console.log(error);
     
   }
-}
+};
 
-module.exports = { orderPageRender, placeOrder ,viewOrderDetails};
+module.exports = { orderPageRender, placeOrder, viewOrderDetails };

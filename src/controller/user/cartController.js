@@ -44,7 +44,7 @@ const addToCart = async (req, res) => {
             quantity: 1,
           },
         ],
-        subTotal:actualPrice,
+        subTotal:price,
         total: price,
       });
 
@@ -110,14 +110,16 @@ const renderCart = async (req, res) => {
     });
 
     if (!cart) {
-      return render("user/cart", { cart: null });
+      return res.render("user/cart", { cart: null,user: true,packagePrice:0 });
     }
     const packagePrice=cart.items.reduce((acc,item)=>
       acc+= item.quantity*20,0)
+    console.log("caart",cart.items);
+    
     res.render("user/cart", { cart, user: true,packagePrice });
   } catch (error) {
     console.error(error);
-  }
+  }    
 };
 
 const updatesCartQuantity = async (req, res) => {
@@ -194,8 +196,8 @@ const removeCart = async (req, res) => {
     cart.subTotal = cart.items.reduce((sum, i) => sum + i.actualPrice * i.quantity, 0);
 
     await cart.save();
-
-    return res.status(200).json({ success: true, message: "Product removed" });
+     
+    return res.status(200).json({ success: true, message: "Product removed",cartCount: cart.items.length});
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Error" });

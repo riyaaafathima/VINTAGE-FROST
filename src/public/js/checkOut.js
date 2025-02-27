@@ -92,7 +92,7 @@ const selectedPaymentMethod = document.querySelector(
     alert(`Selected Payment Method`);
   }
   if (!selectedDeliveryAddress) {
-    alert(`Selected de Method`);
+    alert(`Selected address `);
   }
 
   const response = await fetch("/place-order", {
@@ -108,11 +108,25 @@ const selectedPaymentMethod = document.querySelector(
 
 
 if (response.ok) {
-    alert('order placed')
-    
+  Swal.fire({
+    title: "order placed!",
+    icon: "success",
+    draggable: true
+  }).then(()=>{
+    localStorage.setItem('cart-count',0)
+    window.location.href='/view-orderDetails'
+  })    
 }else{
     const data= await response.json()
-    alert(data.error)
+    console.log(data.error);
+    
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: `${data.error}`,      
+    }).then(()=>{
+      
+    })
 }
 
 });
