@@ -20,7 +20,8 @@ const orderDetailsController=async(req,res)=>{
         const {orderId}=req.params
         const orderDetails=await orderModel.findById(orderId)
         console.log(orderDetails);
-        
+          
+          
         res.render('admin/order-details',{
             orderDetails
         })
