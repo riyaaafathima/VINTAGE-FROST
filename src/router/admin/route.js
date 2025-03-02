@@ -25,9 +25,15 @@ const {
   userDetailsRender,
 } = require("../../controller/admin/userController");
 
+const{
+  orderListController,
+  orderDetailsController
+}=require('../../controller/admin/orderController')
+
 const multer = require("multer");
 const preventNavigation = require("../../middleware/preventNavigation");
 const {upload} = require("../../config/multer/multer");
+const product = require("../../model/admin/product");
 
 const router = require("express").Router();
 
@@ -61,5 +67,9 @@ router.put("/block-user/:id", blockuser);
 router.post("/add-product", upload.array("images", 3), addProductController);
 
 router.get("/logout", logoutAdmin);
+
+router.get('/order-list',orderListController)
+
+router.get('/order-Details/:orderId',orderDetailsController)
 
 module.exports = router;

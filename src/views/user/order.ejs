@@ -53,7 +53,6 @@
     <div class="page-wrapper">
         <%- include('partials/header.ejs') %>
 
-
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
         		<div class="container">
@@ -112,14 +111,14 @@
                                                                 <span>●</span> <%=item?.status%>
                                                             </div>
                                                             <div>quantity  : <%=item.quantity%> , kg  : <%=item.kg%></div>
-                                                            <div><%=item.actualPrice%></div>
+                                                            <div> price: <%=item.actualPrice%></div>
                                                             <div>coupon applied. code: Sd%23 discount: 40</div>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-5">
-                                                            <span class="price"><%item.price%></span>
-                                                            <a href="/view-orderDetails">
+                                                            <span class="price"><%item.price%> </span>
+                                                            <a href="/view-orderDetails/<%=item. orderObjectId%>/<%=item._id%>">
 
-                                                                <button data-id="<%=item. orderObjectId%>" product-id="<%=item._id%>" class="btn btn-primary view-btn">View</button>
+                                                                <button data-id="<%=item. orderObjectId%>" product-id="<%=item._id%>" class="btn btn-primary view-btns">View</button>
                                                             </a>
                                                         </div>
                                                     </div>
@@ -444,6 +443,7 @@
     <script src="card-assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="card-assets/js/main.js"></script>
+    <script src="js/order.js"></script>
 </body>
 
 

@@ -75,7 +75,7 @@ router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
 
 
 router.post('/place-order',placeOrder)
-router.get('/view-orderDetails',viewOrderDetails)
+router.get('/view-orderDetails/:orderId/:productId', viewOrderDetails);
 
 module.exports = router;
    

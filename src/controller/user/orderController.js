@@ -19,10 +19,9 @@ async function quantityChecking(productId, kg, quantity) {
   if (stockVarient.stock < quantity) {
     throw new Error(`${product.productName} doesn't have enough stock`);
   }
-   stockVarient.stock -= quantity;
+  stockVarient.stock -= quantity;
 
-   await product.save();
-
+  await product.save();
 }
 
 const orderPageRender = async (req, res) => {
@@ -37,18 +36,16 @@ const orderPageRender = async (req, res) => {
 
     const orders = await orderModel.find({ userId: userId });
     console.log("orders", orders);
-    
-    let allOrders = orders.flatMap(order =>
-      order.products.map(product => ({
-        ...product.toObject(), 
+
+    let allOrders = orders.flatMap((order) =>
+      order.products.map((product) => ({
+        ...product.toObject(),
         orderId: order.orderId,
-        orderObjectId: order._id
+        orderObjectId: order._id,
       }))
     );
-    
+
     console.log("allOrders", allOrders[0]);
-    
-    
 
     res.render("user/order", {
       user: true,
@@ -84,7 +81,7 @@ const placeOrder = async (req, res) => {
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
       kg: item.kg,
-      image:item.product.image,
+      image: item.product.image,
       actualPrice: item.actualPrice,
       price: item.price,
       quantity: item.quantity,
@@ -153,29 +150,75 @@ const placeOrder = async (req, res) => {
     await order.save();
 
     if (order && userCart) {
-      await userCart.deleteOne(); 
+      await userCart.deleteOne();
     }
-    
-console.log("bhhjgj");
 
-    res.status(200).json({ order:order });
+    console.log("bhhjgj");
+
+    res.status(200).json({ order: order });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error.message});
+    res.status(500).json({ error: error.message });
   }
 };
-
 const viewOrderDetails = async (req, res) => {
   try {
-
+    const { orderId, productId } = req.params;
+    console.log(orderId,productId);
+    
     const userId = req.session?.user?._id;
 
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const orderDetails = await orderModel.findById(orderId);
 
+    if (!orderDetails) {
+      return res.status(404).json({ error: "Order not found" });
+    }
 
+    const productDetails = orderDetails.products.find(
+      (product) => product._id.toString() === productId
+    );
+
+    const otherProducts = orderDetails.products.filter(
+      (product) => product._id.toString() !== productId
+    );
+console.log('============otherppp',otherProducts);
+
+    if (!productDetails) {
+      return res.status(404).json({ error: "Product not found in order" });
+    }
+
+    const userDetails = await userModel.findById(userId);
+console.log("kmfksd",orderDetails);
+
+    let order = {
+      orderId:orderDetails.orderId,
+      _id: orderDetails._id,
+      date: orderDetails.createdAt,
+      address: orderDetails.address,
+      selectedProduct:productDetails,
+      items: otherProducts
+    };
+    console.log("=========================");
+    
+    console.log("order",order);
+
+    res.render("user/userOrder", {
+      user: userDetails, // Pass the complete user object
+      order :{
+        orderId:orderDetails.orderId,
+        _id: orderDetails._id,
+        date: orderDetails.createdAt,
+        address: orderDetails.address,
+        selectedProduct:productDetails,
+        items: otherProducts
+      },
+    });
   } catch (error) {
     console.log(error);
-    
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
 module.exports = { orderPageRender, placeOrder, viewOrderDetails };

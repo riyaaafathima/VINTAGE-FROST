@@ -1,0 +1,217 @@
+<!-- 198 -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Nest Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:title" content="" />
+    <meta property="og:type" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="assets/imgs/theme/favicon.svg"
+    />
+    <!-- Template CSS -->
+    <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
+    <style>
+        .order-header {
+          background-color: #b9a289;
+          color: white;
+          padding: 20px;
+          border-radius: 4px;
+          margin-bottom: 20px;
+        }
+        .download-button {
+          background-color: white;
+          color: #333;
+          border: none;
+          padding: 8px 20px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .order-title {
+          padding: 10px 0;
+          font-size: 24px;
+          font-weight: bold;
+        }
+        .order-id {
+          color: #666;
+          margin-bottom: 15px;
+        }
+        .product-card {
+          border: 1px solid #eee;
+          border-radius: 4px;
+          padding: 20px;
+          margin-bottom: 20px;
+          background-color: white;
+        }
+        .product-image {
+          width: 200px;
+          height: 200px;
+          object-fit: cover;
+        }
+        .product-title {
+          font-size: 20px;
+          margin-bottom: 5px;
+        }
+        .product-weight {
+          color: #666;
+          margin-bottom: 15px;
+        }
+        .product-price {
+          font-size: 18px;
+          margin-bottom: 15px;
+        }
+        .product-status {
+          color: #c9b037;
+          margin-bottom: 15px;
+          font-weight: bold;
+        }
+        .cancel-button {
+          background-color: #c9a67d;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .order-summary {
+          text-align: right;
+          padding: 10px 0;
+          font-weight: bold;
+        }
+        .content-main {
+          padding: 30px;
+          background-color: #f8f9fa;
+          border-radius: 5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="screen-overlay"></div>
+      <%- include('partials/navbar-aside') %>
+    
+      <main class="main-wrap">
+        <header class="main-header navbar">
+          <div class="col-search">
+            <form class="searchform">
+              <div class="input-group">
+                <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
+                <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+              </div>
+              <datalist id="search_terms">
+                <option value="Products"></option>
+                <option value="New orders"></option>
+                <option value="Apple iphone"></option>
+                <option value="Ahmed Hassan"></option>
+              </datalist>
+            </form>
+          </div>
+          <div class="col-nav">
+            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i class="material-icons md-apps"></i></button>
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link btn-icon" href="#">
+                  <i class="material-icons md-notifications animation-shake"></i>
+                  <span class="badge rounded-pill">3</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+              </li>
+              <li class="dropdown nav-item">
+                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                  <a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English" />English</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français" />Français</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="Français" />日本語</a>
+                  <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="Français" />中国人</a>
+                </div>
+              </li>
+              <li class="dropdown nav-item">
+                <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="assets/imgs/people/avatar-2.png" alt="User" /></a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                  <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                  <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </header>
+    
+        <section class="content-main">
+          <div class="content-header">
+            <h2 class="content-title">Order Details</h2>
+          </div>
+          
+          <div class="card">
+            <div class="card-body">
+              <div class="row order-header">
+                <div class="col-md-8">
+                  <h2 style="color: white;">Shipping Information</h2>
+                  <p class="mb-1"><%=orderDetails.address.name%></p>
+                  <p class="mb-1"><%=orderDetails.address.state%>, <%=orderDetails.address.city%></p>
+                  <p class="mb-1"><%=orderDetails.address.address%>,<%=orderDetails.address.addressType%>,<%=orderDetails.address.landmark%></p>
+                  <p class="mb-1"><%=orderDetails.address.phoneNumber%></p>
+                  <p><%=orderDetails.address.pincode%>,<%=orderDetails.address.locality%></p>
+                </div>
+               
+              </div>
+    
+              <div class="text-center order-title">
+                <h2>Here's what you ordered:</h2>
+              </div>
+              <%orderDetails.products.forEach((item)=>{%>
+
+           
+              <div class="order-details">
+                <div class="order-id"> order Id: <%=orderDetails.orderId%></div>
+                
+                <div class="product-card">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <img src="/uploads/<%=item.image[0]%>" alt="Lotus biscoff cheese cake" class="product-image img-fluid">
+                    </div>
+                    <div class="col-md-9 product-info">
+                      <h3 class="product-title"><%=item.product%></h3>
+                      <p class="product-weight">KG: <%=item.kg%></p>
+                      <p class="product-price">₹777 <del><%=item.actualPrice%></del></p>
+                      <p class="product-status">Status: <%=item.status%></p>
+                      <button class="cancel-button float-end dropdown-toggle">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="order-summary">
+                  <p>Qty: <%=item.quantity%></p>
+                  <p>COST: <%=orderDetails.totalPrice%></p>
+                </div>
+              </div>
+            <%})%>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
+      <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
+      <script src="assets/js/vendors/select2.min.js"></script>
+      <script src="assets/js/vendors/perfect-scrollbar.js"></script>
+      <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
+      <!-- Main Script -->
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
