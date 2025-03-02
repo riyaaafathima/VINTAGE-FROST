@@ -2,15 +2,43 @@ const userModel = require("../../model/user/user");
 
 const userDetailsRender = async (req, res) => {
   try {
-    const allUser = await userModel.find({ isAdmin: false });
+    const { page = 1, limit = 10, search = "" } = req.query;
+    const currentPage = parseInt(page, 10) || 1;
+    const perPage = parseInt(limit, 10) || 10;
+
+    // Search logic
+    const searchQuery = {
+      isAdmin: false,
+      $or: [
+        { name: { $regex: search, $options: "i" } }, // 'i' for case-insensitive
+        { email: { $regex: search, $options: "i" } },
+      ],
+    };
+
+    const totalUsers = await userModel.countDocuments(searchQuery);
+
+    const allUser = await userModel
+      .find(searchQuery)
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 });
+
+    const totalPages = Math.ceil(totalUsers / perPage);
 
     res.render("admin/page-user-list", {
       allUser,
+      currentPage,
+      totalPages,
+      totalUsers,
+      search,
     });
   } catch (error) {
     console.log(error);
+    res.status(500).send("Error fetching users");
   }
 };
+
+
 
 const blockuser = async (req, res) => {
   try {

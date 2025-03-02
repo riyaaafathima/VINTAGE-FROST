@@ -28,10 +28,29 @@ const softDelete = async (req, res) => {
 
 const getAllproducts = async (req, res) => {
   try {
-    const allProducts = await productModel.find({});
-    res.render("admin/page-products-list", { allProducts });
-  } catch (error) {}
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 9; // Items per page
+    const skip = (page - 1) * limit;
+
+    const totalProducts = await productModel.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    const allProducts = await productModel
+      .find({})
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 }); // Optional sorting
+
+    res.render("admin/page-products-list", {
+      allProducts,
+      currentPage: page,
+      totalPages,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
+
 
 const addProduct = async (req, res) => {
   try {

@@ -184,17 +184,17 @@
                   <option>Automobile</option>
                 </select>
               </div>
-              <div class="col-md-2 col-6">
+              <!-- <div class="col-md-2 col-6">
                 <input type="date" value="02.05.2021" class="form-control" />
-              </div>
-              <div class="col-md-2 col-6">
+              </div> -->
+              <!-- <div class="col-md-2 col-6">
                 <select class="form-select">
                   <option selected>Status</option>
                   <option>Active</option>
                   <option>Disabled</option>
                   <option>Show all</option>
                 </select>
-              </div>
+              </div> -->
             </div>
           </header>
           <!-- card-header end// -->
@@ -290,25 +290,50 @@
         </div>
         <!-- card end// -->
         <div class="pagination-area mt-30 mb-50">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-start">
-              <li class="page-item active">
-                <a class="page-link" href="#">01</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">02</a></li>
-              <li class="page-item"><a class="page-link" href="#">03</a></li>
-              <li class="page-item">
-                <a class="page-link dot" href="#">...</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">16</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#"
-                  ><i class="material-icons md-chevron_right"></i
-                ></a>
-              </li>
-            </ul>
-          </nav>
+          <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-start">
+          
+                <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                      <i class="material-icons md-chevron_left"></i>
+                    </a>
+                  </li>
+                <% } else { %>
+                  <li class="page-item disabled">
+                    <span class="page-link">
+                      <i class="material-icons md-chevron_left"></i>
+                    </span>
+                  </li>
+                <% } %>
+          
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= ('0' + i).slice(-2) %></a>
+                  </li>
+                <% } %>
+          
+                <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                      <i class="material-icons md-chevron_right"></i>
+                    </a>
+                  </li>
+                <% } else { %>
+                  <li class="page-item disabled">
+                    <span class="page-link">
+                      <i class="material-icons md-chevron_right"></i>
+                    </span>
+                  </li>
+                <% } %>
+          
+              </ul>
+            </nav>
+          </div>
+          
         </div>
+        
       </section>
       <!-- content-main end// -->
       <footer class="main-footer font-xs">

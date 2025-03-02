@@ -159,7 +159,7 @@ const placeOrder = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
-  }
+  }     
 };
 const viewOrderDetails = async (req, res) => {
   try {
@@ -221,4 +221,40 @@ console.log("kmfksd",orderDetails);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-module.exports = { orderPageRender, placeOrder, viewOrderDetails };
+
+
+  const cancelProduct = async (req, res) => {
+    try {
+      const { orderId, productId } = req.params;
+  
+      const order = await orderModel.findById(orderId);
+  
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+  
+      const product = order.products.id(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: "Product not found in order" });
+      }
+  
+      // Check if already cancelled
+      if (product.status === "Cancelled") {
+        return res.status(400).json({ message: "Product is already cancelled" });
+      }
+  
+      product.status = "Cancelled";
+  
+      await order.save();
+  
+      return res.status(200).json({ message: "Product cancelled successfully" });
+  
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  };
+  
+
+module.exports = { orderPageRender, placeOrder, viewOrderDetails,cancelProduct };
