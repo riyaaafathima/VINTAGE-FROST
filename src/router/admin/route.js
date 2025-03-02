@@ -27,7 +27,8 @@ const {
 
 const{
   orderListController,
-  orderDetailsController
+  orderDetailsController,
+  updateOrderStatus
 }=require('../../controller/admin/orderController')
 
 const multer = require("multer");
@@ -71,5 +72,7 @@ router.get("/logout", logoutAdmin);
 router.get('/order-list',orderListController)
 
 router.get('/order-Details/:orderId',orderDetailsController)
+
+router.post('/update-status/:orderId/:productId',updateOrderStatus)
 
 module.exports = router;
