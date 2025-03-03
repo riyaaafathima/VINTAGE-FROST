@@ -1,5 +1,5 @@
 const UserDB = require("../model/user/user");
-
+const cartModel = require("../model/user/cart");
 const requireUser = (req, res, next) => {
   if (req.session.user) {
     next();
@@ -8,12 +8,23 @@ const requireUser = (req, res, next) => {
   }
 };
 
+const checkCart = async (req, res, next) => {
+  const userId = req.session?.user?._id;
+  const cart = await cartModel.findOne({ user: userId });
+
+  if (!cart) {
+    return res.redirect("/home-page");
+  } else {
+    next();
+  }
+};
+
 const verifyUser = (req, res, next) => {
   if (req.session?.user) {
     return res.redirect("/home-page");
   } else if (req.session?.isAdmin) {
     return res.redirect("/admin/dashboard");
-  }else {
+  } else {
     next();
   }
 };
@@ -26,18 +37,18 @@ const isBlock = async (req, res, next) => {
     if (!exitUser?.status) {
       return res.render("common/blockPage");
     } else {
-      next();  
+      next();
     }
-  } else {   
+  } else {
     next();
   }
 };
 
-const isOtpUser = (req,res,next)=>{
-  if(req.session?.otpUsersData){
-    return res.redirect('/otp-page')
-  }else{
-    next()
+const isOtpUser = (req, res, next) => {
+  if (req.session?.otpUsersData) {
+    return res.redirect("/otp-page");
+  } else {
+    next();
   }
-}
-module.exports = { requireUser, verifyUser, isBlock ,isOtpUser};
+};
+module.exports = { requireUser, verifyUser, isBlock, isOtpUser, checkCart };

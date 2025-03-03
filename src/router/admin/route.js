@@ -69,9 +69,9 @@ router.post("/add-product", upload.array("images", 3), addProductController);
 
 router.get("/logout", logoutAdmin);
 
-router.get('/order-list',orderListController)
+router.get('/order-list',preventNavigation,orderListController)
 
-router.get('/order-Details/:orderId',orderDetailsController)
+router.get('/order-Details/:orderId',preventNavigation,orderDetailsController)
 
 router.post('/update-status/:orderId/:productId',updateOrderStatus)
 

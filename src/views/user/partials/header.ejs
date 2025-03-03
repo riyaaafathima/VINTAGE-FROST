@@ -16,7 +16,6 @@
     <!-- Add this inside your <head> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="apple-touch-icon" sizes="180x180" href="card-assets/images/icons/apple-touch-icon.png">
@@ -35,11 +34,8 @@
     <link rel="stylesheet" href="card-assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="card-assets/css/style.css">
-    <!-- <link rel="stylesheet" href="css/userProfile.css"> -->
     <link rel="stylesheet" href="css/homePage.css">
 </head>
-
-
 
 <body>
     <div class="page-wrapper">
@@ -68,32 +64,6 @@
 
                                 </li>
                                
-                                <!-- <li>
-                                    <a href="#" class="sf-with-ul">Pages</a>
-
-                                    <ul>
-                                        <li>
-                                            <a href="about.html" class="sf-with-ul">About</a>
-
-                                            <ul>
-                                                <li><a href="about.html">About 01</a></li>
-                                                <li><a href="about-2.html">About 02</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="contact.html" class="sf-with-ul">Contact</a>
-
-                                            <ul>
-                                                <li><a href="contact.html">Contact 01</a></li>
-                                                <li><a href="contact-2.html">Contact 02</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="login.html">Login</a></li>
-                                        <li><a href="faq.html">FAQs</a></li>
-                                        <li><a href="404.html">Error 404</a></li>
-                                        <li><a href="coming-soon.html">Coming Soon</a></li>
-                                    </ul>
-                                </li> -->
                                 <li>
                                     <a href="blog.html">contact</a>
 
@@ -128,6 +98,8 @@
                 </div>
                         <div class="dropdown compare-dropdown">
                           <% if (user) { %>  
+
+
                           <div class="dropdown">
                             <i
                               class="fas fa-person dropdown-toggle"
@@ -138,45 +110,37 @@
                               <br>
                               <a id="logout" href="/logout">Logout</a>
                             </div>
+                            
+                          </div>
+                          <div class="wishlist">
+                            <a href="/whishlist-page">
+                                <i class="fas fa-heart dropdown-toggle " style="color: black;"></i>
+                            </a>
+                                
+                        </div>
+
+
+                          <div class="dropdown cart-dropdown">
+                            <a href="/cart" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
+                                <i class="icon-shopping-cart"></i>
+                                <span class="cart-count" id="cartCount">0</span>
+                            </a>
+                           
+                            
+                          <script>
+                            var cartCount = localStorage.getItem("cart-count") || 0;
+                            document.getElementById("cartCount").textContent = cartCount;
+                          </script>
                           </div>
                           <% } else { %>
                           <a href="/login">
                             <i class="fas fa-sign-in-alt"> Login</i>
                           </a>
                           <% } %>
-
-                            <!-- <div class="dropdown-menu dropdown-menu-right">
-                                <ul class="compare-products">
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class=""></i></a>
-                                        <h4 class="compare-product-title"><a href="/logout">Logout</a></h4>
-                                    </li>
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class=""></i></a>
-                                        <h4 class="compare-product-title"><a href="/user-profile">user profile</a></h4>
-                                    </li>
-                                </ul>
-
-                                <div class="compare-actions">
-                                 
-                                </div>
-                            </div> -->
                         </div>
+                                 
 
-                        <div class="dropdown cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                                <span class="cart-count" id="cartCount">0</span>
-                            </a>
-
-                            <!-- <a href="/cart" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
-                              <i class="icon-shopping-cart"></i>
-                              <span class="cart-count" id="cartCount">0</span>
-                          </a> -->
-                          <script>
-                            var cartCount = localStorage.getItem("cart-count") || 0;
-                            document.getElementById("cartCount").textContent = cartCount;
-                          </script>
-                          </div>
+                                 
+           
 
         </header><!-- End .header -->

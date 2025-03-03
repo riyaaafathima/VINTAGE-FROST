@@ -6,7 +6,7 @@ const cart_btn_el = document.querySelector("#addcart-btn");
 const productId_el = document.querySelector("#productname");
 const instruction_el = document.querySelector("#instruction-el");
 const message_el = document.querySelector("#message-el");
-
+const inStock = document.querySelector("#stock")
 // Toast functions
 const showErrorToast = (message) => {
   toastr.options = {
@@ -76,11 +76,16 @@ cart_btn_el.addEventListener("click", async (e) => {
     return;
   }
 
+  if(inStock.innerHTML.toUpperCase() == "OUT OF STOCK"){
+    showErrorToast("Out of stock");
+    return;
+  }
+
   const productId = productId_el.getAttribute("data-id");
   console.log(productId);
 
   const productDetails = {
-    price: price,
+    price: price,    
     kg: kg,
     eggPreference: eggValue,
     productId: productId,

@@ -32,6 +32,7 @@ document.querySelector("#add-Address-button")
 
 save_address_btn.addEventListener("click", async function (e) {
   e.preventDefault();
+  
   const createErrElAfter = (element, err) => {
     if (element?.nextElementSibling?.id == "erro_el") {
       element.nextElementSibling.remove();
@@ -41,6 +42,13 @@ save_address_btn.addEventListener("click", async function (e) {
     new_el.style.color = "red";
     new_el.innerHTML = err;
     element.after(new_el);
+
+    
+    element.addEventListener('focus', () => {
+      if (element.nextElementSibling?.id == "erro_el") {
+        element.nextElementSibling.remove();
+      }
+    });
   };
 
   let isValid = true;
@@ -179,6 +187,8 @@ const editBtns = document.querySelectorAll(".edit-button");
 
 editBtns.forEach((editbtn) => {
   editbtn.addEventListener("click", async (e) => {
+
+
     e.preventDefault();
     let index = editbtn.getAttribute("data-index");
     let id = editbtn.getAttribute("data-id");
@@ -220,6 +230,113 @@ editBtns.forEach((editbtn) => {
 });
 
 save_EditAddress_Btn.addEventListener("click", async (e) => {
+  const createErrElAfter = (element, err) => {
+    if (element?.nextElementSibling?.id == "erro_el") {
+      element.nextElementSibling.remove();
+    }
+    const new_el = document.createElement("p");
+    new_el.setAttribute("id", "erro_el");
+    new_el.style.color = "red";
+    new_el.innerHTML = err;
+    element.after(new_el);
+
+    element.addEventListener('focus', () => {
+      if (element.nextElementSibling?.id == "erro_el") {
+        element.nextElementSibling.remove();
+      }
+    });
+
+  };
+
+  let isValid = true;
+
+  if (edit_place_el?.value == "") {
+    createErrElAfter(edit_place_el, "this field can not be empty");
+    isValid = false;
+  }
+
+  if (edit_place_el?.value.length >= 50) {
+    createErrElAfter(edit_place_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (edit_state_el?.value == "") {
+    createErrElAfter(edit_state_el, "this field can not be empty");
+    isValid = false;
+  }
+
+  if (edit_state_el?.value.length >= 20) {
+    createErrElAfter(edit_state_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (edit_phone_el?.value == "") {
+    createErrElAfter(edit_phone_el, "this field can not be empty");
+    isValid = false;
+  }
+
+  if (edit_phone_el?.value.length >= 11) {
+    createErrElAfter(edit_phone_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(edit_phone_el.value)) {
+    createErrElAfter(edit_phone_el, "product name cannot be special char");
+    isValid = false;
+  }
+  if (edit_landMark_el?.value == "") {
+    createErrElAfter(edit_landMark_el, "this field can not be empty");
+    isValid = false;
+  }
+
+  if (edit_landMark_el?.value.length >= 50) {
+    createErrElAfter(edit_landMark_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (edit_address_el?.value == "") {
+    createErrElAfter(edit_address_el, "this field can not be empty");
+    isValid = false;
+  }
+  if (edit_pincode_el?.value.length >= 10) {
+    createErrElAfter(edit_pincode_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (edit_pincode_el?.value == "") {
+    createErrElAfter(edit_pincode_el, "this field can not be empty");
+    isValid = false;
+  }
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(edit_pincode_el.value)) {
+    createErrElAfter(edit_pincode_el, "this field cannot be special char");
+    isValid = false;
+  }
+  if (edit_locality_el?.value.length >= 10) {
+    createErrElAfter(edit_locality_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (/\d/.test(edit_locality_el.value)) {
+    //d4 digit
+    createErrElAfter(edit_locality_el, "this field cannot be numbers");
+    isValid = false;
+  }
+  if (edit_locality_el?.value == "") {
+    createErrElAfter(edit_locality_el, "this field can not be empty");
+    isValid = false;
+  }
+  if (edit_city_el?.value.length >= 10) {
+    createErrElAfter(edit_locality_el, "this field can not be longer than 20");
+    isValid = false;
+  }
+  if (/\d/.test(edit_city_el.value)) {
+    //d4 digit
+    createErrElAfter(edit_city_el, "this field cannot be numbers");
+    isValid = false;
+  }
+  if (edit_city_el?.value == "") {
+    createErrElAfter(edit_city_el, "this field can not be empty");
+    isValid = false;
+  }
+
+  if (!isValid) {
+    return;
+  }
+
   const addressDetails = {
     place: edit_place_el.value,
     state: edit_state_el.value,
@@ -232,6 +349,9 @@ save_EditAddress_Btn.addEventListener("click", async (e) => {
     city: edit_city_el.value,
     id: addressId.value
   };
+
+
+
   try {
     const response = await fetch("/edit-address", {
       method: "PUT",
@@ -335,4 +455,7 @@ function removeAddressFromDOM(id) {
     }
   }
 }
+
+
+
 

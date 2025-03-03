@@ -1,7 +1,7 @@
 const userModel = require("../../model/user/user");
 const productModel = require("../../model/admin/product");
 const categoryModel = require("../../model/admin/category");
-const cartModel=require('../../model/user/cart');
+const cartModel = require("../../model/user/cart");
 const { default: mongoose } = require("mongoose");
 
 const homePageRender = async (req, res) => {
@@ -102,19 +102,17 @@ const productPageRender = async (req, res) => {
 const productView = async (req, res) => {
   try {
     const { id } = req.params;
-    
 
     if (!mongoose.isValidObjectId(id)) {
       return res.render("common/404");
     }
 
     const product = await productModel
-      .findOne({ _id: id, isActive: true  })
+      .findOne({ _id: id, isActive: true })
       .populate({
         path: "category",
         match: { isActive: true }, // Only populate active categories
       });
-    console.log("dfyghu", product);
 
     if (!product || !product.category) {
       return res.render("common/404");
@@ -126,16 +124,8 @@ const productView = async (req, res) => {
       _id: { $ne: id }, // Exclude the current product by its ID
     });
 
-
-    const cart= await cartModel.find({
-      
-    })
-
-   
-
-    console.log(relatedProducts);
-
-    res.render("user/singleProduct", { product, relatedProducts,user:true });
+    const cart = await cartModel.find({});
+    res.render("user/singleProduct", { product, relatedProducts, user: true });
   } catch (error) {
     console.log(error);
   }
@@ -146,3 +136,4 @@ module.exports = {
   productPageRender,
   productView,
 };
+    

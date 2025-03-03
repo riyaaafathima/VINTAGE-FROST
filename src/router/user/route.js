@@ -20,6 +20,7 @@ const {
   isBlock,
   isOtpUser,
   requireUser,
+  checkCart,
 } = require("../../middleware/requireUser");
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
@@ -27,7 +28,8 @@ const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, e
 const{orderPageRender, placeOrder, viewOrderDetails, cancelProduct}=require('../../controller/user/orderController')
 const{checkoutRender, checkoutAddressRender}=require('../../controller/user/checkOutController')
 
-const {userUpload}=require('../../config/multer/multer')
+const {userUpload}=require('../../config/multer/multer');
+const { whishlistPageRender, addToWhishList } = require("../../controller/user/whishListController");
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -69,15 +71,18 @@ router.delete('/delete-address/:id',deleteAddress)
 
 router.get('/order',requireUser,orderPageRender)
 
-router.get('/checkout',checkoutRender)
+router.get('/checkout',checkCart,requireUser,checkoutRender)
 
-router.route('/recent-password').get(recentPasswordPage).post(updatePassword)
+router.route('/recent-password').get(requireUser,recentPasswordPage).post(updatePassword)
 
 
 router.post('/place-order',placeOrder)
-router.get('/view-orderDetails/:orderId/:productId', viewOrderDetails);
+router.get('/view-orderDetails/:orderId/:productId',requireUser, viewOrderDetails);
 router.patch('/order/cancel/:orderId/:productId', cancelProduct);
 
 
+router.get('/whishlist-page',requireUser,whishlistPageRender)
+router.get('/add-wishlist',addToWhishList)
+
 module.exports = router;
-   
+    
