@@ -44,13 +44,14 @@ const addToCart = async (req, res) => {
             quantity: 1,
           },
         ],
-        subTotal:price,
+        subTotal: price,
         total: price,
       });
 
       await cart.save();
-      return res.status(200).json({message:"items added",cartCount:cart.items.length});
-
+      return res
+        .status(200)
+        .json({ message: "items added", cartCount: cart.items.length });
     } else {
       const oldItem = isCartAvailable.items.find(
         (item) => item.kg == kg && item.product.toString() === productId
@@ -67,10 +68,15 @@ const addToCart = async (req, res) => {
 
         oldItem.quantity++;
         isCartAvailable.total += parseInt(price);
-        isCartAvailable.subTotal +=parseInt(oldItem.actualPrice)
+        isCartAvailable.subTotal += parseInt(oldItem.actualPrice);
         await isCartAvailable.save();
 
-        return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
+        return res
+          .status(200)
+          .json({
+            message: "items added",
+            cartCount: isCartAvailable.items.length,
+          });
       }
 
       const item = {
@@ -89,7 +95,12 @@ const addToCart = async (req, res) => {
       isCartAvailable.subTotal += parseInt(price);
 
       await isCartAvailable.save();
-      return res.status(200).json({message:"items added",cartCount:isCartAvailable.items.length});
+      return res
+        .status(200)
+        .json({
+          message: "items added",
+          cartCount: isCartAvailable.items.length,
+        });
     }
   } catch (error) {
     console.log(error);
@@ -102,24 +113,36 @@ const renderCart = async (req, res) => {
     if (!userId) {
       return res.redirect("/login");
     }
-
     const cart = await cartModel.findOne({ user: userId }).populate({
       path: "items.product",
       model: "products",
       match: { isActive: true },
     });
-
-    if (!cart) {
-      return res.render("user/cart", { cart: null,user: true,packagePrice:0 });
-    }
-    const packagePrice=cart.items.reduce((acc,item)=>
-      acc+= item.quantity*20,0)
-    console.log("caart",cart.items);
     
-    res.render("user/cart", { cart, user: true,packagePrice });
+    console.log("after", cart);
+    
+    const cartItem = cart.items.filter((item) => item.product !== null);
+    cart.items = cartItem
+    console.log("before", cart);
+    
+
+    if (!cart || cart.items.length == 0) {
+      return res.render("user/cart", {
+        cart: null,
+        user: true,
+        packagePrice: 0,
+      });
+    }
+    
+    const packagePrice = cart.items.reduce(
+      (acc, item) => (acc += item.quantity * 20),
+      0
+    );
+
+    res.render("user/cart", { cart, user: true, packagePrice });
   } catch (error) {
     console.error(error);
-  }    
+  }
 };
 
 const updatesCartQuantity = async (req, res) => {
@@ -157,7 +180,10 @@ const updatesCartQuantity = async (req, res) => {
     item.price = quantity * item.actualPrice;
 
     cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
-    cart.subTotal = cart.items.reduce((sum, i) => sum + i.actualPrice * i.quantity, 0);
+    cart.subTotal = cart.items.reduce(
+      (sum, i) => sum + i.actualPrice * i.quantity,
+      0
+    );
     await cart.save();
 
     res.status(200).json({ success: true, message: "Quantity updated", item });
@@ -193,11 +219,20 @@ const removeCart = async (req, res) => {
     //   0
     // );
     cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
-    cart.subTotal = cart.items.reduce((sum, i) => sum + i.actualPrice * i.quantity, 0);
+    cart.subTotal = cart.items.reduce(
+      (sum, i) => sum + i.actualPrice * i.quantity,
+      0
+    );
 
     await cart.save();
-     
-    return res.status(200).json({ success: true, message: "Product removed",cartCount: cart.items.length});
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Product removed",
+        cartCount: cart.items.length,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Error" });
@@ -218,9 +253,11 @@ const updateInstruction = async (req, res) => {
     const item = cart.items.find(
       (item) => item.kg == kg && item.product.toString() == productId
     );
+console.log("intrr",instruction);
 
     item.instruction = instruction;
     await cart.save();
+    console.log("edit inster  ",cart);
 
     return res.status(200).json({ message: "save changes" });
   } catch (error) {
@@ -232,7 +269,7 @@ const updateInstruction = async (req, res) => {
 const updateMessage = async (req, res) => {
   try {
     const { message, productId, kg } = req.body;
-console.log( message, productId, kg);
+    console.log(message, productId, kg);
 
     const userId = req.session?.user?._id;
 
@@ -243,12 +280,14 @@ console.log( message, productId, kg);
     }
 
     const item = cart.items.find(
-      (item) =>    item.product.toString() == productId  && item.kg == kg 
+      (item) => item.product.toString() == productId && item.kg == kg
     );
 
     item.message = message;
     await cart.save();
-    return res.status(200).json({message:'save changes'})
+    console.log("edit messagge",cart);
+    
+    return res.status(200).json({ message: "save changes" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "internal server error " });
@@ -261,5 +300,5 @@ module.exports = {
   updatesCartQuantity,
   removeCart,
   updateInstruction,
-  updateMessage
+  updateMessage,
 };

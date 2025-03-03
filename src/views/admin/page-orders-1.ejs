@@ -14,9 +14,28 @@
         <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg" />
         <!-- Template CSS -->
         <link href="assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+        <style>
+            .pagination {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+.pagination a {
+  padding: 5px 10px;
+  background: #ddd;
+  text-decoration: none;
+  border-radius: 4px;
+}
+.pagination a.active {
+  background: #333;
+  color: #fff;
+}
+
+        </style>
     </head>
 
     <body>
+
         <div class="screen-overlay"></div>
         <%- include('partials/navbar-aside') %>
        
@@ -161,18 +180,22 @@
                 </div>
                 <!-- card end// -->
                 <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <div class="pagination">
+                        <% if (currentPage > 1) { %>
+                          <a href="?page=<%= currentPage - 1 %>">Previous</a>
+                        <% } %>
+                      
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                          <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>">
+                            <%= i %>
+                          </a>
+                        <% } %>
+                      
+                        <% if (currentPage < totalPages) { %>
+                          <a href="?page=<%= currentPage + 1 %>">Next</a>
+                        <% } %>
+                      </div>
+                      
                 </div>
             </section>
             <!-- content-main end// -->

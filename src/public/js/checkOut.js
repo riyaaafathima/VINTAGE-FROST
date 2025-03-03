@@ -2,6 +2,15 @@ const remove_btns_el = document.querySelectorAll(".btnRemove");
 
 const placeorder_btn_el = document.querySelector("#placeorder-btn");
 
+const showErrorToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.error(message);
+};
+
 remove_btns_el.forEach((btn) => {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -78,21 +87,23 @@ placeorder_btn_el.addEventListener("click", async (e) => {
     'input[name="deliveryAddress"]:checked'
   );
 
-  if (selectedDeliveryAddress) {
-    alert(`Selected delivery Address: ${selectedDeliveryAddress.value}`);
-  } else {
-    alert("Please select a payment method before placing the order.");
-  }
+  // if (selectedDeliveryAddress) {
+  //   alert(`Selected delivery Address: ${selectedDeliveryAddress.value}`);
+  // } else {
+  //   alert("Please select a payment method before placing the order.");
+  // }
 
 const selectedPaymentMethod = document.querySelector(
     'input[name="paymentMethod"]:checked'
   );
 
   if (!selectedPaymentMethod) {
-    alert(`Selected Payment Method`);
+    showErrorToast("please select a payment Method");
+    return
   }
-  if (!selectedDeliveryAddress) {
-    alert(`Selected address `);
+  if (!selectedDeliveryAddress) {    
+    showErrorToast("please select a address");
+    return
   }
 
   const response = await fetch("/place-order", {
@@ -106,6 +117,8 @@ const selectedPaymentMethod = document.querySelector(
     }),
   });
 
+const data = await response.json()
+console.log(data);
 
 if (response.ok) {
   Swal.fire({
@@ -114,7 +127,7 @@ if (response.ok) {
     draggable: true
   }).then(()=>{
     localStorage.setItem('cart-count',0)
-    window.location.href='/view-orderDetails'
+    window.location.href=`/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`
   })    
 }else{
     const data= await response.json()

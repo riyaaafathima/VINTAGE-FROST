@@ -1,5 +1,16 @@
 
 <%- include('partials/header.ejs') %>
+
+<style>
+  #price-slider .noUi-connect {
+  background-color: #c96;
+}
+
+#price-slider .noUi-handle {
+  border: none;
+  background-color: #ffffff;
+}
+</style>
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
         		<div class="container">
@@ -394,13 +405,13 @@
                     <div class="collapse show" id="widget-5">
                       <div class="widget-body">
                         <div class="filter-price">
-                          <div class="filter-price-text">
+                          <div class="filter-price-text" >
                             Price Range:
-                            <span id="filter-price-range"></span>
+                            <span id="filter-price-range" ></span>
                           </div>
                           <!-- End .filter-price-text -->
 
-                          <div id="price-slider"></div>
+                          <div id="price-slider" ></div>
                           <!-- End #price-slider -->
                         </div>
                         <!-- End .filter-price -->

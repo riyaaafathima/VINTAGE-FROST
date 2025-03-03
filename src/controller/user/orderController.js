@@ -153,8 +153,6 @@ const placeOrder = async (req, res) => {
       await userCart.deleteOne();
     }
 
-    console.log("bhhjgj");
-
     res.status(200).json({ order: order });
   } catch (error) {
     console.log(error);
@@ -201,12 +199,12 @@ console.log("kmfksd",orderDetails);
       selectedProduct:productDetails,
       items: otherProducts
     };
-    console.log("=========================");
+    console.log("=========================",productDetails);
     
     console.log("order",order);
 
     res.render("user/userOrder", {
-      user: userDetails, // Pass the complete user object
+      user: userDetails, 
       order :{
         orderId:orderDetails.orderId,
         _id: orderDetails._id,
@@ -239,7 +237,6 @@ console.log("kmfksd",orderDetails);
         return res.status(404).json({ message: "Product not found in order" });
       }
   
-      // Check if already cancelled
       if (product.status === "Cancelled") {
         return res.status(400).json({ message: "Product is already cancelled" });
       }
