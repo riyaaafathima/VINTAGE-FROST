@@ -29,7 +29,7 @@ const{orderPageRender, placeOrder, viewOrderDetails, cancelProduct}=require('../
 const{checkoutRender, checkoutAddressRender}=require('../../controller/user/checkOutController')
 
 const {userUpload}=require('../../config/multer/multer');
-const { whishlistPageRender, addToWhishList } = require("../../controller/user/whishListController");
+const { whishlistPageRender, addToWhishList, getWishlist, removeWishList } = require("../../controller/user/whishListController");
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -63,7 +63,7 @@ router.get('/user-profile',requireUser,userProfileRender)
 router.post('/edit-profile',userUpload.single("image"),editUserProfile)
 
 
-router.get('/user-address',requireUser,userAddressRender)
+router.get('/user-address',requireUser,userAddressRender)       
 router.post('/save-address',getUserAddress)
 router.put('/edit-address',editAddress)
 router.delete('/delete-address/:id',deleteAddress)
@@ -82,7 +82,8 @@ router.patch('/order/cancel/:orderId/:productId', cancelProduct);
 
 
 router.get('/whishlist-page',requireUser,whishlistPageRender)
-router.get('/add-wishlist',addToWhishList)
-
+router.post('/add-wishlist',addToWhishList)
+router.get('/wishlist',getWishlist)
+router.post('/wishlist-remove',removeWishList)
 module.exports = router;
     

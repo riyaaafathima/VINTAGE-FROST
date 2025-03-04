@@ -1,11 +1,12 @@
+const { json } = require("express");
 const wishlistModel = require("../../model/user/wishlist");
 
 const whishlistPageRender = (req, res) => {
   try {
-    res.render("user/wishlist",{user:true});
+   return res.render("user/wishlist",{user:true});
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server Error");
+   return res.status(500).send("Internal Server Error");
   }
 };      
 
@@ -13,23 +14,81 @@ const addToWhishList=async(req,res)=>{
     try {
         const userId=req.session?.user?._id
         const{productId}=req.body       
-        console.log(productId,'product misdndns');
-        
-        const wishlist=await wishlistModel.findOne({user:userId})     
+         console.log(userId,productId);
+         
+        let wishlist=await wishlistModel.findOne({user:userId})     
          
          if(!wishlist){
              wishlist=new wishlistModel({
                  user:userId, 
-                 products:[productId]
-                })
+                 products:[productId] 
+                })      
+            }else{
+              if(!wishlist.products.includes(productId)){
+                   wishlist.products.push(productId);
+              }
             }
    
        await wishlist.save()
-       res.status(200).json({user:true,wishlist})
+       console.log(wishlist);
+       
+      return res.status(200).json({user:true,wishlist})
     } catch (error) {     
         console.log(error);
-        res.status(500).json({error})
-    }
+       return res.status(500).json({error})
+    } 
+}     
+
+const getWishlist=async(req,res)=>{
+try {
+  const userId=req.session?.user?._id
+
+  const wishlist=await wishlistModel.findOne({user:userId}).populate('products')
+    
+ 
+  if(!wishlist){
+    return res.status(401).json({message:'no wishlist'})   
+  }
+ console.log(wishlist);
+ 
+ return res.render("user/wishlist",{user:true,wishlist:wishlist});
+} catch (error) {
+  console.log(error);
+  return res.status(500).json({message:error.message})
+}
 }
 
-module.exports = { whishlistPageRender,addToWhishList };
+
+
+const removeWishList=async(req,res)=>{
+  try {
+    const userId=req.session?.user?._id
+    const{ productId}=req.body
+    console.log(productId);
+    
+    const wishlist=await wishlistModel.findOne({user:userId})
+
+
+    if(!wishlist){
+      return res.status(400).json({message:'no wishlist'})
+    }
+    wishlist.products=wishlist.products.filter((id)=>id)
+
+    wishlist.products=wishlist.products.filter(
+      (id)=>
+        id.toString()!==productId.toString()
+    );
+    await wishlist.save()
+
+    return res.status(200).json({message:'product removed'})
+  } catch (error) {
+    console.log(error);    
+    return res.status(500).json({error})
+    
+  }
+}            
+
+
+
+
+module.exports = { whishlistPageRender,addToWhishList,getWishlist,removeWishList };

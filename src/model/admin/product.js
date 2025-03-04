@@ -27,6 +27,13 @@
       type:Number,
       required:true
       },
+      numberOfReviews: {
+         type: Number
+         },
+      rating: { 
+        type: Number
+       },
+  
       
       category: {
         type: mongoose.Schema.Types.ObjectId,

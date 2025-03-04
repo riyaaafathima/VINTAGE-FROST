@@ -12,14 +12,25 @@ const homePageRender = async (req, res) => {
 
     const allProducts = Products.filter((product) => product.category);
 
-    let user = null;
+    const latestProducts = await productModel
+      .find({ isActive: true })
+      .populate({ path: "category", match: { isActive: true } })
+      .sort({ createdAt: -1 })
+      .limit(8);
+
+      const topRated= await productModel.find({isActive:true})
+      .sort({ rating: -1 }) 
+      .limit(10); 
+
+    let user = null;   
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
       user = user.username;
-    }
+    }         
 
-    res.render("user/homepage", { allProducts, user });
+
+    res.render("user/homepage", { allProducts, user,latestProducts,topRated });
   } catch (error) {
     console.log(error);
   }
@@ -124,8 +135,14 @@ const productView = async (req, res) => {
       _id: { $ne: id }, // Exclude the current product by its ID
     });
 
-    const cart = await cartModel.find({});
-    res.render("user/singleProduct", { product, relatedProducts, user: true });
+    let user = null;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+    }
+
+    res.render("user/singleProduct", { product, relatedProducts, user });
   } catch (error) {
     console.log(error);
   }
@@ -136,4 +153,3 @@ module.exports = {
   productPageRender,
   productView,
 };
-    

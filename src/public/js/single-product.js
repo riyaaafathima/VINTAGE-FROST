@@ -122,3 +122,39 @@ cart_btn_el.addEventListener("click", async (e) => {
     console.log(error);
   }
 });
+
+
+
+
+const wishlist_btn_el=document.querySelector('.btn-wishlist')
+
+wishlist_btn_el.addEventListener('click',async(e)=>{
+    e.preventDefault()
+
+    console.log("kjfladsjl");
+    
+    // const productId= e.target.dataset.data-product-id
+    const productId= wishlist_btn_el.getAttribute('data-product-id')      
+    console.log(productId);
+    
+
+
+    try {
+        const response= await fetch ('/add-wishlist',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({productId})
+        })   
+        if(response.ok){
+   alert('added to wishlist')
+        }
+                 
+    } catch (error) {
+        console.log(error);
+        
+    }
+
+
+})
