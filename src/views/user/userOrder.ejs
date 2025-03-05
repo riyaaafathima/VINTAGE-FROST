@@ -297,7 +297,9 @@
                                             <button 
                                               class="btn btn-cancel"
                                               data-order-id="<%= order._id %>"
-                                              data-product-id="<%= order.selectedProduct._id %>"
+                                              data-product-id="<%= order.selectedProduct.productId %>"
+                                              data-id="<%= order.selectedProduct._id %>"
+
                                             >
                                               Cancel
                                             </button>
@@ -420,6 +422,7 @@ if (cancel_btn_el) {
 
     const orderId = cancel_btn_el.getAttribute('data-order-id');
     const productId = cancel_btn_el.getAttribute('data-product-id');
+    const itemId = cancel_btn_el.getAttribute('data-id');
 
     Swal.fire({
       title: "Are you sure?",
@@ -432,7 +435,7 @@ if (cancel_btn_el) {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`/order/cancel/${orderId}/${productId}`, {
+          const response = await fetch(`/order/cancel/${orderId}/${productId}/${itemId}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

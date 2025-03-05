@@ -8,8 +8,6 @@ const instruction_el = document.querySelectorAll("#instruction-Btn");
 
 const mssg_el = document.querySelectorAll("#mssg-btn");
 
-
-
 const showErrorToast = (message) => {
   toastr.options = {
     positionClass: "toast-top-center",
@@ -86,11 +84,11 @@ document.querySelectorAll(".quantity-input").forEach((input) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (!cart || cart.items.length == 0) {
-    localStorage.setItem("cart-count", 0);
-  } else {
-    localStorage.setItem("cart-count", cart.items.length);
-  }
+  // if (!cart || cart.items.length == 0) {
+  //   localStorage.setItem("cart-count", 0);
+  // } else {
+  //   localStorage.setItem("cart-count", cart.items.length);
+  // }
   const remove_btn_el = document.querySelectorAll(".btn-remove");
 
   remove_btn_el.forEach((btn) => {
@@ -115,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (data.success) {
           window.location.reload();
-          localStorage.setItem("cart-count", data.cartCount);
+          // localStorage.setItem("cart-count", data.cartCount);
         } else {
           showWarningToast("Failed to remove product");
         }
@@ -245,14 +243,3 @@ save_btn_el.addEventListener("click", async (e) => {
   }
 });
 
-// checkout_btn_el.addEventListener('click',async(e)=>{
-//   e.preventDefault()
-
-// const response= await fetch('/checkout',{
-//   method:'GET',
-//   headers:{
-//     'Content-Type':'application/json'
-//   }
-// })
-
-// })

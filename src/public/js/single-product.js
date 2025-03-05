@@ -1,4 +1,3 @@
-
 const price_el = document.querySelector(".product-price");
 const kg_el = document.querySelector("#kg");
 const stock_el = document.querySelector("#stock");
@@ -16,6 +15,8 @@ const showErrorToast = (message) => {
   };
   toastr.error(message);
 };
+
+
 
 const showSuccessToast = (message) => {
   toastr.options = {
@@ -113,7 +114,7 @@ cart_btn_el.addEventListener("click", async (e) => {
         timer: 1500,
       }).then(async() => {
       const data=await response.json()
-        localStorage.setItem("cart-count",data.cartCount)
+        // localStorage.setItem("cart-count",data.cartCount)
         
         window.location.href = "/cart";
       });
@@ -126,35 +127,67 @@ cart_btn_el.addEventListener("click", async (e) => {
 
 
 
-const wishlist_btn_el=document.querySelector('.btn-wishlist')
+const wishlist_btn_el = document.querySelector('.btn-wishlist');
+const productId = wishlist_btn_el.getAttribute('data-product-id');
 
-wishlist_btn_el.addEventListener('click',async(e)=>{
-    e.preventDefault()
+if (wishlist?.products?.includes(productId)) {
+  wishlist_btn_el.classList.add("active");
+  wishlist_btn_el.querySelector("span").textContent = "Added to Wishlist";
+}
 
-    console.log("kjfladsjl");
-    
-    // const productId= e.target.dataset.data-product-id
-    const productId= wishlist_btn_el.getAttribute('data-product-id')      
-    console.log(productId);
-    
+wishlist_btn_el.addEventListener('click', async (e) => {
+  e.preventDefault();
+  console.log("wishlish",wishlist);
 
+  const wishlistButton = e.currentTarget;
+  wishlistButton.classList.toggle("active");
+
+  // let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+  if (wishlistButton.classList.contains("active")) {
+  
+    wishlist_btn_el.querySelector("span").textContent = "Added to Wishlist";
 
     try {
-        const response= await fetch ('/add-wishlist',{
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({productId})
-        })   
-        if(response.ok){
-   alert('added to wishlist')
-        }
-                 
-    } catch (error) {
-        console.log(error);
+      const response = await fetch('/add-wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId })
+      });
+      if (response.ok) {
+        showSuccessToast('Added to wishlist');
         
+      }
+    } catch (error) {
+      console.log(error);
     }
 
+  } else {
+   
+    wishlist_btn_el.querySelector("span").textContent = "Add to Wishlist";
+    try {
+      const response= await fetch('/wishlist-remove',{
+       method:'POST',
+       headers:{
+           'Content-Type':'application/json'
+       },
+       body:JSON.stringify({productId})
+      })
+      if (response.ok) {
+       showErrorToast('removed successfully');
+       wishlist = wishlist.filter(id => id !== productId);
+       window.location.reload()
+       
+      }else{
+       showErrorToast('cannot remove')
+      }
+   } catch (error) {
+       console.log(error);
+       
+   }
+  }
 
-})
+});
+

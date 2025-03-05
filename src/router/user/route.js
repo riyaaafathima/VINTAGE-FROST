@@ -78,7 +78,7 @@ router.route('/recent-password').get(requireUser,recentPasswordPage).post(update
 
 router.post('/place-order',placeOrder)
 router.get('/view-orderDetails/:orderId/:productId',requireUser, viewOrderDetails);
-router.patch('/order/cancel/:orderId/:productId', cancelProduct);
+router.patch('/order/cancel/:orderId/:productId/:itemId', cancelProduct);
 
 
 router.get('/whishlist-page',requireUser,whishlistPageRender)

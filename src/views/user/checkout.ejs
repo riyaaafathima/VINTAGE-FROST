@@ -7,216 +7,85 @@
     <link rel="stylesheet" href="card-assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <style>
-        :root {
-            --custom-pink: #c96;
-            --field-bg: #F9F9F9;
-        }
-        
-        .breadcrumb-item + .breadcrumb-item::before {
-            content: "/"
-        }
-        
-        .form-control, .form-select {
-            background-color: var(--field-bg);
-            border: 1px solid #dee2e6;
-        }
-        
-        .btn-custom {
-            background-color: var(--custom-pink);
-            color: white;
-            border: none;
-        }
-        
-        .btn-custom:hover {
-            background-color: #b85;
-            color: white;
-        }
-        
-        .delivery-radio {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-           /* Custom CSS for the modal */
-    #addAddressModal .modal-dialog {
-      max-width: 600px;
-    }
-    
-    #addAddressModal .modal-body {
-      padding: 20px;
-    }
-    
-    #addAddressModal .form-group {
-      margin-bottom: 15px;
-    }
-    
-        /* Custom CSS for the modal */
-        #editAddressModal .modal-dialog {
-      max-width: 600px;
-    }
-    
-    #editAddressModal .modal-body {
-      padding: 20px;
-    }
-    
-    #editAddressModal .form-group {
-      margin-bottom: 15px;
-    }
-    
-    .card-dashboard{
-        margin-top: 40px;
-    
-    }
-    #add-Address-button{
-        border: none;
-        border-radius: 5px;
-        padding: 10px 20px;
-    }
-    
-    #add-Address-button:hover{
-        background-color: rgb(173, 145, 112);
-        color: antiquewhite;
-    }   
-
-    </style>
-    
-     
-    
    
 </head>
-
-
 <body>
-    <header class="header">
-           
-        <div class="header-middle sticky-header">
-            <div class="container">
-                <div class="header-left">
-                    <button class="mobile-menu-toggler">
-                        <span class="sr-only">Toggle mobile menu</span>
-                        <i class="icon-bars"></i>
-                    </button>
+  <%- include('partials/header.ejs') %>
+  <style>
+    :root {
+        --custom-pink: #c96;
+        --field-bg: #F9F9F9;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "/"
+    }
+    
+    .form-control, .form-select {
+        background-color: var(--field-bg);
+        border: 1px solid #dee2e6;
+    }
+    
+    .btn-custom {
+        background-color: var(--custom-pink);
+        color: white;
+        border: none;
+    }
+    
+    .btn-custom:hover {
+        background-color: #b85;
+        color: white;
+    }
+    
+    .delivery-radio {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
-                    <a href="index.html" class="logo">
-                        <img src="card-assets/images/logo.png" alt="Molla Logo" width="105" height="25">
-                    </a>
+       /* Custom CSS for the modal */
+#addAddressModal .modal-dialog {
+  max-width: 600px;
+}
 
-                    <nav class="main-nav">
-                        <ul class="menu sf-arrows">
-                            <li class="megamenu-container active">
-                                <a href="/home-page">Home</a>
+#addAddressModal .modal-body {
+  padding: 20px;
+}
 
-                            </li>
-                            <li>
-                                <a href="/all-products">Shop</a>
+#addAddressModal .form-group {
+  margin-bottom: 15px;
+}
 
-                            </li>
-                           
-                            <!-- <li>
-                                <a href="#" class="sf-with-ul">Pages</a>
+    /* Custom CSS for the modal */
+    #editAddressModal .modal-dialog {
+  max-width: 600px;
+}
 
-                                <ul>
-                                    <li>
-                                        <a href="about.html" class="sf-with-ul">About</a>
+#editAddressModal .modal-body {
+  padding: 20px;
+}
 
-                                        <ul>
-                                            <li><a href="about.html">About 01</a></li>
-                                            <li><a href="about-2.html">About 02</a></li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="contact.html" class="sf-with-ul">Contact</a>
+#editAddressModal .form-group {
+  margin-bottom: 15px;
+}
 
-                                        <ul>
-                                            <li><a href="contact.html">Contact 01</a></li>
-                                            <li><a href="contact-2.html">Contact 02</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="login.html">Login</a></li>
-                                    <li><a href="faq.html">FAQs</a></li>
-                                    <li><a href="404.html">Error 404</a></li>
-                                    <li><a href="coming-soon.html">Coming Soon</a></li>
-                                </ul>
-                            </li> -->
-                            <li>
-                                <a href="blog.html">contact</a>
+.card-dashboard{
+    margin-top: 40px;
 
-                              
-                            </li>
-                            <li>
-                                <a href="/user-profile" >profile</a>
+}
+#add-Address-button{
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
 
-                            </li>
-                        </ul><!-- End .menu -->
-                    </nav><!-- End .main-nav -->
-                </div><!-- End .header-left -->
+#add-Address-button:hover{
+    background-color: rgb(173, 145, 112);
+    color: antiquewhite;
+}   
 
-                <div class="header-right">
-                  <div class="header-search">
-                    <a href="#" class="search-toggle" role="button" title="Search"
-                      ><i class="icon-search"></i
-                    ></a>
-                    <form action="/all-products" method="get">
-                      <div class="header-search-wrapper">
-                        <label for="q" class="sr-only">Search</label>
-                        <input 
-                          type="search"
-                          class="form-control"
-                          name="search"
-                          id="search-input"
-                          placeholder="Search in..."
-                          required
-                        />
-                      </div>
-                    </form>
-            </div>
-                    <div class="dropdown compare-dropdown">
-                      <% if (user) { %>  
-                      <div class="dropdown">
-                        <i
-                          class="fas fa-person dropdown-toggle"
-                          style="color: black;"
-                        ></i>
-                        <div id="dropdownMenu" class="dropdown-menu">
-                          <a href="/user-profile">User Profile</a> 
-                          <br>
-                          <a id="logout" href="/logout">Logout</a>
-                        </div>
-                      </div>
-                      <% } else { %>
-                      <a href="/login">
-                        <i class="fas fa-sign-in-alt"> Login</i>
-                      </a>
-                      <% } %>
-
-                        <!-- <div class="dropdown-menu dropdown-menu-right">
-                            <ul class="compare-products">
-                                <li class="compare-product">
-                                    <a href="#" class="btn-remove" title="Remove Product"><i class=""></i></a>
-                                    <h4 class="compare-product-title"><a href="/logout">Logout</a></h4>
-                                </li>
-                                <li class="compare-product">
-                                    <a href="#" class="btn-remove" title="Remove Product"><i class=""></i></a>
-                                    <h4 class="compare-product-title"><a href="/user-profile">user profile</a></h4>
-                                </li>
-                            </ul>
-
-                            <div class="compare-actions">
-                             
-                            </div>
-                        </div> -->
-                    </div>
-
-                    <div class="dropdown cart-dropdown">
-                        <a href="/cart" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false" data-display="static">
-                            <i class="icon-shopping-cart"></i>
-                        </a>
-
-                      
-    </header>
+</style>  
     <div class="container py-4 ">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb">

@@ -1,13 +1,31 @@
 const userModel = require("../../model/user/user");
 const addressModel = require("../../model/user/address");
-const bcrypt = require('bcrypt'); 
+const cartModel = require("../../model/user/cart");
+const bcrypt = require("bcrypt");
 
 const userProfileRender = async (req, res) => {
   try {
     const userId = req.session?.user?._id;
 
     const userDetails = await userModel.findById(userId);
-    res.render("user/userProfile", { userDetails, user:userDetails });
+
+    let user = null;
+    let cartCount = 0;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
+
+    res.render("user/userProfile", {
+      userDetails,
+      user: userDetails,
+      cartCount,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -61,17 +79,38 @@ const userAddressRender = async (req, res) => {
 
     const userAddress = await addressModel.findOne({ user: userId });
 
-    res.render("user/address", { userAddress ,user:true });
+    let user = null;
+    let cartCount = 0;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
+
+    res.render("user/address", { userAddress, user, cartCount });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
-
 const getUserAddress = async (req, res) => {
-  try {                                    
-    const { place, state, phone, landmark, addressType, pincode, locality, city, address } = req.body;
+  try {
+    const {
+      place,
+      state,
+      phone,
+      landmark,
+      addressType,
+      pincode,
+      locality,
+      city,
+      address,
+    } = req.body;
     const userId = req.session?.user?._id;
 
     if (!userId) {
@@ -84,7 +123,7 @@ const getUserAddress = async (req, res) => {
       userAddress = new addressModel({
         user: userId,
         addresses: [
-          {    
+          {
             place,
             state,
             phoneNumber: phone,
@@ -121,23 +160,35 @@ const getUserAddress = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
-            
+
 const editAddress = async (req, res) => {
   try {
-    const { place, state, phone, landmark, addressType, pincode, locality, city, address,id } = req.body;
+    const {
+      place,
+      state,
+      phone,
+      landmark,
+      addressType,
+      pincode,
+      locality,
+      city,
+      address,
+      id,
+    } = req.body;
 
-    const userAddress = await addressModel.findOne({ 'addresses._id': id, user: req.session?.user?._id });
+    const userAddress = await addressModel.findOne({
+      "addresses._id": id,
+      user: req.session?.user?._id,
+    });
 
     if (!userAddress) {
-      return res.status(404).json({ message: 'Address not found' });
+      return res.status(404).json({ message: "Address not found" });
     }
 
-   
     const updatedAddress = userAddress.addresses.id(id);
-    
 
-    if (! updatedAddress) {
-      return res.status(404).json('address not found');
+    if (!updatedAddress) {
+      return res.status(404).json("address not found");
     }
 
     updatedAddress.place = place;
@@ -152,38 +203,36 @@ const editAddress = async (req, res) => {
 
     await userAddress.save();
 
-    return res.status(200).json({ message: 'Address updated successfully', userAddress });
+    return res
+      .status(200)
+      .json({ message: "Address updated successfully", userAddress });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-const deleteAddress = async (req, res) => {   
+const deleteAddress = async (req, res) => {
   try {
-
-    const { id } = req.params;  
+    const { id } = req.params;
     if (!id) {
-      return res.status(400).json({error:'address id is required'})
-      
+      return res.status(400).json({ error: "address id is required" });
     }
     const userId = req.session?.user?._id;
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized request" });
     }
 
-    const userAddress = await addressModel.findOne({ user:userId });    
-    console.log(userAddress,'useradresss == ');
-    
+    const userAddress = await addressModel.findOne({ user: userId });
+    console.log(userAddress, "useradresss == ");
+
     if (!userAddress) {
       return res.status(404).json({ error: "User address not found" });
     }
 
-    
     const addressIndex = userAddress.addresses.findIndex(
-      (address) => address._id.toString() === id      
+      (address) => address._id.toString() === id
     );
-
 
     if (addressIndex === -1) {
       return res.status(404).json({ error: "Address not found" });
@@ -194,60 +243,63 @@ const deleteAddress = async (req, res) => {
     await userAddress.save();
 
     return res.status(200).json({ message: "Address deleted successfully" });
-
   } catch (error) {
     console.error("Error deleting address:", error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-
-
-const recentPasswordPage=(req,res)=>{
+const recentPasswordPage = async (req, res) => {
   try {
-    
-    res.render('user/recentPassword',{user:true})
-  } catch (error) {
-    
-  }
-}
-
-const updatePassword= async (req,res)=>{
-  try {
-    const userId=req.session?.user?._id
-    const{newPassword,currentPassword}=req.body
-
-    if (!userId ) {
-    return res.status(400).json({message:'please login'})
-      
+    let user = null;
+    let cartCount = 0;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
     }
-    const userData=await userModel.findById(userId)
-    console.log(userData);
-    
 
-   const isValidPassword= await bcrypt.compare(currentPassword,userData.password)
+    res.render("user/recentPassword", { user, cartCount });
+  } catch (error) {}
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const userId = req.session?.user?._id;
+    const { newPassword, currentPassword } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "please login" });
+    }
+    const userData = await userModel.findById(userId);
+    console.log(userData);
+
+    const isValidPassword = await bcrypt.compare(
+      currentPassword,
+      userData.password
+    );
 
     if (!isValidPassword) {
-    return  res.status(400).json({message:'incorrect password'})
-      
+      return res.status(400).json({ message: "incorrect password" });
     }
 
-    const hashedpassword=await bcrypt.hash(newPassword,10);
-    
-    await userModel.findByIdAndUpdate(userId,{password:hashedpassword})
+    const hashedpassword = await bcrypt.hash(newPassword, 10);
 
-    res.status(200).json({message:'password updated successfully'})
+    await userModel.findByIdAndUpdate(userId, { password: hashedpassword });
 
+    res.status(200).json({ message: "password updated successfully" });
   } catch (error) {
     console.log(error);
-    
-    res.status(500).json({message:'error in updating',error})
-    
+
+    res.status(500).json({ message: "error in updating", error });
   }
-}
+};
 
-
-module.exports = {   
+module.exports = {
   userProfileRender,
   editUserProfile,
   userAddressRender,
@@ -255,7 +307,5 @@ module.exports = {
   editAddress,
   deleteAddress,
   recentPasswordPage,
-  updatePassword
-  
+  updatePassword,
 };
-   

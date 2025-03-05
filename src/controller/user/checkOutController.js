@@ -17,6 +17,7 @@ const checkoutRender = async (req, res) => {
     });
     console.log(cart);
 
+     
     if (!cart) {
       return res.status(400).json({ message: "Cart not found" });
     }
@@ -25,10 +26,24 @@ const checkoutRender = async (req, res) => {
       (acc, item) => (acc += item.quantity * 20),
       0
     );
+
+    let user = null; 
+    let cartCount=0 
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+     const cart =await cartModel.findOne({user:id});
+     if(cart){
+      cartCount=cart.items.length
+     }
+    }    
+    
     res.render("user/checkout", {
-      user: true,
+      user,
       userAddress,
       cart,
+      cartCount,
       packagePrice,
     });
   } catch (error) {

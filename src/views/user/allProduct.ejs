@@ -130,10 +130,23 @@
 
                           <div class="product-action-vertical">
                             <a
-                              href="#"
-                              class="btn-product-icon btn-wishlist btn-expandable"
-                              ><span>add to wishlist</span></a
-                            >
+                            href="#"
+                            class="btn-product-icon btn-expandable wishlist-btn"
+                            data-product-id="<%= product._id %>"
+                          >
+                            <% if(wishlist.includes(product._id.toString())) { %>
+                              <i class="fa-solid fa-heart"></i>
+                              <span> remove from wishlist</span>
+                            <% } else { %>
+                              <i class="fa-regular fa-heart"></i>
+                              <span> add to wishlist</span>
+                            <% } %>
+                          </a>
+                          
+                          
+          
+                            
+                          
                             <a
                               href="/product/<%=product._id%>"
                               class="btn-product-icon btn-quickview"
@@ -916,6 +929,9 @@
   const currentPage = JSON.parse('<%= JSON.stringify(currentPage) %>'.replace(/&#34;/g, '"'));
 </script>
     <!-- Plugins JS File -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
     <script src="card-assets/js/jquery.min.js"></script>
     <script src="card-assets/js/bootstrap.bundle.min.js"></script>
     <script src="card-assets/js/jquery.hoverIntent.min.js"></script>
@@ -926,6 +942,9 @@
     <script src="card-assets/js/bootstrap-input-spinner.js"></script>
     <script src="card-assets/js/jquery.magnific-popup.min.js"></script>
     <script src="card-assets/js/nouislider.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
     <!-- Main JS File -->
     <script src="card-assets/js/main.js"></script>
     <script src="js/all-products.js"></script>

@@ -44,11 +44,21 @@ const orderPageRender = async (req, res) => {
         orderObjectId: order._id,
       }))
     );
-
-    console.log("allOrders", allOrders[0]);
+    let user = null;
+    let cartCount = 0;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
 
     res.render("user/order", {
-      user: true,
+      user,
+      cartCount,
       allOrders,
     });
   } catch (error) {
@@ -60,7 +70,6 @@ const placeOrder = async (req, res) => {
   try {
     const { paymentMethod, addressId } = req.body;
     const userId = req.session?.user?._id;
-    console.log(addressId, paymentMethod, "===========");
 
     if (!userId) {
       res.status(400).json({ error: "userId is not found" });
@@ -80,6 +89,7 @@ const placeOrder = async (req, res) => {
 
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
+      productId:item.product._id,
       kg: item.kg,
       image: item.product.image,
       actualPrice: item.actualPrice,
@@ -157,13 +167,13 @@ const placeOrder = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
-  }     
+  }
 };
 const viewOrderDetails = async (req, res) => {
   try {
     const { orderId, productId } = req.params;
-    console.log(orderId,productId);
-    
+    console.log(orderId, productId);
+
     const userId = req.session?.user?._id;
 
     if (!userId) {
@@ -182,37 +192,45 @@ const viewOrderDetails = async (req, res) => {
     const otherProducts = orderDetails.products.filter(
       (product) => product._id.toString() !== productId
     );
-console.log('============otherppp',otherProducts);
 
     if (!productDetails) {
       return res.status(404).json({ error: "Product not found in order" });
     }
 
     const userDetails = await userModel.findById(userId);
-console.log("kmfksd",orderDetails);
+
+    let user = null;
+    let cartCount = 0;
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
 
     let order = {
-      orderId:orderDetails.orderId,
+      orderId: orderDetails.orderId,
       _id: orderDetails._id,
       date: orderDetails.createdAt,
       address: orderDetails.address,
-      selectedProduct:productDetails,
-      items: otherProducts
+      selectedProduct: productDetails,
+      items: otherProducts,
     };
-    console.log("=========================",productDetails);
-    
-    console.log("order",order);
 
     res.render("user/userOrder", {
-      user: userDetails, 
-      order :{
-        orderId:orderDetails.orderId,
+      user: userDetails,
+      order: {
+        orderId: orderDetails.orderId,
         _id: orderDetails._id,
         date: orderDetails.createdAt,
         address: orderDetails.address,
-        selectedProduct:productDetails,
-        items: otherProducts
+        selectedProduct: productDetails,
+        items: otherProducts,
       },
+      cartCount,
     });
   } catch (error) {
     console.log(error);
@@ -220,38 +238,57 @@ console.log("kmfksd",orderDetails);
   }
 };
 
+const cancelProduct = async (req, res) => {
+  try {
+    const { orderId, productId,itemId } = req.params;
+    console.log(orderId,productId,itemId);
+    
 
-  const cancelProduct = async (req, res) => {
-    try {
-      const { orderId, productId } = req.params;
-  
-      const order = await orderModel.findById(orderId);
-  
-      if (!order) {
-        return res.status(404).json({ message: "Order not found" });
-      }
-  
-      const product = order.products.id(productId);
-  
-      if (!product) {
-        return res.status(404).json({ message: "Product not found in order" });
-      }
-  
-      if (product.status === "Cancelled") {
-        return res.status(400).json({ message: "Product is already cancelled" });
-      }
-  
-      product.status = "Cancelled";
-  
-      await order.save();
-  
-      return res.status(200).json({ message: "Product cancelled successfully" });
-  
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Server error" });
+    const order = await orderModel.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
     }
-  };
-  
 
-module.exports = { orderPageRender, placeOrder, viewOrderDetails,cancelProduct };
+    const orderdProduct = order.products.id(itemId);
+
+    if (!orderdProduct) {
+      return res.status(404).json({ message: "Product not found in order" });
+    }
+
+    const product = await productModel.findById(productId);
+     console.log(product);
+
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const stockVarient = product.varients.find(
+      (item) => item.kg == orderdProduct.kg
+    );
+
+    stockVarient.stock += orderdProduct.quantity;
+
+    await product.save();
+
+    if (orderdProduct.status === "Cancelled") {
+      return res.status(400).json({ message: "Product is already cancelled" });
+    }
+
+    orderdProduct.status = "Cancelled";
+
+    await order.save();
+
+    return res.status(200).json({ message: "Product cancelled successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  orderPageRender,
+  placeOrder,
+  viewOrderDetails,
+  cancelProduct,
+};

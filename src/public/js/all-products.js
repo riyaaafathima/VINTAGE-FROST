@@ -1,7 +1,26 @@
 const radioButtons = document.querySelectorAll(".custom-control-input");
 const clearAll_el=document.getElementById('clear-btn');
  const sort_input_el=document.querySelector('#sortby');
- 
+ const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+
+ const showErrorToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.error(message);
+};
+
+const showSuccessToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.success(message);
+};
+
 
 document.querySelectorAll(".page-link").forEach((btn) => {
   btn.addEventListener("click", async (e) => {
@@ -92,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-
 sort_input_el.addEventListener('change',async(e)=>{
   
   const selectedOption=e.target.options[e.target.selectedIndex]
@@ -102,5 +120,60 @@ sort_input_el.addEventListener('change',async(e)=>{
 
 })
 
+wishlistButtons.forEach(button => {
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
 
+    const productId = button.dataset.productId;
+    const heartIcon = button.querySelector('i');
+    const textSpan = button.querySelector('span');
+
+    const isInWishlist = heartIcon.classList.contains('fa-solid');
+
+    if (isInWishlist) {
+      try {
+        const response = await fetch('/wishlist-remove', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
+        });
+
+        if (response.ok) {
+          heartIcon.classList.remove('fa-solid');
+          heartIcon.classList.add('fa-regular');
+          textSpan.textContent = ' add to wishlist';
+          showErrorToast('Removed from wishlist');
+        } else {
+          showErrorToast('Could not remove from wishlist');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+    } else {
+      try {
+        const response = await fetch('/add-wishlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
+        });
+
+        if (response.ok) {
+          heartIcon.classList.remove('fa-regular');
+          heartIcon.classList.add('fa-solid');
+          textSpan.textContent = ' remove from wishlist';
+          showSuccessToast('Added to wishlist');
+        } else {
+          showErrorToast('Could not add to wishlist');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+});
 

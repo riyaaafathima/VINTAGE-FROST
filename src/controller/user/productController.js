@@ -3,6 +3,8 @@ const productModel = require("../../model/admin/product");
 const categoryModel = require("../../model/admin/category");
 const cartModel = require("../../model/user/cart");
 const { default: mongoose } = require("mongoose");
+const wishlistModel = require("../../model/user/wishlist");
+const wishlist = require("../../model/user/wishlist");
 
 const homePageRender = async (req, res) => {
   try {
@@ -18,19 +20,30 @@ const homePageRender = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(8);
 
-      const topRated= await productModel.find({isActive:true})
-      .sort({ rating: -1 }) 
-      .limit(10); 
+    const topRated = await productModel
+      .find({ isActive: true })
+      .sort({ rating: -1 })
+      .limit(10);
 
-    let user = null;   
+    let user = null;
+    let cartCount = 0;
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
       user = user.username;
-    }         
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
 
-
-    res.render("user/homepage", { allProducts, user,latestProducts,topRated });
+    res.render("user/homepage", {
+      allProducts,
+      user,
+      latestProducts,
+      topRated,
+      cartCount,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -89,11 +102,24 @@ const productPageRender = async (req, res) => {
 
     const categories = await categoryModel.find({ isActive: true });
 
+
+
     let user = null;
+    let cartCount = 0;
+    let wishlist=[]
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
       user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+      let items = await wishlistModel.findOne({ user: id });
+      if(items){
+        wishlist=items.products
+      }
+
     }
 
     res.render("user/allProduct", {
@@ -104,6 +130,8 @@ const productPageRender = async (req, res) => {
       categories,
       selectedCategory: category,
       user,
+      cartCount,
+      wishlist:wishlist
     });
   } catch (error) {
     console.log(error);
@@ -122,31 +150,47 @@ const productView = async (req, res) => {
       .findOne({ _id: id, isActive: true })
       .populate({
         path: "category",
-        match: { isActive: true }, // Only populate active categories
+        match: { isActive: true },
       });
 
     if (!product || !product.category) {
       return res.render("common/404");
     }
 
-    const categoryId = product.category._id;
-    const relatedProducts = await productModel.find({
-      category: categoryId, // Match products with the same category
-      _id: { $ne: id }, // Exclude the current product by its ID
-    });
-
     let user = null;
+    let cartCount = 0;
+    let wishlist = null;
+
     if (req.session?.user) {
-      const id = req.session?.user?._id;
-      user = await userModel.findById(id);
-      user = user.username;
+      const userId = req.session.user._id;
+
+      const userData = await userModel.findById(userId);
+      user = userData?.username || null;
+
+      const cart = await cartModel.findOne({ user: userId });
+      cartCount = cart ? cart.items.length : 0;
+
+      wishlist = await wishlistModel.findOne({ user: userId });
     }
 
-    res.render("user/singleProduct", { product, relatedProducts, user });
+    const relatedProducts = await productModel.find({
+      category: product.category._id,
+      _id: { $ne: id },
+    });
+
+    res.render("user/singleProduct", {
+      product,
+      relatedProducts,
+      user,
+      cartCount,
+      wishlist:wishlist,
+    });
   } catch (error) {
     console.log(error);
+    res.status(500).render("common/500"); // Optional: handle server errors
   }
 };
+
 
 module.exports = {
   homePageRender,

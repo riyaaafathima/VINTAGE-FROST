@@ -301,11 +301,10 @@
 
                       <div class="details-action-wrapper">
                         <a
-                          href=""
                           class="btn-product btn-wishlist "  data-product-id="<%=product._id%>"
                           title="Wishlist"
-                          ><span>Add to Wishlist</span></a
-                        >
+                          ><span>Add to Wishlist</span></a>
+                  
                       </div>
                       <!-- End .details-action-wrapper -->
                     </div>
@@ -1138,6 +1137,10 @@
       <!-- End .modal-dialog -->
     </div>
     <!-- End .modal -->
+
+    <script>
+      const wishlist = JSON.parse('<%= JSON.stringify(wishlist) %>'.replace(/&#34;/g, '"'));
+    </script>
 
     <!-- Plugins JS File -->
     <script src="/card-assets/js/jquery.min.js"></script>

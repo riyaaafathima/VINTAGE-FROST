@@ -1,5 +1,7 @@
-const { json } = require("express");
 const wishlistModel = require("../../model/user/wishlist");
+const userModel = require("../../model/user/user");
+const cartModel = require("../../model/user/cart");
+
 
 const whishlistPageRender = (req, res) => {
   try {
@@ -49,9 +51,20 @@ try {
   if(!wishlist){
     return res.status(401).json({message:'no wishlist'})   
   }
- console.log(wishlist);
+  let user = null; 
+  let cartCount=0 
+  if (req.session?.user) {
+    const id = req.session?.user?._id;
+    user = await userModel.findById(id);
+    user = user.username;
+   const cart =await cartModel.findOne({user:id});
+   if(cart){
+    cartCount=cart.items.length
+   }
+  }    
+  
  
- return res.render("user/wishlist",{user:true,wishlist:wishlist});
+ return res.render("user/wishlist",{user,cartCount,wishlist:wishlist});
 } catch (error) {
   console.log(error);
   return res.status(500).json({message:error.message})

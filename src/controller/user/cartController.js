@@ -1,5 +1,6 @@
 const cartModel = require("../../model/user/cart");
 const productModel = require("../../model/admin/product");
+const userModel = require("../../model/user/user");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -129,6 +130,7 @@ const renderCart = async (req, res) => {
     if (!cart || cart.items.length == 0) {
       return res.render("user/cart", {
         cart: null,
+        cartCount:cart.items.length,
         user: true,
         packagePrice: 0,
       });
@@ -139,7 +141,16 @@ const renderCart = async (req, res) => {
       0
     );
 
-    res.render("user/cart", { cart, user: true, packagePrice });
+    let user = null; 
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+     
+    }    
+    
+
+    res.render("user/cart", { cart, user, packagePrice,cartCount:cart.items.length });
   } catch (error) {
     console.error(error);
   }
