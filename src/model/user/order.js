@@ -92,6 +92,9 @@ const ProductSchema = new Schema({
     type: Boolean,
     required: true,
   },
+  reason:{
+    type:String,
+  }
 });
 
 const OrderSchema = new Schema(
@@ -117,7 +120,7 @@ const OrderSchema = new Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["COD", "Online", "Wallet"],
+      enum: ["COD", "Razorpay", "Wallet"],  
     },
     totalQuantity: {
       type: Number,

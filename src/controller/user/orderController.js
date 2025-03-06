@@ -1,11 +1,13 @@
 const addressModel = require("../../model/user/address");
-
 const cartModel = require("../../model/user/cart");
-
 const orderModel = require("../../model/user/order");
 const productModel = require("../../model/admin/product");
 const userModel = require("../../model/user/user");
-const cart = require("../../model/user/cart");
+const RazorPay = require("razorpay");
+const crypto = require("crypto");
+
+
+
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -89,7 +91,7 @@ const placeOrder = async (req, res) => {
 
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
-      productId:item.product._id,
+      productId: item.product._id,
       kg: item.kg,
       image: item.product.image,
       actualPrice: item.actualPrice,
@@ -169,6 +171,39 @@ const placeOrder = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+const createRazorPayOrder = async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    const instance = new RazorPay({
+      key_id: process.env.KEY_ID,
+      key_secret: process.env.KEY_SECRET,
+    });
+
+    const options = {
+      amount: amount * 100,
+      currency: "INR",
+      receipt: crypto.randomBytes(10).toString("hex"),
+    };
+
+    instance.orders.create(options, (error, order) => {
+      if (error) {
+        console.log(error);
+        throw Error(error);
+      }
+      res.status(200).json(order);
+    });
+  } catch (error) {
+    console.log(error);
+    
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getKey = async (req, res) => {
+  return res.status(200).json(process.env.KEY_ID);
+};
 const viewOrderDetails = async (req, res) => {
   try {
     const { orderId, productId } = req.params;
@@ -240,9 +275,9 @@ const viewOrderDetails = async (req, res) => {
 
 const cancelProduct = async (req, res) => {
   try {
-    const { orderId, productId,itemId } = req.params;
-    console.log(orderId,productId,itemId);
-    
+    const { orderId, productId, itemId } = req.params;
+    const { reason } = req.body;
+    console.log(orderId, productId, itemId, reason);
 
     const order = await orderModel.findById(orderId);
 
@@ -255,9 +290,8 @@ const cancelProduct = async (req, res) => {
     if (!orderdProduct) {
       return res.status(404).json({ message: "Product not found in order" });
     }
-
     const product = await productModel.findById(productId);
-     console.log(product);
+    console.log(product);
 
     if (!product) {
       throw new Error("Product not found");
@@ -274,6 +308,7 @@ const cancelProduct = async (req, res) => {
     if (orderdProduct.status === "Cancelled") {
       return res.status(400).json({ message: "Product is already cancelled" });
     }
+    orderdProduct.reason = reason;
 
     orderdProduct.status = "Cancelled";
 
@@ -286,9 +321,40 @@ const cancelProduct = async (req, res) => {
   }
 };
 
+
+const verifyPayment = async (req, res) => {
+  try {
+
+    const userId = req.session.userId;
+
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSign = crypto
+      .createHmac("sha256", process.env.KEY_SECRET)
+      .update(sign.toString())
+      .digest("hex");
+
+    if (razorpay_signature !== expectedSign) {
+      throw Error("Invalid Signature sent");
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Payment verified successfully" });
+
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   orderPageRender,
   placeOrder,
   viewOrderDetails,
   cancelProduct,
+  getKey,
+  createRazorPayOrder,
+  verifyPayment
 };

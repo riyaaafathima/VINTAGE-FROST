@@ -199,7 +199,7 @@
                             </div>
                             <div class="d-flex justify-content-between mt-3 border-top pt-3">
                                 <strong>Grand Total</strong>
-                                <strong class="text-danger">₹<%=cart.total+packagePrice%></strong>
+                                <strong class="text-danger totalAmount">₹<%=cart.total+packagePrice%></strong>
                             </div>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                     <div class="card-body">
                         <h6 class="card-title mb-3">Payment Methods</h6>
                         <div class="form-check mb-2">
-                            <input class="form-check-input online-btn" type="radio" value="Online" name="paymentMethod" id="online">
+                            <input class="form-check-input online-btn" type="radio" value="Razorpay" name="paymentMethod" id="online">
                             <label class="form-check-label" for="online">
                                 Online
                             </label>
@@ -218,7 +218,7 @@
                         <div class="form-check mb-2">
                             <input class="form-check-input wallet-btn" type="radio" value="Wallet" name="paymentMethod" id="wallet">
                             <label class="form-check-label" for="wallet">
-                                Wallet (₹133)
+                                Wallet 
                             </label>
                         </div>
                         <div class="form-check">
@@ -379,6 +379,7 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
     <script src="js/address.js"></script>

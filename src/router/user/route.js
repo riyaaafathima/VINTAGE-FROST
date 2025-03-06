@@ -25,7 +25,7 @@ const {
 
 const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
 const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
-const{orderPageRender, placeOrder, viewOrderDetails, cancelProduct}=require('../../controller/user/orderController')
+const{orderPageRender, placeOrder, viewOrderDetails, cancelProduct, getKey, createRazorPayOrder, verifyPayment}=require('../../controller/user/orderController')
 const{checkoutRender, checkoutAddressRender}=require('../../controller/user/checkOutController')
 
 const {userUpload}=require('../../config/multer/multer');
@@ -85,5 +85,10 @@ router.get('/whishlist-page',requireUser,whishlistPageRender)
 router.post('/add-wishlist',addToWhishList)
 router.get('/wishlist',getWishlist)
 router.post('/wishlist-remove',removeWishList)
+
+
+router.get('/razor-key',getKey)
+router.post('/razor-order',createRazorPayOrder)
+router.post('/razor-verify',verifyPayment)
 module.exports = router;
     
