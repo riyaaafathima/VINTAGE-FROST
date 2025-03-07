@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("./userModel");
-const Order = require("./orderModel");
-const Product = require("../adminModels/product");
 
 const { Schema } = mongoose;
 
@@ -9,17 +6,17 @@ const reviewSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: User,
+      ref: 'users',
       required: true,
     },
     product: {
       type: Schema.Types.ObjectId,
-      ref: Product,
+      ref: 'products',
       required: true,
     },
     order: {
       type: Schema.Types.ObjectId,
-      ref: Order,
+      ref: 'Order',
       required: true,
     },
     rating: {

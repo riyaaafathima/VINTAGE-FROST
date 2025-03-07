@@ -62,8 +62,7 @@ const addProduct = async (req, res) => {
 const addProductController = async (req, res) => {
   try {
     console.log(req.body, "this is req.body");
-    const { productName, varients, category, description, preperationHour } =
-      req.body;
+    const { productName, varients, category, description, preperationHour } =req.body;
     const LowerCasedProductName = productName.toLowerCase();
     const isProductExist = await productModel.findOne({
       productName: LowerCasedProductName,

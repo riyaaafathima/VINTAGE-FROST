@@ -1,5 +1,4 @@
   const mongoose = require("mongoose");
-  const { array } = require("../../config/multer/multer");
 
   const productSchema = new mongoose.Schema(
     {

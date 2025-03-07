@@ -12,9 +12,6 @@ add_btn_el.addEventListener('click', async(e)=>{
     e.preventDefault()
 
 
-
-
-
     const createErrElAfter =(element,err)=>{
         if(element?.nextElementSibling?.id == 'erro_el' ){
           element.nextElementSibling.remove()

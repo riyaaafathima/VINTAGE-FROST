@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Form</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
+
+    <style>
+        :root {
+            --primary-brown: rgb(93, 67, 36);
+            --secondary-brown: rgb(129, 99, 63);
+            --light-brown: rgb(187, 166, 141);
+            --dark-brown: rgb(67, 48, 26);
+            --bg-color: rgb(236, 225, 213);
+        }
+        
+        body {
+            background-color: var(--primary-brown);
+            color: white;
+            padding: 20px;
+        }
+        
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px auto;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .form-control {
+            background-color: white;
+            border: 1px solid var(--light-brown);
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            height: 50px;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(93, 67, 36, 0.25);
+            border-color: var(--secondary-brown);
+        }
+        
+        .btn-coupon {
+            background-color: var(--secondary-brown);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-coupon:hover {
+            background-color: var(--dark-brown);
+            color: white;
+        }
+        
+        .date-input {
+            background-color: white;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-text {
+            font-size: 0.8rem;
+            margin-top: -15px;
+            display: block;
+        }
+        
+        /* Improve consistency in form element heights */
+        select.form-control {
+            appearance: auto;
+        }
+        
+        /* Ensure consistent spacing */
+        .row {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+
+       
+        
+        <div class="form-container">
+            <form>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="form-group">
+
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" value="<%=coupon.name%>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="couponCode" class="form-label">Coupon Code</label>
+                            <input type="text" class="form-control" id="couponCode" value="<%=coupon.couponCode%>">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="maxUses" class="form-label">Maximum Uses</label>
+                            <input type="number" class="form-control" id="maxUses" value="<%=coupon.maximumUses%>">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="expiryDate" class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control date-input" id="expiryDate" value="<%=coupon.expiryDate%>">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control date-input" id="startDate" value="<%=coupon.startDate%>">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="minPurchase" class="form-label">Minimum Purchase Amount</label>
+                            <input type="number" class="form-control" id="minPurchase" value="<%=coupon.minimumPurchaseAmount%>" min="0">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="offerAmount" class="form-label">Offer Amount</label>
+                            
+                            <select class="form-control" name="offerAmount" id="offerAmount">
+                                <% [10,20,30,40,50,60,70,80,90,100].forEach(amount => { %>
+                                    <option value="<%= amount %>" <%= coupon.offerAmount === amount ? 'selected' : '' %>><%= amount %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="submit-container">
+                    <button type="button" class="btn btn-coupon btn-lg" id="update-btn" data-id="<%=coupon._id%>">UPDATE COUPON</button>
+                </div>
+            </form>
+        </div>
+       
+   
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin/assets/js/edit-coupon.js"></script>
+</body>
+</html>

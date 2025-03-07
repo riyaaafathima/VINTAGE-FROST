@@ -4,6 +4,8 @@ const placeorder_btn_el = document.querySelector("#placeorder-btn");
 
 const total_amount = document.querySelector(".totalAmount");
 
+const wallet_el=document.querySelector('.wallet-btn')
+
 const showErrorToast = (message) => {
   toastr.options = {
     positionClass: "toast-top-center",
@@ -85,8 +87,12 @@ function removeAddressFromDOM(id) {
   }
 }
 placeorder_btn_el.addEventListener("click", async (e) => {
+  const walletBalance=wallet_el.getAttribute('data-balance')
   let totalAmount_val = total_amount.innerHTML;
   let totalAmount = totalAmount_val.replace("₹", "");
+
+  console.log(walletBalance);
+  
   const selectedDeliveryAddress = document.querySelector(
     'input[name="deliveryAddress"]:checked'
   );
@@ -110,7 +116,9 @@ placeorder_btn_el.addEventListener("click", async (e) => {
   ) {
     saveOrderOnCashOnDelivery(
       selectedPaymentMethod.value,
-      selectedDeliveryAddress.value
+      selectedDeliveryAddress.value,
+      walletBalance,
+      totalAmount
     );
   } else if (selectedPaymentMethod.value == "Razorpay") {
     console.log(totalAmount, total_amount.innerHTML);
@@ -124,39 +132,59 @@ placeorder_btn_el.addEventListener("click", async (e) => {
 });
 
 //for cash on delivery and wallet//
-const saveOrderOnCashOnDelivery = async (paymentMethod, addressId) => {
-  const response = await fetch("/place-order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      paymentMethod,
-      addressId,
-    }),
-  });
+const saveOrderOnCashOnDelivery = async (paymentMethod, addressId,walletBalance,totalAmount) => {
 
-  const data = await response.json();
-  console.log(data);
-
-  if (response.ok) {
-    Swal.fire({
-      title: "order placed!",
-      icon: "success",
-      draggable: true,
-    }).then(() => {
-      window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
-    });
-  } else {
-    console.log(data.error);
-
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: `${data.error}`,
-    }).then(() => {});
+if(paymentMethod=='Wallet'){
+  if(Number(walletBalance)<Number(totalAmount)){
+    alert('0 balance')
+    return
   }
-};
+
+}
+if(totalAmount>1000 && paymentMethod=='COD'){
+  alert('order above 1000 not alloed in cod')
+
+}else{
+
+}
+  try {
+    const response = await fetch("/place-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        paymentMethod,
+        addressId,
+        walletBalance,
+        totalAmount
+      }),
+    });
+  
+    const data = await response.json();
+    console.log(data);
+  
+    if (response.ok) {
+      Swal.fire({
+        title: "order placed!",
+        icon: "success",
+        draggable: true,
+      }).then(() => {
+        window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
+      });
+    } else {
+      console.log(data.error);
+  
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${data.error}`,
+      }).then(() => {});
+    }
+  } catch (error) {
+  };
+    
+  }
 
 //for razor pay//
 const InitializeRazorPayment = async (

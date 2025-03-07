@@ -1,6 +1,8 @@
 const userModel = require("../../model/user/user");
 const addressModel = require("../../model/user/address");
 const cartModel = require("../../model/user/cart");
+const WalletModel=require('../../model/user/wallet');
+const wallet = require("../../model/user/wallet");
 
 const checkoutRender = async (req, res) => {
   try {
@@ -27,6 +29,8 @@ const checkoutRender = async (req, res) => {
       0
     );
 
+   const wallet=await WalletModel.findOne({user:userId})
+
     let user = null; 
     let cartCount=0 
     if (req.session?.user) {
@@ -45,6 +49,7 @@ const checkoutRender = async (req, res) => {
       cart,
       cartCount,
       packagePrice,
+      walletBalance:wallet?.balance
     });
   } catch (error) {
     console.log(error);

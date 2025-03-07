@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
 
-const { Schema } = mongoose;
-
-const CounterSchema = new Schema({
-  model: {
+  
+const CounterSchema = new mongoose.Schema({
+  model: {  
     type: String,
     required: true,
-    unique: true,
+    unique: true,  
   },
-  field: String,
+  field: String,  
   count: {
     type: Number,
     default: 1000,

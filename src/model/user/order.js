@@ -1,15 +1,14 @@
 const mongoose = require("mongoose");
 const Counter = require("./counter");
-const { Schema } = mongoose;
 
-const AddressSchema = new Schema({
+const AddressSchema = new mongoose.Schema({
   name:{
     type:String,
     
   },
   place: {
     type: String,
-    required: true,
+    required: true,  
   },
   state: {
     type: String,
@@ -46,13 +45,13 @@ const AddressSchema = new Schema({
 
 
 
-const ProductSchema = new Schema({
+const ProductSchema = new  mongoose.Schema({
   product: {
     type: String,
     required: true,
   },
-  productId:{
-    type:Schema.Types.ObjectId,
+  productId:{  
+    type:mongoose.Schema.Types.ObjectId,  
     ref: "products",
     required: true,
   },
@@ -97,14 +96,14 @@ const ProductSchema = new Schema({
   }
 });
 
-const OrderSchema = new Schema(
+const OrderSchema = new  mongoose.Schema(
   {
-    orderId: {
+    orderId: {  
       type: Number,
       unique: true,
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type:mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },

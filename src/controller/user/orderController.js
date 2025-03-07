@@ -2,12 +2,13 @@ const addressModel = require("../../model/user/address");
 const cartModel = require("../../model/user/cart");
 const orderModel = require("../../model/user/order");
 const productModel = require("../../model/admin/product");
+const walletModel = require("../../model/user/wallet");
+const counterModel = require("../../model/user/counter");
 const userModel = require("../../model/user/user");
 const RazorPay = require("razorpay");
 const crypto = require("crypto");
-
-
-
+const counter = require("../../model/user/counter");
+const { type } = require("os");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -161,6 +162,44 @@ const placeOrder = async (req, res) => {
     const order = await new orderModel(orderData);
     await order.save();
 
+    if (paymentMethod == "Wallet") {
+      const isWalletExists = await walletModel.findOne({ user: userId });
+      if (!isWalletExists) {
+        return res.status(401).json({ message: "wallet not found" });
+      }
+
+      let counter = await counterModel.findOne({
+        model: "Wallet",
+        field: "transaction_id",
+      });
+
+      if (counter) {
+        counter.count += 1;
+        await counter.save();
+      } else {
+        counter = await counterModel.create({
+          model: "Wallet",
+          field: "transaction_id",
+        });
+      }
+
+      let wallet = {};
+      wallet = await walletModel.findByIdAndUpdate(isWalletExists._id, {
+        $inc: {
+          balance: -order.totalPrice,
+        },
+        $push: {
+          transaction: {
+            transaction_id: counter.count + 1,
+            amount: order.totalPrice,
+            type: "Debit",
+            description: "Product Ordered",
+            order: order._id,
+          },
+        },
+      });
+    }
+
     if (order && userCart) {
       await userCart.deleteOne();
     }
@@ -196,7 +235,7 @@ const createRazorPayOrder = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    
+
     res.status(400).json({ error: error.message });
   }
 };
@@ -277,6 +316,9 @@ const cancelProduct = async (req, res) => {
   try {
     const { orderId, productId, itemId } = req.params;
     const { reason } = req.body;
+    const userId = req.session?.user?._id;
+    console.log("userId", userId);
+
     console.log(orderId, productId, itemId, reason);
 
     const order = await orderModel.findById(orderId);
@@ -314,6 +356,59 @@ const cancelProduct = async (req, res) => {
 
     await order.save();
 
+    if (order.paymentMethod != "COD") {
+      const isWalletExists = await walletModel.findOne({ user: userId });
+
+      let counter = await counterModel.findOne({
+        model: "Wallet",
+        field: "transaction_id",
+      });
+
+      if (counter) {
+        counter.count += 1;
+        await counter.save();
+      } else {
+        counter = await counterModel.create({
+          model: "Wallet",
+          field: "transaction_id",
+        });
+      }
+        
+      if (isWalletExists) {
+
+        wallet = await walletModel.findByIdAndUpdate(isWalletExists._id, {
+          $inc: {
+            balance: +orderdProduct.price,
+          },
+          $push: {
+            transaction: {
+              transaction_id: counter.count + 1,
+              amount: orderdProduct.price,
+              type: "Credit",
+              description: " Ordered cancellation Refund",
+              order: order._id,
+              product: orderdProduct._id,
+            },
+          },
+        });
+      } else {
+        wallet = await walletModel.create({
+          user: userId,
+          balance: orderdProduct.price,
+          transaction: [
+            {
+              transaction_id: counter.count + 1,
+              amount: orderdProduct.price,
+              type: "Credit",
+              description: "Order Cancellation Refund",
+              orderId: order._id,
+              product: orderdProduct._id,
+            },
+          ],
+        });
+      }
+    }
+
     return res.status(200).json({ message: "Product cancelled successfully" });
   } catch (error) {
     console.error(error);
@@ -321,13 +416,12 @@ const cancelProduct = async (req, res) => {
   }
 };
 
-
 const verifyPayment = async (req, res) => {
   try {
-
     const userId = req.session.userId;
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -340,10 +434,7 @@ const verifyPayment = async (req, res) => {
       throw Error("Invalid Signature sent");
     }
 
-    return res
-      .status(200)
-      .json({ message: "Payment verified successfully" });
-
+    return res.status(200).json({ message: "Payment verified successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -356,5 +447,5 @@ module.exports = {
   cancelProduct,
   getKey,
   createRazorPayOrder,
-  verifyPayment
+  verifyPayment,
 };
