@@ -45,9 +45,9 @@ const couponSchema = new mongoose.Schema(
 
 couponSchema.index({ couponCode: 1,
      isActive: 1 
-    },
-     { unique:
+    }, { unique:
          true 
-        });
+        }
+);
 
 module.exports = mongoose.model("Coupon", couponSchema);

@@ -35,7 +35,7 @@ const multer = require("multer");
 const preventNavigation = require("../../middleware/preventNavigation");
 const {upload} = require("../../config/multer/multer");
 const product = require("../../model/admin/product");
-const { addCouponPage, createCouponPage, addCoupon, editCoupon, updateCoupon, couponListPage } = require("../../controller/admin/couponController");
+const { addCouponPage, createCouponPage, addCoupon, editCoupon, updateCoupon, couponListPage, removeCoupon } = require("../../controller/admin/couponController");
 
 const router = require("express").Router();
 
@@ -87,6 +87,8 @@ router.get('/addcoupon-page',createCouponPage)
 router.get('/edit-coupon/:id', editCoupon)
 
 router.put('/update-coupon/:id', updateCoupon)
+
+router.put('/delete-coupon/:id',removeCoupon)
 
 
 
