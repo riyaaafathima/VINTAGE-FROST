@@ -217,7 +217,7 @@
           
                         if (response.ok) {
                           Swal.fire("Deleted!", "Your product offer has been deleted.", "success");
-                          deleteBtn.closest("tr").remove(); // Remove row from DOM
+                          deleteBtn.closest("tr").remove(); 
                         } else {
                           Swal.fire("Error!", "Failed to delete the product offer.", "error");
                         }

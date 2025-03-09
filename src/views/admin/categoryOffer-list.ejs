@@ -68,11 +68,11 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">coupon List</h2>
+                        <h2 class="content-title card-title">category Offer List</h2>
                     </div>
                     <div>
                        
-                        <a href="/admin/addOffer-page" class="btn btn-primary btn-sm rounded">create coupon</a>
+                        <a href="/admin/addOffer-page" class="btn btn-primary btn-sm rounded">create category Offer</a>
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -181,7 +181,7 @@
 
 
         <script>
-const deleteBtns = document.querySelectorAll(".delete-icon");
+const deleteBtns = document.querySelectorAll(".delete-btn");
 console.log(deleteBtns);
 
 deleteBtns.forEach((deleteBtn) => {
@@ -201,7 +201,7 @@ deleteBtns.forEach((deleteBtn) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`/admin/delete-coupon/${deleteId}`, {
+          const response = await fetch(`/admin/delete-categoryoffer/${deleteId}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -209,11 +209,11 @@ deleteBtns.forEach((deleteBtn) => {
           });
 
           if (response.ok) {
-            Swal.fire("Deleted!", "Your coupon has been deleted.", "success");
+            Swal.fire("Deleted!", "Your categoryOffer has been deleted.", "success");
             // Optionally remove the element from the DOM
             deleteBtn.closest('tr').remove(); // if inside a table row
           } else {
-            Swal.fire("Error!", "Failed to delete the coupon.", "error");
+            Swal.fire("Error!", "Failed to delete the categoryOffer.", "error");
           }
         } catch (error) {
           console.log(error);

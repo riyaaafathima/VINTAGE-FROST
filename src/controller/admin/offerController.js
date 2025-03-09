@@ -211,6 +211,23 @@ const updateCategoryOffer = async (req, res) => {
   }
 };
 
+const removeCategoryOffer = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const categoryOffer = await categoryOfferModel.findByIdAndDelete(id);
+    if (!categoryOffer) {
+      return res.status(400).json({ message: "categoryOffer is not found" });
+    }
+    return res
+      .status(200)
+      .json({ message: "categoryOffer deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const renderProductOfferPage = async (req, res) => {
   try {
     const productOffers = await productOfferModel
@@ -342,22 +359,23 @@ const editProductOfferPage = async (req, res) => {
   }
 };
 
-const removeProductOffer=async(req,res)=>{
-    try {
-        const {id}=req.params
-        console.log(req.params,'dmd,dm,fm');
-        
-        const productOffer=await productOfferModel.findByIdAndDelete(id)
-if (!productOffer) {
-    return res.status(404).json({ message: "ProductOffer is not found" });
+const removeProductOffer = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(req.params, "dmd,dm,fm");
 
-}
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: "Internal server error" });
-
+    const productOffer = await productOfferModel.findByIdAndDelete(id);
+    if (!productOffer) {
+      return res.status(400).json({ message: "ProductOffer is not found" });
     }
-}
+    return res
+      .status(200)
+      .json({ message: "ProductOffer deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 module.exports = {
   categoryOfferPage,
@@ -371,5 +389,6 @@ module.exports = {
   createProductOffer,
   editProductOffer,
   editProductOfferPage,
-  removeProductOffer
+  removeProductOffer,
+  removeCategoryOffer,
 };

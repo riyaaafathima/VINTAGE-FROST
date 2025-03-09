@@ -6,6 +6,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="card-assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
 
    
 </head>
@@ -85,6 +87,54 @@
     color: antiquewhite;
 }   
 
+
+/* ///coupon modal */
+.modal-content {
+      background-color: #F3F1EA;
+      border-radius: 0;
+      border: none;
+    }
+    
+    .coupon-code {
+      color: #CC9966;
+      border: 1px dashed #CC9966;
+      padding: 5px 10px;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+    
+    .coupon-item {
+      border-bottom: 1px solid #e9e7e0;
+      padding: 15px 0;
+      margin: 0 15px;
+    }
+    
+    .apply-btn {
+      background-color: #CC9966;
+      border: none;
+      border-radius: 0;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+    
+    .modal-title {
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .close-btn {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      background: none;
+      border: none;
+    }
+    
+    .form-check-input:checked {
+      background-color: #CC9966;
+      border-color: #CC9966;
+    }
 </style>  
     <div class="container py-4 ">
         <!-- Breadcrumb -->
@@ -191,8 +241,12 @@
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Delivery charges</span>
-                                <span class="text-danger">Free</span>
+                                <span class="text-danger radio">Free</span>
                             </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2 coupon-modal" data-bs-toggle="modal" data-bs-target="#couponModal" style="cursor: pointer;">
+                              <span>Apply Coupon</span>
+                          </div>
+                          
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Packing charges</span>
                                 <span class="text-danger">₹<%=packagePrice%></span>
@@ -373,6 +427,70 @@
       </div>
 
 
+
+
+
+
+
+
+
+<!-- //////////////////////////////////////////////coupon Modal////////////////////////////////// -->
+
+
+<div class="container mt-5">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#couponModal">
+    Open Coupon Modal
+  </button>
+
+  <!-- Coupon Modal -->
+  <div class="modal fade" id="couponModal" tabindex="-1" aria-labelledby="couponModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="couponModalLabel">APPLY COUPON</h5>
+          <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Enter coupon code">
+          </div>
+          
+          <div class="coupon-list" style="max-height: 300px; overflow-y: auto;">
+          <%coupons.forEach((item)=>{%>
+
+          
+            
+            <div class="coupon-item">
+              <div class="coupon-code"><%=item.couponCode%></div>
+              <div class="d-flex">
+                <div class="form-check me-2">
+                  <input class="form-check-input radio-btn" type="radio" data-id="<%=item._id%>" name="couponRadio" id="coupon4">
+                </div>
+                <div>
+                  <div class="fw-bold">Save<%=item.offerAmount%></div>
+                  <div><%=item.offerAmount%>% off on minimum purchase of Rs.<%=item.minimumPurchaseAmount%></div>
+                  <div class="text-muted">Expires on: <%= new Date(item.expiryDate).toLocaleDateString("en-GB", { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
+                </div>
+              </div>
+            </div>
+            <%})%>
+          </div>
+          
+          <div class="mt-3 px-3">
+            <div class="d-flex justify-content-between">
+              <span>Maximum savings: <%= cart.actualPrice - (cart.actualPrice * coupons.offerAmount / 100) %></span>
+              <span>₹0</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn apply-btn w-100 " id="apply-btn">APPLY</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
       <script src="card-assets/js/jquery.min.js"></script>
       <script src="card-assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -380,9 +498,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 
 
     <script src="js/address.js"></script>
     <script src="js/checkout.js"></script>
+    <script src="js/coupon.js"></script>
 </body>
 </html>
