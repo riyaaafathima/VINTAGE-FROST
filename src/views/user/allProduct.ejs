@@ -10,6 +10,28 @@
   border: none;
   background-color: #ffffff;
 }
+
+
+.offer-badge {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.original-price {
+    text-decoration: line-through;
+    color: gray;
+}
+.discounted-price {
+    color: green;
+    font-weight: bold;
+}
+
 </style>
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
@@ -112,6 +134,8 @@
                 </div>
                 <!-- End .toolbox -->
 
+
+                
                 <div class="products mb-3">
                   <div class="row justify-content-center" id="product-list">
                     <% if (allProducts.length > 0) { %> <%
@@ -120,6 +144,13 @@
                     <div class="col-6 col-md-4 col-lg-4">
                       <div class="product product-7 text-center">
                         <figure class="product-media">
+                          <% if (product.productOfferModel) { %>
+                            <span class="offer-badge">Product Offer <%=product.offerPercentage%>%</span>
+                            <% }else if(product. categoryOfferModel){%>
+                              <span class="offer-badge">CategoryOffer <%=product.offerPercentage%>%</span>
+
+                         <%} %>
+                          
                           <a href="/product/<%=product._id%>">
                             <img
                               src="/uploads/<%=product.image[0]%>"
@@ -181,8 +212,19 @@
                           </h3>
                           <!-- End .product-title -->
                           <div class="product-price">
-                            <%=product.varients[0].price%>.rs
+                            <% if (product.productOfferModel) { %>
+                              <span class="original-price">₹<%= product.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
+                            <% } else if(product.categoryOfferModel) { %>
+                              <span class="original-price">₹<%= product.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
+
+                            <% }else{%>
+                              <span>₹<%= product.varients[0].price %></span>
+                                             
+                          <%  } %>
                           </div>
+                          
                           <!-- End .product-price -->
                           <div class="ratings-container">
                             <div class="ratings">

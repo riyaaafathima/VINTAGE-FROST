@@ -1,6 +1,7 @@
 const cartModel = require("../../model/user/cart");
 const productModel = require("../../model/admin/product");
 const userModel = require("../../model/user/user");
+const { checkCoupon } = require("../../service/checkcartQty");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -30,7 +31,12 @@ const addToCart = async (req, res) => {
       } catch (error) {
         return res.status(400).json({ success: false, message: error.message });
       }
+      const product = await productModel.findById(productId);
+      let offerPrice = price;
 
+      if (product.offerPercentage) {
+        offerPrice = price-(price*product.offerPercentage)/100;
+      }
       const cart = new cartModel({
         user: userId,
         items: [
@@ -38,7 +44,7 @@ const addToCart = async (req, res) => {
             product: productId,
             kg,
             actualPrice: price,
-            price,
+            price: offerPrice,
             instruction,
             message,
             isEggless,
@@ -46,7 +52,7 @@ const addToCart = async (req, res) => {
           },
         ],
         subTotal: price,
-        total: price,
+        total: offerPrice,
       });
 
       await cart.save();
@@ -72,12 +78,10 @@ const addToCart = async (req, res) => {
         isCartAvailable.subTotal += parseInt(oldItem.actualPrice);
         await isCartAvailable.save();
 
-        return res
-          .status(200)
-          .json({
-            message: "items added",
-            cartCount: isCartAvailable.items.length,
-          });
+        return res.status(200).json({
+          message: "items added",
+          cartCount: isCartAvailable.items.length,
+        });
       }
 
       const item = {
@@ -96,12 +100,10 @@ const addToCart = async (req, res) => {
       isCartAvailable.subTotal += parseInt(price);
 
       await isCartAvailable.save();
-      return res
-        .status(200)
-        .json({
-          message: "items added",
-          cartCount: isCartAvailable.items.length,
-        });
+      return res.status(200).json({
+        message: "items added",
+        cartCount: isCartAvailable.items.length,
+      });
     }
   } catch (error) {
     console.log(error);
@@ -119,38 +121,43 @@ const renderCart = async (req, res) => {
       model: "products",
       match: { isActive: true },
     });
-    
+
     console.log("after", cart);
-    
+
     const cartItem = cart.items.filter((item) => item.product !== null);
-    cart.items = cartItem
+    cart.items = cartItem;
     console.log("before", cart);
-    
 
     if (!cart || cart.items.length == 0) {
       return res.render("user/cart", {
         cart: null,
-        cartCount:cart.items.length,
+        cartCount: cart.items.length,
         user: true,
         packagePrice: 0,
       });
     }
-    
+
     const packagePrice = cart.items.reduce(
       (acc, item) => (acc += item.quantity * 20),
       0
     );
 
-    let user = null; 
+    let user = null;
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
       user = user.username;
-     
-    }    
-    
+    }
 
-    res.render("user/cart", { cart, user, packagePrice,cartCount:cart.items.length });
+    if (cart?.coupon) {
+      checkCoupon(userId);
+    }
+    res.render("user/cart", {
+      cart,
+      user,
+      packagePrice,
+      cartCount: cart.items.length,
+    });
   } catch (error) {
     console.error(error);
   }
@@ -237,13 +244,11 @@ const removeCart = async (req, res) => {
 
     await cart.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Product removed",
-        cartCount: cart.items.length,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Product removed",
+      cartCount: cart.items.length,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: "Error" });
@@ -264,11 +269,11 @@ const updateInstruction = async (req, res) => {
     const item = cart.items.find(
       (item) => item.kg == kg && item.product.toString() == productId
     );
-console.log("intrr",instruction);
+    console.log("intrr", instruction);
 
     item.instruction = instruction;
     await cart.save();
-    console.log("edit inster  ",cart);
+    console.log("edit inster  ", cart);
 
     return res.status(200).json({ message: "save changes" });
   } catch (error) {
@@ -296,8 +301,8 @@ const updateMessage = async (req, res) => {
 
     item.message = message;
     await cart.save();
-    console.log("edit messagge",cart);
-    
+    console.log("edit messagge", cart);
+
     return res.status(200).json({ message: "save changes" });
   } catch (error) {
     console.log(error);

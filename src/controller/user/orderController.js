@@ -292,18 +292,15 @@ const viewOrderDetails = async (req, res) => {
       address: orderDetails.address,
       selectedProduct: productDetails,
       items: otherProducts,
+      totalPrice:orderDetails.totalPrice,
+      subtotal:orderDetails.subTotal
+
+
     };
 
     res.render("user/userOrder", {
       user: userDetails,
-      order: {
-        orderId: orderDetails.orderId,
-        _id: orderDetails._id,
-        date: orderDetails.createdAt,
-        address: orderDetails.address,
-        selectedProduct: productDetails,
-        items: otherProducts,
-      },
+      order,
       cartCount,
     });
   } catch (error) {
@@ -373,9 +370,8 @@ const cancelProduct = async (req, res) => {
           field: "transaction_id",
         });
       }
-        
-      if (isWalletExists) {
 
+      if (isWalletExists) {
         wallet = await walletModel.findByIdAndUpdate(isWalletExists._id, {
           $inc: {
             balance: +orderdProduct.price,

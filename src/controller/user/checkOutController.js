@@ -1,8 +1,11 @@
 const userModel = require("../../model/user/user");
 const addressModel = require("../../model/user/address");
 const cartModel = require("../../model/user/cart");
-const WalletModel=require('../../model/user/wallet');
+const WalletModel = require("../../model/user/wallet");
 const wallet = require("../../model/user/wallet");
+const Coupon = require("../../model/admin/coupon");
+const {checkCoupon}=require('../../service/checkcartQty')
+
 
 const checkoutRender = async (req, res) => {
   try {
@@ -17,9 +20,9 @@ const checkoutRender = async (req, res) => {
     const cart = await cartModel.findOne({ user: userId }).populate({
       path: "items.product",
     });
+
     console.log(cart);
 
-     
     if (!cart) {
       return res.status(400).json({ message: "Cart not found" });
     }
@@ -29,27 +32,39 @@ const checkoutRender = async (req, res) => {
       0
     );
 
-   const wallet=await WalletModel.findOne({user:userId})
+    const wallet = await WalletModel.findOne({ user: userId });
 
-    let user = null; 
-    let cartCount=0 
+    let user = null;
+    let cartCount = 0;
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
       user = user.username;
-     const cart =await cartModel.findOne({user:id});
-     if(cart){
-      cartCount=cart.items.length
-     }
-    }    
-    
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
+      }
+    }
+    const currentDate = new Date();
+
+    const coupons = await Coupon.find({
+      isActive: true,
+      expiryDate: { $gt: currentDate },
+      minimumPurchaseAmount: { $ne: null },
+    });
+
+    if (cart?.coupon) {
+      checkCoupon(userId);
+    }
+
     res.render("user/checkout", {
       user,
       userAddress,
       cart,
       cartCount,
       packagePrice,
-      walletBalance:wallet?.balance
+      walletBalance: wallet?.balance,
+      coupons,
     });
   } catch (error) {
     console.log(error);

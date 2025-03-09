@@ -7,6 +7,14 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
 
+  coupon: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Coupon",
+  },
+  couponOffer: {
+    type: Number,
+  },
+
   items: [
     {
       product: {
@@ -20,7 +28,7 @@ const cartSchema = new mongoose.Schema({
       },
       actualPrice: {
         type: Number,
-        required:true
+        required: true,
       },
       price: {
         type: Number,

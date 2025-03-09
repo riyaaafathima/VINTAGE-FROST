@@ -72,7 +72,7 @@
                     </div>
                     <div>
                        
-                        <a href="/admin/addcoupon-page" class="btn btn-primary btn-sm rounded">create coupon</a>
+                        <a href="/admin/addOffer-page" class="btn btn-primary btn-sm rounded">create coupon</a>
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -87,66 +87,46 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>coupon name</th>
-                                    <th>coupon code</th>
+                                    <th>Category Name</th>
                                     <th>Status</th>
-                                    <th>Starting Date</th>
-                                    <th>expiryDate</th>
-                                    <th>min Amount</th>
-                                    <th>max use</th>
-                                    <th>offer Amount</th>
+                                    <th>Expiry Date</th>
+                                    <th>offer percentage</th>
+                                    
                                     <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <%coupons.forEach((item,index)=>{%>
+                                <% categoryOffers.forEach((offer, index) => { %>
                                 <tr>
-                                  
+                                    <td><%= offer.category_id.categoryName %></td>
+                            
                                     <td>
-                                        <%=item.name%>
-                                    </td>
-                                    <td><%=item.couponCode%></td>
-                                    <td>
-                                        <% if (new Date(item.expiryDate) < new Date()) { %>
+                                        <% if (new Date(offer.expiryDate) < new Date()) { %>
                                             <span class="badge rounded-pill alert-danger isActive-<%= index %>">Inactive</span>
-                                         <% } else { %>
+                                        <% } else { %>
                                             <span class="badge rounded-pill alert-success isActive-<%= index %>">Active</span>
-                                         <% } %>
-                                         
-                                      </td>
-                                      
-                                      <td>
-                                        <%= new Date(item.startDate).toLocaleDateString() %>
-                                      </td>
-                                      
-                                      <td>
-                                        <%= new Date(item.expiryDate).toLocaleDateString() %>
-                                      </td>
-                                      <td>
-                                        <%= item.minimumPurchaseAmount %>
-                                      </td>
-                                      <td>
-                                        <%= item.maximumUses %>
-                                      </td>
-                                      <td>
-                                        <%= item.offerAmount %>
-                                      </td>
-
+                                        <% } %>
+                                    </td>
+                            
+                                    <td><%= new Date(offer.expiryDate).toLocaleDateString() %></td>
+                                    <td><%= offer.offerPercentage %></td>
+                            
                                     <td class="text-end">
                                         <div class="dropdown">
-
-                                            <a href="/admin/edit-coupon/<%=item._id%>"class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit" id="edit-btn"></i> Edit </a>
-
-                                            <button class="btn btn-sm font-sm rounded delete-btn">
-                                                <i class="material-icons md-edit delete-icon" data-id="<%= item._id %>"></i>Delete
-                                              </button>
-                                                                                          <!-- <button class="btn btn-sm font-sm btn-light rounded delete-btn"  ><i class="material-icons md-delete_forever"></i> Activate </button> -->
-                                        </div>  
-                                        <!-- dropdown //end -->
+                                            <a href="/admin//edit-categryOffer/<%= offer._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                                <i class="material-icons md-edit"></i> Edit
+                                            </a>
+                            
+                                            <button class="btn btn-sm font-sm rounded delete-btn" data-id="<%= offer._id %>">
+                                                <i class="material-icons md-delete_forever delete-icon"></i>Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
-                                <% })%>
+                                <% }) %>
+                                
                             </tbody>
+                            
                         </table>
                         <!-- table-responsive.// -->
                     </div>
@@ -159,37 +139,14 @@
                 <div class="pagination-area mt-30 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            
-                            <% if (currentPage > 1) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage - 1 %>">
-                                        <i class="material-icons md-chevron_left"></i>
-                                    </a>
-                                </li>
-                            <% } %>
-                
-                            <% for (let i = 1; i <= totalPages; i++) { %>
-                                <% if (i === currentPage) { %>
-                                    <li class="page-item active">
-                                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                    </li>
-                                <% } else if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) { %>
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-                                    </li>
-                                <% } else if (i === currentPage - 2 || i === currentPage + 2) { %>
-                                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                                <% } %>
-                            <% } %>
-                
-                            <% if (currentPage < totalPages) { %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage + 1 %>">
-                                        <i class="material-icons md-chevron_right"></i>
-                                    </a>
-                                </li>
-                            <% } %>
-                
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
                         </ul>
                     </nav>
                 </div>

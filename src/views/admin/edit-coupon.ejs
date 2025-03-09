@@ -127,13 +127,13 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="expiryDate" class="form-label">Expiry Date</label>
-                            <input type="date" class="form-control date-input" id="expiryDate" value="<%=coupon.expiryDate%>">
+                            <input type="date" class="form-control date-input" id="expiryDate" value="<%=coupon.expiryDate ?coupon.expiryDate.toISOString().split('T')[0] : ''%>">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="startDate" class="form-label">Start Date</label>
-                            <input type="date" class="form-control date-input" id="startDate" value="<%=coupon.startDate%>">
+                            <input type="date" class="form-control date-input" id="startDate" value="<%=coupon.startDate ? coupon.startDate.toISOString().split('T')[0] : ''%>">
                         </div>
                     </div>
                     <div class="col-md-3">

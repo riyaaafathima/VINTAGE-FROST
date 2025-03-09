@@ -90,7 +90,7 @@ const productPageRender = async (req, res) => {
 
     const Products = await productModel
       .find(filter)
-      .populate({
+      .populate({ 
         path: "category",
         match: { isActive: true }, // Ensure only active categories are populated
       })
@@ -102,6 +102,7 @@ const productPageRender = async (req, res) => {
 
     const categories = await categoryModel.find({ isActive: true });
 
+console.log(allProducts);
 
 
     let user = null;
