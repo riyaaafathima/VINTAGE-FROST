@@ -6,7 +6,7 @@ const userRouter = require("./router/user/route");
 const adminRouter=require('./router/admin/route')
 const connectDb = require("./config/db/dbConnection");
 const passport=require('passport')
-const userRoutes = require("./router/user/route"); 
+
 
 const path = require("path");
 
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
 }); 
 
 
-app.use("/", userRoutes);   
+    
 app.use('/admin',adminRouter);
 app.use(userRouter);
 app.use('/auth',googleRouter)

@@ -61,8 +61,6 @@ const {
 } = require("../../controller/admin/offerController");
 
 
-const{couponBadge}=require('../../controller/user/couponController')
-
 const router = require("express").Router();
 
 router.get("/dashboard", preventNavigation, dashboardRender);
@@ -130,8 +128,5 @@ router.get("/edit-productOffer/:id", editProductOfferPage);
 router.put("/update-productOffer/:id", editProductOffer);
 router.put('/delete-productoffer/:id',removeProductOffer)
 router.put('/delete-categoryoffer/:id',removeCategoryOffer)
-
-
-router.post('/coupon',couponBadge)
 
 module.exports = router;

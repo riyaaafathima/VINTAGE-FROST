@@ -19,6 +19,7 @@ const checkoutRender = async (req, res) => {
 
     const cart = await cartModel.findOne({ user: userId }).populate({
       path: "items.product",
+      path:'coupon'
     });
 
     console.log(cart);

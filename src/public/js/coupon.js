@@ -27,7 +27,6 @@ const selectedRadio = document.querySelector('.radio-btn:checked');
     }
     const couponId = selectedRadio.getAttribute('data-id');
     const couponCode = selectedRadio.closest('.coupon-item').querySelector('.coupon-code').textContent.trim();
-   console.log(couponCode,couponId);
    
    try {
     const response = await fetch('/coupon', {
@@ -35,12 +34,20 @@ const selectedRadio = document.querySelector('.radio-btn:checked');
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify( {couponCode} ) 
+        body: JSON.stringify( {couponCode,couponId} ) 
     });
 
     if (response.ok) {
         const data = await response.json();
-        alert(`Coupon Applied! Discount: ${data.discount}%`);
+        Swal.fire({
+            position: "center",
+            icon: "success",
+            title: 'coupon applied',
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            window.location.reload();
+          });
     } else {
         alert("Failed to apply coupon");
     }
@@ -48,5 +55,8 @@ const selectedRadio = document.querySelector('.radio-btn:checked');
     console.log(error);
 }
 })
+
+
+
 
 

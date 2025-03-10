@@ -23,6 +23,9 @@ const {
   checkCart,
 } = require("../../middleware/requireUser");
 
+const{couponBadge, removeCoupon}=require('../../controller/user/couponController')
+
+
 const {addToCart, renderCart,updatesCartQuantity, removeCart, updateInstruction, updateMessage}=require('../../controller/user/cartController');
 const { userProfileRender, editUserProfile, userAddressRender, getUserAddress, editAddress, recentPasswordPage, deleteAddress, updatePassword } = require("../../controller/user/userProfileController");
 const{orderPageRender, placeOrder, viewOrderDetails, cancelProduct, getKey, createRazorPayOrder, verifyPayment}=require('../../controller/user/orderController')
@@ -84,11 +87,16 @@ router.patch('/order/cancel/:orderId/:productId/:itemId', cancelProduct);
 router.get('/whishlist-page',requireUser,whishlistPageRender)
 router.post('/add-wishlist',addToWhishList)
 router.get('/wishlist',getWishlist)
-router.post('/wishlist-remove',removeWishList)
+router.post('/wishlist-remove',removeWishList)      
 
 
 router.get('/razor-key',getKey)
 router.post('/razor-order',createRazorPayOrder)
 router.post('/razor-verify',verifyPayment)
+
+router.post('/coupon',couponBadge)
+
+router.delete('/remove-coupon',removeCoupon)
+
 module.exports = router;
     

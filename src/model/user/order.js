@@ -2,13 +2,12 @@ const mongoose = require("mongoose");
 const Counter = require("./counter");
 
 const AddressSchema = new mongoose.Schema({
-  name:{
-    type:String,
-    
+  name: {
+    type: String,
   },
   place: {
     type: String,
-    required: true,  
+    required: true,
   },
   state: {
     type: String,
@@ -43,23 +42,21 @@ const AddressSchema = new mongoose.Schema({
   },
 });
 
-
-
-const ProductSchema = new  mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
   product: {
     type: String,
     required: true,
   },
-  productId:{  
-    type:mongoose.Schema.Types.ObjectId,  
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "products",
     required: true,
   },
   status: {
     type: String,
     required: true,
-    enum: ["Pending", "Processing", "Delivered","Cancelled"],
-    default:'Pending'
+    enum: ["Pending", "Processing", "Delivered", "Cancelled"],
+    default: "Pending",
   },
   kg: {
     type: Number,
@@ -69,12 +66,16 @@ const ProductSchema = new  mongoose.Schema({
     type: Number,
     required: true,
   },
-  image:{
-    type:[]
-    },
+  image: {
+    type: [],
+  },
   price: {
     type: Number,
-    required: true,   
+    required: true,
+  },
+  offerPrice:{
+    type:Number,
+
   },
 
   quantity: {
@@ -91,19 +92,19 @@ const ProductSchema = new  mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  reason:{
-    type:String,
-  }
+  reason: {
+    type: String,
+  },
 });
 
-const OrderSchema = new  mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
   {
-    orderId: {  
+    orderId: {
       type: Number,
       unique: true,
     },
     userId: {
-      type:mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
@@ -119,7 +120,7 @@ const OrderSchema = new  mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["COD", "Razorpay", "Wallet"],  
+      enum: ["COD", "Razorpay", "Wallet"],
     },
     totalQuantity: {
       type: Number,
@@ -131,9 +132,8 @@ const OrderSchema = new  mongoose.Schema(
       enum: ["Failed", "Pending", "Success"],
       default: "Pending",
     },
-    coupon: {
-      type: mongoose.Types.ObjectId,
-      ref:"coupon",
+    couponCode: {
+      type: String,
     },
     couponDiscount: {
       type: Number,
@@ -141,9 +141,9 @@ const OrderSchema = new  mongoose.Schema(
     discount: {
       type: Number,
     },
-    packagingPrice:{
-      type:Number
-    }
+    packagingPrice: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );
@@ -174,6 +174,3 @@ OrderSchema.pre("save", async function (next) {
 });
 
 module.exports = mongoose.model("Order", OrderSchema);
-
-
-

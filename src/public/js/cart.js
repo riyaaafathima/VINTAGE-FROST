@@ -60,8 +60,16 @@ document.querySelectorAll(".quantity-input").forEach((input) => {
       return;
     }
 
+    if (newQuantity > 10) {
+      e.target.value = 9;
+      //alert
+      return;
+    }
+
     try {
       input.disabled = true;
+      console.log(productId,  newQuantity, kg);
+      
       const response = await fetch("/update-cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,11 +92,6 @@ document.querySelectorAll(".quantity-input").forEach((input) => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  // if (!cart || cart.items.length == 0) {
-  //   localStorage.setItem("cart-count", 0);
-  // } else {
-  //   localStorage.setItem("cart-count", cart.items.length);
-  // }
   const remove_btn_el = document.querySelectorAll(".btn-remove");
 
   remove_btn_el.forEach((btn) => {

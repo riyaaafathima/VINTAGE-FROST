@@ -33,9 +33,10 @@ const addToCart = async (req, res) => {
       }
       const product = await productModel.findById(productId);
       let offerPrice = price;
-
+      let off = null;
       if (product.offerPercentage) {
-        offerPrice = price-(price*product.offerPercentage)/100;
+        offerPrice = price - (price * product.offerPercentage) / 100;
+        off = price - (price * product.offerPercentage) / 100;
       }
       const cart = new cartModel({
         user: userId,
@@ -45,6 +46,7 @@ const addToCart = async (req, res) => {
             kg,
             actualPrice: price,
             price: offerPrice,
+            offerPrice: off,
             instruction,
             message,
             isEggless,
@@ -84,12 +86,20 @@ const addToCart = async (req, res) => {
         });
       }
 
+      const product = await productModel.findById(productId);
+      let off = null;
+      let offerPrice = price;
+      if (product.offerPercentage) {
+        offerPrice = price - (price * product.offerPercentage) / 100;
+        off = price - (price * product.offerPercentage) / 100;
+      }
       const item = {
         product: productId,
         kg,
-        price,
+        price: offerPrice,
         instruction,
         actualPrice: price,
+        offerPrice: off,
         message,
         isEggless,
         quantity: 1,
@@ -152,6 +162,7 @@ const renderCart = async (req, res) => {
     if (cart?.coupon) {
       checkCoupon(userId);
     }
+
     res.render("user/cart", {
       cart,
       user,
@@ -182,6 +193,7 @@ const updatesCartQuantity = async (req, res) => {
     const item = cart.items.find(
       (item) => item.product.toString() === productId && item.kg == kg
     );
+
     if (!item) {
       return res
         .status(404)
@@ -193,9 +205,17 @@ const updatesCartQuantity = async (req, res) => {
     } catch (error) {
       return res.status(400).json({ success: false, message: error.message });
     }
+    console.log("========", quantity, item.price, quantity * item.price);
 
     item.quantity = quantity;
-    item.price = quantity * item.actualPrice;
+
+    if (item.offerPrice) {
+      item.price = quantity * item.offerPrice;
+    }else{
+      item.price = quantity * item.actualPrice;
+    }
+
+
 
     cart.total = cart.items.reduce((sum, i) => sum + i.price, 0);
     cart.subTotal = cart.items.reduce(
@@ -203,6 +223,7 @@ const updatesCartQuantity = async (req, res) => {
       0
     );
     await cart.save();
+    checkCoupon(userId);
 
     res.status(200).json({ success: true, message: "Quantity updated", item });
   } catch (error) {

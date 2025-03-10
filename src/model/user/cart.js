@@ -30,6 +30,10 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      offerPrice:{
+        type: Number,
+        default:null
+      },
       price: {
         type: Number,
         required: true,

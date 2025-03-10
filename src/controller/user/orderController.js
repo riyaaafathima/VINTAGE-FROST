@@ -9,6 +9,7 @@ const RazorPay = require("razorpay");
 const crypto = require("crypto");
 const counter = require("../../model/user/counter");
 const { type } = require("os");
+const couponModel = require("../../model/admin/coupon");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -97,6 +98,7 @@ const placeOrder = async (req, res) => {
       image: item.product.image,
       actualPrice: item.actualPrice,
       price: item.price,
+      offerPrice:item.offerPrice,
       quantity: item.quantity,
       message: item.message,
       instruction: item.instruction,
@@ -141,6 +143,15 @@ const placeOrder = async (req, res) => {
       paymentStatus = "Pending";
     }
 
+    let couponCode=null
+    let couponDiscount=null
+    if (userCart?.coupon) {
+      const coupon=await couponModel.findById(userCart.coupon)
+      couponCode=coupon.couponCode
+      couponDiscount=coupon.offerAmount
+    }
+ 
+
     const orderData = {
       userId: userId,
       address: updatedAddress,
@@ -150,6 +161,8 @@ const placeOrder = async (req, res) => {
       subTotal: userCart.subTotal,
       totalPrice: userCart.total,
       packagingPrice,
+      couponCode,
+      couponDiscount,
       paymentStatus,
     };
 

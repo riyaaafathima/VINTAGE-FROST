@@ -1,9 +1,13 @@
+const cartModel = require("../model/user/cart");
+const Coupon = require("../model/admin/coupon");
+
 exports.checkCoupon = async (userId) => {
   try {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ user: userId });
 
     if (cart.coupon) {
       const coupon = await Coupon.findOne({ _id: cart.coupon });
+      console.log(coupon, "ghjkl;");
 
       if (
         coupon.minimumPurchaseAmount &&
