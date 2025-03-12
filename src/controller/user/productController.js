@@ -25,24 +25,31 @@ const homePageRender = async (req, res) => {
       .sort({ rating: -1 })
       .limit(10);
 
-    let user = null;
-    let cartCount = 0;
-    if (req.session?.user) {
-      const id = req.session?.user?._id;
-      user = await userModel.findById(id);
-      user = user.username;
-      const cart = await cartModel.findOne({ user: id });
-      if (cart) {
-        cartCount = cart.items.length;
+      let user = null;
+      let cartCount = 0;
+      let wishlist=[]
+      if (req.session?.user) {
+        const id = req.session?.user?._id;
+        user = await userModel.findById(id);
+        user = user.username;
+        const cart = await cartModel.findOne({ user: id });
+        if (cart) {
+          cartCount = cart.items.length;
+        }
+        let items = await wishlistModel.findOne({ user: id });
+        if(items){
+          wishlist=items.products
+        }
+  
       }
-    }
 
     res.render("user/homepage", {
       allProducts,
       user,
       latestProducts,
       topRated,
-      cartCount,
+      cartCount,  
+      wishlist  
     });
   } catch (error) {
     console.log(error);

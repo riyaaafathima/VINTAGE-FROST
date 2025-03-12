@@ -4,7 +4,29 @@
 <%- include('partials/header.ejs') %>
     
 
+<style>
 
+.offer-badge {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.original-price {
+    text-decoration: line-through;
+    color: gray;
+}
+.discounted-price {
+    color: green;
+    font-weight: bold;
+}
+
+</style>
 <main>
 
       <!-- <h1>cakes by flavours</h1> -->
@@ -136,29 +158,67 @@
                   <%allProducts.forEach((item)=>{%>
                   <div class="product product-11 text-center">
                       <figure class="product-media">
-                          <a href="product.html">
+                        <% if (item.productOfferModel) { %>
+                          <span class="offer-badge">Product Offer <%=item.offerPercentage%>%</span>
+                          <% }else if(item. categoryOfferModel){%>
+                            <span class="offer-badge">CategoryOffer <%=item.offerPercentage%>%</span>
+
+                       <%} %>
+                        <div class="col-6 col-md-4 col-lg-4">
+                          <div class="product product-7 text-center">
+                         
+                            <!-- End .product-media -->
+    
+                         
+                            <!-- End .product-body -->
+                          </div>
+                          <!-- End .product -->
+                        </div>
+                          <a href="/product/<%=item._id%>">
                               <img src="/uploads/<%=item.image[0]%>" alt="Product image" class="product-image">
                               <img src="/uploads/<%=item.image[1]%>" alt="Product image" class="product-image-hover">
                           </a>
 
                           <div class="product-action-vertical">
-                              <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
-                          </div><!-- End .product-action-vertical -->
+                            <a
+                            href="#"
+                            class="btn-product-icon btn-expandable wishlist-btn"
+                            data-product-id="<%=item._id %>"
+                          >
+                            <% if(wishlist.includes(item._id.toString())) { %>
+                              <i class="fa-solid fa-heart"></i>
+                              <span> remove from wishlist</span>
+                            <% } else { %>
+                              <i class="fa-regular fa-heart"></i>
+                              <span> add to wishlist</span>
+                            <% } %>
+                          </a><!-- End .product-action-vertical -->
+<!-- End .product-action-vertical -->
                       </figure><!-- End .product-media -->
 
                       <div class="product-body">
                           <h3 class="product-title"><a href="product.html">Octo 4240</a></h3><!-- End .product-title -->
                           <div class="product-price">
-                              $746,00
-                          </div><!-- End .product-price -->
+                            <% if (item.productOfferModel) { %>
+                              <span class="original-price">₹<%= item.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
+                            <% } else if(item.categoryOfferModel) { %>
+                              <span class="original-price">₹<%= item.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
 
+                            <% }else{%>
+                              <span>₹<%= item.varients[0].price %></span>
+                                             
+                          <%  } %>
+                          </div>
+                          
                           <div class="product-nav product-nav-dots">
                               <a href="#" class="active" style="background: #1f1e18;"><span class="sr-only">Color name</span></a>
                               <a href="#" style="background: #e8e8e8;"><span class="sr-only">Color name</span></a>
                           </div><!-- End .product-nav -->
                       </div><!-- End .product-body -->
                       <div class="product-action">
-                          <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                          <a href="/product/<%=item._id%>" class="btn-product btn-cart"><span>View</span></a>
                       </div><!-- End .product-action -->
                   </div><!-- End .product -->
 
@@ -203,26 +263,54 @@
                   <% latestProducts.forEach((item)=>{%>
                   <div class="product product-11 text-center">
                       <figure class="product-media">
+                        <figure class="product-media">
+                          <% if (item.productOfferModel) { %>
+                            <span class="offer-badge">Product Offer <%=item.offerPercentage%>%</span>
+                            <% }else if(item. categoryOfferModel){%>
+                              <span class="offer-badge">CategoryOffer <%=item.offerPercentage%>%</span>
+  
+                         <%} %>
                           <span class="product-label label-new">NEW</span>
-                          <a href="product.html">
+                          <a href="/product/<%=item._id%>">
                               <img src="/uploads/<%=item.image[0]%>" alt="Product image" class="product-image">
                               <img src="/uploads/<%=item.image[1]%>" alt="Product image" class="product-image-hover">
                           </a>
 
                           <div class="product-action-vertical">
-                              <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
-                          </div><!-- End .product-action-vertical -->
+                            <a
+                            href="#"
+                            class="btn-product-icon btn-expandable wishlist-btn"
+                            data-product-id="<%=item._id %>"
+                          >
+                            <% if(wishlist.includes(item._id.toString())) { %>
+                              <i class="fa-solid fa-heart"></i>
+                              <span> remove from wishlist</span>
+                            <% } else { %>
+                              <i class="fa-regular fa-heart"></i>
+                              <span> add to wishlist</span>
+                            <% } %>
+                          </a><!-- End .product-action-vertical -->
 
                       </figure><!-- End .product-media -->
 
                       <div class="product-body">
                           <h3 class="product-title"><a href=""><%=item.productName%></a></h3><!-- End .product-title -->
-                          <div class="product-price">
-                            ₹<%=item.varients[0].price%>
+                           <div class="product-price">
+                            <% if (item.productOfferModel) { %>
+                              <span class="original-price">₹<%= item.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
+                            <% } else if(item.categoryOfferModel) { %>
+                              <span class="original-price">₹<%= item.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
+
+                            <% }else{%>
+                              <span>₹<%= item.varients[0].price %></span>
+                                             
+                          <%  } %>
                           </div><!-- End .product-price -->
                       </div><!-- End .product-body -->
                       <div class="product-action">
-                          <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                          <a href="/product/<%=item._id%>" class="btn-product btn-cart"><span>view </span></a>
                       </div><!-- End .product-action -->
                   </div><!-- End .product -->
                   <% })%>
@@ -261,24 +349,55 @@
                   }'>
                   <div class="product product-11 text-center">
                       <figure class="product-media">
-                          <a href="product.html">
+
+                        <figure class="product-media">
+                          <% if (item.productOfferModel) { %>
+                            <span class="offer-badge">Product Offer <%=item.offerPercentage%>%</span>
+                            <% }else if(item. categoryOfferModel){%>
+                              <span class="offer-badge">CategoryOffer <%=item.offerPercentage%>%</span>
+  
+                         <%} %>
+                          <a href="/product/<%=item._id%>">
                               <img src="/uploads/<%=item.image[0]%>" alt="Product image" class="product-image">
                               <img src="/uploads/<%=item.image[1]%>" alt="Product image" class="product-image-hover">
                           </a>
 
                           <div class="product-action-vertical">
-                              <a href="#" class="btn-product-icon btn-wishlist"><span>add to wishlist</span></a>
-                          </div><!-- End .product-action-vertical -->
+                            <a
+                            href="#"
+                            class="btn-product-icon btn-expandable wishlist-btn"
+                            data-product-id="<%=item._id %>"
+                          >
+                            <% if(wishlist.includes(item._id.toString())) { %>
+                              <i class="fa-solid fa-heart"></i>
+                              <span> remove from wishlist</span>
+                            <% } else { %>
+                              <i class="fa-regular fa-heart"></i>
+                              <span> add to wishlist</span>
+                            <% } %>
+                          </a><!-- End .product-action-vertical -->
+<!-- End .product-action-vertical -->
                       </figure><!-- End .product-media -->
 
                       <div class="product-body">
-                          <h3 class="product-title"><a href="product.html"><%=item.productName%></a></h3><!-- End .product-title -->
-                          <div class="product-price">
-                            ₹<%=item.varients[0].price%>
-                          </div><!-- End .product-price -->
-                      </div><!-- End .product-body -->
+                        <h3 class="product-title"><a href=""><%=item.productName%></a></h3><!-- End .product-title -->
+                         <div class="product-price">
+                          <% if (item.productOfferModel) { %>
+                            <span class="original-price">₹<%= item.varients[0].price %></span>
+                            <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
+                          <% } else if(item.categoryOfferModel) { %>
+                            <span class="original-price">₹<%= item.varients[0].price %></span>
+                            <span class="discounted-price">₹<%= item.varients[0].price -(item.varients[0].price*item.offerPercentage)/100%></span>
+
+                          <% }else{%>
+                            <span>₹<%= item.varients[0].price %></span>
+                                           
+                        <%  } %>
+                        </div><!-- End .product-price -->
+                    </div>
+                      <!-- End .product-body -->
                       <div class="product-action">
-                          <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                          <a href="/product/<%=item._id%>" class="btn-product btn-cart"><span> View </span></a>
                       </div><!-- End .product-action -->
                   </div><!-- End .product -->
                
@@ -326,7 +445,89 @@
   <script src="card-assets/js/jquery.plugin.min.js"></script>
   <script src="card-assets/js/jquery.magnific-popup.min.js"></script>
   <script src="card-assets/js/jquery.countdown.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
   <!-- Main JS File -->
   <script src="card-assets/js/main.js"></script>
   <script src="card-assets/js/demos/demo-2.js"></script>
+    
+  <script>
+
+const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+const showErrorToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.error(message);
+};
+
+const showSuccessToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.success(message);
+};
+
+wishlistButtons.forEach(button => {
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const productId = button.dataset.productId;
+    const heartIcon = button.querySelector('i');
+    const textSpan = button.querySelector('span');
+
+    const isInWishlist = heartIcon.classList.contains('fa-solid');
+
+    if (isInWishlist) {
+      try {
+        const response = await fetch('/wishlist-remove', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
+        });
+
+        if (response.ok) {
+          heartIcon.classList.remove('fa-solid');
+          heartIcon.classList.add('fa-regular');
+          textSpan.textContent = ' add to wishlist';
+          showErrorToast('Removed from wishlist');
+        } else {
+          showErrorToast('Could not remove from wishlist');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+    } else {
+      try {
+        const response = await fetch('/add-wishlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
+        });
+
+        if (response.ok) {
+          heartIcon.classList.remove('fa-regular');
+          heartIcon.classList.add('fa-solid');
+          textSpan.textContent = ' remove from wishlist';
+          showSuccessToast('Added to wishlist');
+        } else {
+          showErrorToast('Could not add to wishlist');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  });
+});
+
+  </script>
 </html>

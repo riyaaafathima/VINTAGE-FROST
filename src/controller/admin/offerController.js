@@ -149,11 +149,13 @@ const updateCategoryOffer = async (req, res) => {
     }
 
     // Find all products associated with this category offer
-    const products = await productModel.find({ categoryOfferModel: id });
+    const products = await productModel.find({ category: category_id });
+    console.log("product",products);
 
     // Resolve promises inside map using Promise.all
     const bulkOperations = await Promise.all(
       products.map(async (product) => {
+        
         if (product.productOfferModel) {
           const existingOffer = await productOfferModel.findById(
             product.productOfferModel
@@ -297,7 +299,7 @@ const createProductOffer = async (req, res) => {
 
 const editProductOffer = async (req, res) => {
   try {
-    const { expiryDate, offerPercentage } = req.body;
+    const { expiryDate, offerPercentage,product_id } = req.body;
     console.log(req.body);
 
     const { id } = req.params;
@@ -316,9 +318,9 @@ const editProductOffer = async (req, res) => {
       return res.status(401).json("offer not found");
     }
 
-    const product = await productModel.findById(id);
+    const product = await productModel.findById(product_id);
 
-    if (product.categoryOfferModel) {
+    if (product?.categoryOfferModel) {
       if (product.offerPercentage < newProductOffer.offerPercentage) {
         product.categoryOfferModel = null;
         product.productOfferModel = newProductOffer._id;

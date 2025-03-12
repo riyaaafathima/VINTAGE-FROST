@@ -61,6 +61,8 @@ const {
 } = require("../../controller/admin/offerController");
 
 
+const{ generateOrderExcel, generateOrderCSV, generateOrderPDF }=require('../../controller/admin/orderlistController')
+
 const router = require("express").Router();
 
 router.get("/dashboard", preventNavigation, dashboardRender);
@@ -128,5 +130,10 @@ router.get("/edit-productOffer/:id", editProductOfferPage);
 router.put("/update-productOffer/:id", editProductOffer);
 router.put('/delete-productoffer/:id',removeProductOffer)
 router.put('/delete-categoryoffer/:id',removeCategoryOffer)
+
+
+router.post("/order-generate-excel", generateOrderExcel);
+router.post("/order-generate-csv", generateOrderCSV);
+router.post("/order-generate-pdf", generateOrderPDF);
 
 module.exports = router;

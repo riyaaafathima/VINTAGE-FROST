@@ -7,6 +7,8 @@ const couponBadge = async (req, res) => {
   try {
     const userId = req.session?.user?._id;
     const { couponCode, couponId } = req.body;
+    console.log(req.body);
+    
 
     console.log(req.body);
     const currentDate = new Date();

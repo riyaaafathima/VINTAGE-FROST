@@ -1,6 +1,25 @@
 const status_btn_el=document.querySelectorAll('.status-change-btn')
 const instruction_el = document.querySelectorAll("#instruction-Btn");
 const mssg_el = document.querySelectorAll("#mssg-btn");
+const showErrorToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.error(message);
+};
+
+
+
+const showSuccessToast = (message) => {
+  toastr.options = {
+    positionClass: "toast-top-center",
+    timeOut: "3000",
+    closeButton: true,
+  };
+  toastr.success(message);
+};
 
 
 status_btn_el.forEach((btn)=>{
@@ -21,11 +40,11 @@ status_btn_el.forEach((btn)=>{
             body:JSON.stringify({status})
         })
        if(response.ok){
-        alert('stattus updated')
+        showSuccessToast('status updated successfully')
         window.location.reload()
 
        }else{
-        alert('somethimg wrong')
+        showErrorToast('something went wrong')
        }
   
       } catch (error) {

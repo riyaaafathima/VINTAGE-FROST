@@ -629,58 +629,70 @@
     <script src="js/address.js"></script>
     <script src="js/checkout.js"></script>
     <script src="js/coupon.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https: //cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script>
-  
-const removeModalOpenEl = document.querySelector('.remove-icon');
-const couponInfoModal = document.getElementById('couponInfoModal');
-const removeCouponCloseBtn = document.getElementById('removeCouponCloseBtn');
-const remove_btn=document.querySelector('.remove-btn')
-const modal = new bootstrap.Modal(couponInfoModal);
+ 
 
 
+const modal_open_coupon_el=document.querySelector('.coupon-modal')
+const btn=document.querySelector('.btn-primary')
+const apply_btn=document.getElementById('apply-btn')
+const radio_btn=document.querySelector('.radio-btn')
+
+console.log(apply_btn);
+  const radio_buttons = document.querySelectorAll('.radio-btn')
 
 
-removeModalOpenEl.addEventListener('click', (e) => {
-  e.preventDefault();
-  modal.show();
-});
+modal_open_coupon_el.addEventListener('click',(e)=>{
+    e.preventDefault()
+    const modal = btn.getAttribute('data-bs-target')
+    modal.show()
+})
 
 
+apply_btn.addEventListener('click',async(e)=>{
+    e.preventDefault()
+    console.log(apply_btn);
 
+const selectedRadio = document.querySelector('.radio-btn:checked');
+    if (!selectedRadio) {
+        alert("Please select a coupon!");
+        return;
+    }
+    const couponId = selectedRadio.getAttribute('data-id');
+    const couponCode = selectedRadio.closest('.coupon-item').querySelector('.coupon-code').textContent.trim();
+   
+   try {
+    const response = await fetch('/coupon', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( {couponCode,couponId} ) 
+    });
 
-
-remove_btn.addEventListener('click',async(e)=>{
-  try {
-    
-    console.log(remove_btn,'remove');
-    
-    const response=await fetch('/remove-coupon',{
-      method:'DELETE',
-      headers:{
-        'Content-Type':'application/json',
-        body:JSON.stringify({})
-      }
-
-    })
     if (response.ok) {
-      Swal.fire({
+        const data = await response.json();
+        Swal.fire({
             position: "center",
             icon: "success",
-            title: 'coupon removed',
+            title: 'coupon applied',
             showConfirmButton: false,
             timer: 1500,
           }).then(() => {
             window.location.reload();
-            modal.hide();
           });
+    } else {
+        showErrorToast('coupon cannot apply')
     }
-  } catch (error) {
+} catch (error) {
     console.log(error);
-    modal.hide();
-    
-  }
+}
 })
+
+
+
+
 
 </script>
 

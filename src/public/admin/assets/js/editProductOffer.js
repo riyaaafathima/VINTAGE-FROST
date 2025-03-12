@@ -14,7 +14,7 @@ console.log("s,dmfnadm.sfn");
     expiryDate: expirydate_el.value,
   };
 
-  console.log(editedoffer);
+  console.log("editedoffer",editedoffer);
 
   try {
     const response = await fetch(
@@ -29,7 +29,6 @@ console.log("s,dmfnadm.sfn");
     );
 
     const data = await response.json();
-    console.log(data);
 
     if (response.ok) {
       swal.fire("successfully edited").then(() => {

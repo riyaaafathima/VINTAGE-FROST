@@ -86,6 +86,7 @@ function removeAddressFromDOM(id) {
     }
   }
 }
+
 placeorder_btn_el.addEventListener("click", async (e) => {
   const walletBalance=wallet_el.getAttribute('data-balance')
   let totalAmount_val = total_amount.innerHTML;
@@ -109,7 +110,7 @@ placeorder_btn_el.addEventListener("click", async (e) => {
     showErrorToast("please select a address");
     return;
   }
-  console.log("Razorpay", selectedPaymentMethod.value);
+
   if (
     selectedPaymentMethod.value == "COD" ||
     selectedPaymentMethod.value == "Wallet"
@@ -136,14 +137,14 @@ const saveOrderOnCashOnDelivery = async (paymentMethod, addressId,walletBalance,
 
 if(paymentMethod=='Wallet'){
   if(Number(walletBalance)<Number(totalAmount)){
-    alert('0 balance')
-    return
+showErrorToast('Insufficient Balance Go For Another Payment Method')   
+return
   }
 
 }
 if(totalAmount>1000 && paymentMethod=='COD'){
-  alert('order above 1000 not alloed in cod')
-
+  showErrorToast('Order Above 1000 Are Not Allowed In COD')
+  return 
 }else{
 
 }
@@ -201,7 +202,6 @@ const InitializeRazorPayment = async (
     });
 
     const key = await response.json();
-    console.log(totalAmount, key);
 
     const razorOrder = await fetch("/razor-order", {
       method: "POST",
@@ -224,7 +224,6 @@ const InitializeRazorPayment = async (
       order_id: order.id,
 
       handler: function (response) {
-        console.log("success", response);
 
         saveOrderRazor(response, order, paymentMethod, addressId);
       },
@@ -255,21 +254,7 @@ const saveOrderRazor = async (
   selectedAddress
 ) => {
   try {
-    //saving the order
-    // const response = await fetch("/place-order", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     addressId: selectedAddress,
-    //     paymentMethod: selectedPayment,
-    //   }),
-    // });
-
-    // const data = await response.json();
-
-    //saving payment
+   
     const verifyData = await fetch("/razor-verify", {
       method: "POST",
       headers: {
@@ -284,12 +269,25 @@ const saveOrderRazor = async (
     if (verifyData.ok) {
       saveOrderOnCashOnDelivery(selectedPayment, selectedAddress);
     } else {
-      showErrorToast("somthing went wrong");
+      showErrorToast("something went wrong");
     }
   } catch (error) {
     console.log(error);
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

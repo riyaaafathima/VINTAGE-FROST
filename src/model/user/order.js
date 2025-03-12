@@ -70,7 +70,7 @@ const ProductSchema = new mongoose.Schema({
     type: [],
   },
   price: {
-    type: Number,
+    type: Number,  
     required: true,
   },
   offerPrice:{
@@ -105,7 +105,7 @@ const OrderSchema = new mongoose.Schema(
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "users",
       required: true,
     },
     address: AddressSchema,

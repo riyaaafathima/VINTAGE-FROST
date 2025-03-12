@@ -61,6 +61,16 @@
       rel="stylesheet"
       href="/card-assets/css/plugins/nouislider/nouislider.css"
     />
+    <style>
+      .original-price {
+    text-decoration: line-through;
+    color: gray;
+}
+.discounted-price {
+    color: green;
+    font-weight: bold;
+}
+    </style>
   </head>
 
   <body>
@@ -192,12 +202,12 @@
                     <!-- End .product-title -->
                     <% if(product.varients.stock==0){%>
 
-                    <h4 id="stock">Out of stock</h4>
+                    <h2 id="stock" style="color:rgb(143, 0, 0) ;">Out of Stock</h2>
                     <%} else if(product.varients.stock<=10) {%>
-                    <h4 id="stock">Limited stock</h4>
+                    <h2 id="stock" style="color: rgb(169, 110, 0);">Limited Stock</h2>
 
                     <% } else{%>
-                    <h4 id="stock">In stock </h4>
+                    <h2 id="stock" style="color: #A6C76C;">IN Stock </h2>
                     <% } %>
                     <div class="ratings-container">
                       <div class="ratings">
@@ -215,7 +225,18 @@
                     <!-- End .rating-container -->
 
                     <div class="product-price">
-                      <%=product.varients[0].price%>
+
+                      <% if (product.productOfferModel) { %>
+                              <span class="original-price">₹<%= product.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
+                            <% } else if(product.categoryOfferModel) { %>
+                              <span class="original-price">₹<%= product.varients[0].price %></span>
+                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
+
+                            <% }else{%>
+                              <span>₹<%= product.varients[0].price %></span>
+                                             
+                          <%  } %>
                     </div>
                     <!-- End .product-price ----->
 

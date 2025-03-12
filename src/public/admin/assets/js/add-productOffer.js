@@ -26,7 +26,9 @@ addcoupon_btn_el.addEventListener("click", async (e) => {
     console.log(data);
 
     if (response.ok) {
-      alert("success");
+      swal.fire("successfully added").then(() => {
+        window.location.href = "/admin/productOffer-page";
+      });
     }
   } catch (error) {
     console.log(error);
