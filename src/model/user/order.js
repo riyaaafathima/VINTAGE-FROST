@@ -100,7 +100,7 @@ const ProductSchema = new mongoose.Schema({
 const OrderSchema = new mongoose.Schema(
   {
     orderId: {
-      type: Number,
+      type: String,
       unique: true,
     },
     userId: {
