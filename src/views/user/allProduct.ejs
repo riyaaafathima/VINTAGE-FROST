@@ -212,10 +212,10 @@
                           </h3>
                           <!-- End .product-title -->
                           <div class="product-price">
-                            <% if (product.productOfferModel) { %>
+                            <% if (product?.productOfferModel) { %>
                               <span class="original-price">₹<%= product.varients[0].price %></span>
                               <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
-                            <% } else if(product.categoryOfferModel) { %>
+                            <% } else if(product?.categoryOfferModel) { %>
                               <span class="original-price">₹<%= product.varients[0].price %></span>
                               <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
 

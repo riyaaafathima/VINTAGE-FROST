@@ -150,12 +150,11 @@ const updateCategoryOffer = async (req, res) => {
 
     // Find all products associated with this category offer
     const products = await productModel.find({ category: category_id });
-    console.log("product",products);
+    console.log("product", products);
 
     // Resolve promises inside map using Promise.all
     const bulkOperations = await Promise.all(
       products.map(async (product) => {
-        
         if (product.productOfferModel) {
           const existingOffer = await productOfferModel.findById(
             product.productOfferModel
@@ -221,6 +220,29 @@ const removeCategoryOffer = async (req, res) => {
     if (!categoryOffer) {
       return res.status(400).json({ message: "categoryOffer is not found" });
     }
+
+       const categoryId=categoryOffer.category_id
+       
+      
+       const products = await productModel.find({ category: categoryId });
+         console.log('djfhfsjfjd',products,'category');
+         for(let product of products){
+            if (product.categoryOfferModel) {
+              product.categoryOfferModel = null;
+              product.offerPercentage = null;
+
+              const productOffer=await productOfferModel.findOne({
+                product_id:product._id
+              });
+              if (productOffer) {
+                product.productOfferModel=productOffer._id;
+                product.offerPercentage=productOffer.offerPercentage
+                
+              }
+            }    
+                product.save()
+         }
+               
     return res
       .status(200)
       .json({ message: "categoryOffer deleted successfully" });
@@ -299,7 +321,7 @@ const createProductOffer = async (req, res) => {
 
 const editProductOffer = async (req, res) => {
   try {
-    const { expiryDate, offerPercentage,product_id } = req.body;
+    const { expiryDate, offerPercentage, product_id } = req.body;
     console.log(req.body);
 
     const { id } = req.params;
@@ -367,9 +389,38 @@ const removeProductOffer = async (req, res) => {
     console.log(req.params, "dmd,dm,fm");
 
     const productOffer = await productOfferModel.findByIdAndDelete(id);
+
     if (!productOffer) {
       return res.status(400).json({ message: "ProductOffer is not found" });
     }
+    const productId = productOffer.product_id;
+
+    // await productModel.findByIdAndUpdate(productId,{
+    //   $unset:{
+    //     productOfferModel:'',offerPercentage:''
+    //   }
+    // });
+
+    const product = await productModel.findById(productId);
+    
+    if (product.productOfferModel) {
+      product.productOfferModel = null;
+      product.offerPercentage = null;
+
+      const category = await categoryOfferModel.findOne({
+        category_id: product.category,
+      });
+
+      if (category) {
+        product.categoryOfferModel = category._id;
+        product.offerPercentage = category.offerPercentage;
+      }
+
+      product.save();
+    }
+
+    console.log(product);
+
     return res
       .status(200)
       .json({ message: "ProductOffer deleted successfully" });

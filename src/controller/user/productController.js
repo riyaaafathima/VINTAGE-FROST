@@ -80,15 +80,15 @@ const productPageRender = async (req, res) => {
 
     let sortOptions = {};
     if (sort === "LowtoHigh") {
-      sortOptions["varients.price"] = 1; // Sort by price in ascending order
+      sortOptions["varients.price"] = 1; 
     } else if (sort === "HightoLow") {
-      sortOptions["varients.price"] = -1; // Sort by price in descending order
+      sortOptions["varients.price"] = -1; 
     } else if (sort === "Newest") {
-      sortOptions.createdAt = -1; // Sort by creation date in descending order
+      sortOptions.createdAt = -1; 
     } else if (sort === "aToz") {
-      sortOptions.productName = 1; // Sort by product name in ascending order
+      sortOptions.productName = 1; 
     } else if (sort === "zToa") {
-      sortOptions.productName = -1; // Sort by product name in descending order
+      sortOptions.productName = -1; 
     }
     const totalProducts = await productModel.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
@@ -99,9 +99,9 @@ const productPageRender = async (req, res) => {
       .find(filter)
       .populate({ 
         path: "category",
-        match: { isActive: true }, // Ensure only active categories are populated
+        match: { isActive: true }, 
       })
-      .sort(sortOptions) // Apply sorting here
+      .sort(sortOptions)
       .skip(skip)
       .limit(limit);
 

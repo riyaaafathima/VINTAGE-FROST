@@ -32,15 +32,16 @@ const orderPageRender = async (req, res) => {
   try {
     const userId = req.session?.user?._id;
 
-    console.log(userId);
-
     if (!userId) {
       return res.status(401).json({ message: "Unauthorized request" });
     }
 
-    const orders = await orderModel.find({ userId: userId });
-    console.log("orders", orders);
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 3; 
+    const skip = (page - 1) * limit;
 
+    const orders = await orderModel.find({ userId: userId });
+    
     let allOrders = orders.flatMap((order) =>
       order.products.map((product) => ({
         ...product.toObject(),
@@ -48,6 +49,12 @@ const orderPageRender = async (req, res) => {
         orderObjectId: order._id,
       }))
     );
+
+    const totalOrders = allOrders.length; 
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    allOrders = allOrders.slice(skip, skip + limit);
+
     let user = null;
     let cartCount = 0;
     if (req.session?.user) {
@@ -64,11 +71,14 @@ const orderPageRender = async (req, res) => {
       user,
       cartCount,
       allOrders,
+      currentPage: page,
+      totalPages,
     });
   } catch (error) {
     return res.status(400).json({ error: "something went wrong" });
   }
 };
+
 
 const placeOrder = async (req, res) => {
   try {
