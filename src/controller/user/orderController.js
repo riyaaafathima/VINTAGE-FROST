@@ -4,12 +4,15 @@ const orderModel = require("../../model/user/order");
 const productModel = require("../../model/admin/product");
 const walletModel = require("../../model/user/wallet");
 const counterModel = require("../../model/user/counter");
+const reviews = require("../../model/user/review");
+
 const userModel = require("../../model/user/user");
 const RazorPay = require("razorpay");
 const crypto = require("crypto");
 const counter = require("../../model/user/counter");
 const { type } = require("os");
 const couponModel = require("../../model/admin/coupon");
+const order = require("../../model/user/order");
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -47,6 +50,9 @@ const orderPageRender = async (req, res) => {
         ...product.toObject(),
         orderId: order.orderId,
         orderObjectId: order._id,
+        paymentStatus: order.paymentStatus,
+        totalPrice:order.totalPrice
+        
       }))
     );
 
@@ -73,6 +79,7 @@ const orderPageRender = async (req, res) => {
       allOrders,
       currentPage: page,
       totalPages,
+      
     });
   } catch (error) {
     return res.status(400).json({ error: "something went wrong" });
@@ -82,7 +89,7 @@ const orderPageRender = async (req, res) => {
 
 const placeOrder = async (req, res) => {
   try {
-    const { paymentMethod, addressId } = req.body;
+    const { paymentMethod, addressId,  isPaymentFailed} = req.body;
     const userId = req.session?.user?._id;
 
     if (!userId) {
@@ -147,9 +154,12 @@ const placeOrder = async (req, res) => {
 
     let paymentStatus = "";
 
-    if (paymentMethod === "wallet" || paymentMethod === "razorPay") {
+    if (paymentMethod === "wallet" || (paymentMethod === "razorPay" && !isPaymentFailed) ) {
       paymentStatus = "Success";
-    } else {
+    } else if(isPaymentFailed){
+      paymentStatus='Failed'
+    }
+     else {
       paymentStatus = "Pending";
     }
 
@@ -175,6 +185,7 @@ const placeOrder = async (req, res) => {
       couponDiscount,
       paymentStatus,
     };
+console.log("orderData==================",orderData);
 
     const updateProductPromises = userCart.items.map((item) => {
       return quantityChecking(item.product, item.kg, item.quantity);
@@ -244,7 +255,7 @@ const createRazorPayOrder = async (req, res) => {
     });
 
     const options = {
-      amount: amount * 100,
+      amount: amount * 100,        
       currency: "INR",
       receipt: crypto.randomBytes(10).toString("hex"),
     };
@@ -252,7 +263,7 @@ const createRazorPayOrder = async (req, res) => {
     instance.orders.create(options, (error, order) => {
       if (error) {
         console.log(error);
-        throw Error(error);
+        throw Error(error);       
       }
       res.status(200).json(order);
     });
@@ -281,6 +292,9 @@ const viewOrderDetails = async (req, res) => {
     if (!orderDetails) {
       return res.status(404).json({ error: "Order not found" });
     }
+
+
+    const review = await reviews.findOne({ userId: userId, product: productId });
 
     const productDetails = orderDetails.products.find(
       (product) => product._id.toString() === productId
@@ -316,7 +330,7 @@ const viewOrderDetails = async (req, res) => {
       selectedProduct: productDetails,
       items: otherProducts,
       totalPrice:orderDetails.totalPrice,
-      subtotal:orderDetails.subTotal
+      subtotal:orderDetails.subTotal,
 
 
     };
@@ -325,6 +339,8 @@ const viewOrderDetails = async (req, res) => {
       user: userDetails,
       order,
       cartCount,
+      review
+
     });
   } catch (error) {
     console.log(error);
@@ -361,7 +377,7 @@ const cancelProduct = async (req, res) => {
 
     const stockVarient = product.varients.find(
       (item) => item.kg == orderdProduct.kg
-    );
+    );    
 
     stockVarient.stock += orderdProduct.quantity;
 
@@ -439,7 +455,7 @@ const verifyPayment = async (req, res) => {
   try {
     const userId = req.session.userId;
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,orderId } =
       req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -452,12 +468,21 @@ const verifyPayment = async (req, res) => {
     if (razorpay_signature !== expectedSign) {
       throw Error("Invalid Signature sent");
     }
-
-    return res.status(200).json({ message: "Payment verified successfully" });
+    if (orderId) {
+      const order = await orderModel.findByIdAndUpdate(
+        orderId , 
+        { paymentStatus: 'Success' }, 
+        { new: true } 
+      );
+    }
+    return res.status(200).json({ message: "Payment verified successfully"});
   } catch (error) {
+    console.log(error);
+    
     res.status(400).json({ error: error.message });
   }
 };
+
 
 module.exports = {
   orderPageRender,

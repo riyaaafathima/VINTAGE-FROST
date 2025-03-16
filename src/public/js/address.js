@@ -123,7 +123,7 @@ save_address_btn.addEventListener("click", async function (e) {
     isValid = false;
   }
   if (city_el?.value.length >= 10) {
-    createErrElAfter(locality_el, "this field can not be longer than 20");
+    createErrElAfter(city_el, "this field can not be longer than 20");
     isValid = false;
   }
   if (/\d/.test(city_el.value)) {

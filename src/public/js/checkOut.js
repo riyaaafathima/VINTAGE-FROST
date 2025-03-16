@@ -86,7 +86,7 @@ function removeAddressFromDOM(id) {
     }
   }
 }
-
+    
 placeorder_btn_el.addEventListener("click", async (e) => {
   const walletBalance=wallet_el.getAttribute('data-balance')
   let totalAmount_val = total_amount.innerHTML;
@@ -97,7 +97,7 @@ placeorder_btn_el.addEventListener("click", async (e) => {
   const selectedDeliveryAddress = document.querySelector(
     'input[name="deliveryAddress"]:checked'
   );
-
+                     
   const selectedPaymentMethod = document.querySelector(
     'input[name="paymentMethod"]:checked'
   );
@@ -115,9 +115,10 @@ placeorder_btn_el.addEventListener("click", async (e) => {
     selectedPaymentMethod.value == "COD" ||
     selectedPaymentMethod.value == "Wallet"
   ) {
-    saveOrderOnCashOnDelivery(
+    createOrder(
       selectedPaymentMethod.value,
       selectedDeliveryAddress.value,
+      null,
       walletBalance,
       totalAmount
     );
@@ -132,8 +133,8 @@ placeorder_btn_el.addEventListener("click", async (e) => {
   }
 });
 
-//for cash on delivery and wallet//
-const saveOrderOnCashOnDelivery = async (paymentMethod, addressId,walletBalance,totalAmount) => {
+//for create order//
+const createOrder = async (paymentMethod, addressId,isPaymentFailed=null,walletBalance,totalAmount) => {
 
 if(paymentMethod=='Wallet'){
   if(Number(walletBalance)<Number(totalAmount)){
@@ -158,7 +159,8 @@ if(totalAmount>1000 && paymentMethod=='COD'){
         paymentMethod,
         addressId,
         walletBalance,
-        totalAmount
+        totalAmount,
+        isPaymentFailed
       }),
     });
   
@@ -242,6 +244,13 @@ const InitializeRazorPayment = async (
 
     const razor = new window.Razorpay(options);
     razor.open();
+
+    razor.on("payment.failed", async function (response) {
+      createOrder( paymentMethod, addressId,true);
+    });
+
+
+
   } catch (error) {
     console.log(error);
   }
@@ -267,7 +276,7 @@ const saveOrderRazor = async (
     });
 
     if (verifyData.ok) {
-      saveOrderOnCashOnDelivery(selectedPayment, selectedAddress);
+      createOrder(selectedPayment, selectedAddress);
     } else {
       showErrorToast("something went wrong");
     }
@@ -275,19 +284,4 @@ const saveOrderRazor = async (
     console.log(error);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 

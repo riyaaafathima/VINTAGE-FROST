@@ -155,7 +155,7 @@
                background-color: wheat;
               }
               .btn-update {
-                  color: blue;
+                  color:#CC9966 ;
                   text-decoration: underline;
                   background: none;
                   border: none;
@@ -456,22 +456,80 @@
                         </div>
                     </div>
                 </div>
-      
+
+     
+
+    
                   <!-- Review Section --> 
-                  h2 class="review-heading text-center">Here's your review</h2>
+
+  <%if(review){%>
+
+                  <h2>Here's your review</h2>
                   <div class="item-box">
                       <div class="d-flex justify-content-between align-items-center mb-2">
                           <div class="review-date">
-                              karma user, - Tue Jul 23 2024
+                             
+                               <strong>By:</strong> <h1><%= review.userId.username %> </h1>|
+                              <strong>Date:</strong> <%= review.createdAt.toDateString() %>
                           </div>
-                          <button class="btn-update">UPDATE</button>
+                          <button id="reviewUpdate-btn" class="btn-update">UPDATE</button>
                       </div>
                       <div class="star-rating mb-2">
-                          ★ ★ ★ ★ ★
+                          <%= '★'.repeat(review.rating) %> 
+                          <%= '☆'.repeat(5 - review.rating) %> 
                       </div>
-                      <p>good quality product</p>
+                      <p><%= review.Description %></p>
                   </div>
-      
+                
+
+ <%}%>
+
+                  <!-- ////////////////////////////edit review modal///////////////////////// -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Share Your Experience</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="mb-2">How would you rate your experience?</p>
+        
+        <div class="star-rating">
+          <input type="radio" id="star5" name="rating" value="5" />
+          <label for="star5" class="fa fa-star"></label>
+        
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" class="fa fa-star"></label>
+        
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" class="fa fa-star"></label>
+        
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" class="fa fa-star"></label>
+        
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" class="fa fa-star"></label>
+        </div>
+        
+        <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
+        
+        
+        <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
+        
+        <div class="mt-4">
+          <textarea class="form-control description-el" rows="4"  placeholder="Tell us about your experience (optional)"> </textarea>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-custom sbt-btn">Submit Review</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
                   <!-- Related Items Section -->
                  <%if(order.items.length>0){%>
                   <h1 class="related-heading">Other items in your order</h1>
@@ -534,79 +592,6 @@ const close_modal=document.getElementById('closeModal');
 const reason_input=document.getElementById('reasonInput');
 const submit_reason_btn_el=document.getElementById('submitReason');
 
-const orderId = cancel_btn_el.getAttribute('data-order-id');
-   const productId = cancel_btn_el.getAttribute('data-product-id');
-   const itemId = cancel_btn_el.getAttribute('data-id');
-
-
-  cancel_btn_el.addEventListener('click', async (e) => {
-    e.preventDefault();
-    reason_modal.style.display='flex'
-
-close_modal.addEventListener('click',(e)=>{
-  reason_modal.style.display='none'
-})
-submit_reason_btn_el.addEventListener('click',async(e)=>{
-  e.preventDefault()
-  const reason=reason_input.value
-  console.log(reason);
-  
-
-  if (reason) {
-    try {
-          const response = await fetch(`/order/cancel/${orderId}/${productId}/${itemId}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body:JSON.stringify({reason})
-          });
-
-          if (response.ok) {
-
-            
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "saved your message",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-     // Remove the button after successful cancel
-     cancel_btn_el.remove();
-
-// Optionally, update status text
-const statusElement = document.querySelector('.status-text');
-if (statusElement) {
-  // window.location.reload()
-   reason_modal.style.display='none'
-  statusElement.textContent = 'Cancelled';
-}
-        
-      });
-
-          }
-
-        } catch (error) {
-          console.log(error);
-        }
-      }}
-)})
-
-
-   
-
-
-   
-
-
- 
-
-
-    
-      
-
-
 
 
 const modal = document.getElementById("myModal");
@@ -656,6 +641,85 @@ mssg_el.forEach((el) => {
     openModal("message");
   });
 });
+
+
+
+
+///edit reviewModal///
+
+const update_btn_el=document.querySelector('#reviewUpdate-btn')
+
+update_btn_el.addEventListener('click',(e)=>{
+    e.preventDefault()
+    console.log(update_btn_el);
+
+
+    console.log('skjlkd');
+    
+})
+
+
+  cancel_btn_el.addEventListener('click', async (e) => {
+    e.preventDefault();
+    reason_modal.style.display='flex'
+
+close_modal.addEventListener('click',(e)=>{
+  reason_modal.style.display='none'
+})
+submit_reason_btn_el.addEventListener('click',async(e)=>{
+  e.preventDefault()
+
+  
+const orderId = cancel_btn_el.getAttribute('data-order-id');
+   const productId = cancel_btn_el.getAttribute('data-product-id');
+   const itemId = cancel_btn_el.getAttribute('data-id');
+  const reason=reason_input.value
+  console.log(reason);
+  
+
+  if (reason) {
+    try {
+          const response = await fetch(`/order/cancel/${orderId}/${productId}/${itemId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body:JSON.stringify({reason})
+          });
+
+          if (response.ok) {
+
+            
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "saved your message",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+     // Remove the button after successful cancel
+     cancel_btn_el.remove();
+
+// Optionally, update status text
+const statusElement = document.querySelector('.status-text');
+if (statusElement) {
+  // window.location.reload()
+   reason_modal.style.display='none'
+  statusElement.textContent = 'Cancelled';
+}
+
+      });
+
+          }
+
+        } catch (error) {
+          console.log(error);
+        }
+      }}
+)})
+
+
+
 
           </script>
           <!-- Bootstrap JS -->

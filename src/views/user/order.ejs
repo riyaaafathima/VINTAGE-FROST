@@ -193,29 +193,93 @@
                                                                 <span>●</span> <%=item?.status%>
                                                             </div>
                                                             <div>quantity  : <%=item.quantity%> , kg  : <%=item.kg%></div>
-                                                            <div> price: <%=item.actualPrice%></div>
+                                                            <div> price: <%=item.price%></div>
                                                             <div>coupon applied. code: Sd%23 discount: 40</div>
                                                         </div>
                                                         <div class="d-flex align-items-center gap-5">
                                                             <span class="price"><%item.price%> </span>
                                                             <a href="/view-orderDetails/<%=item. orderObjectId%>/<%=item._id%>">
 
-                                                                    <button data-id="<%=item. orderObjectId%>" product-id="<%=item._id%>" class="btn btn-primary view-btns">View</button>
-                                                                   
+                                                                    <button data-id="<%=item. orderObjectId%>" product-id="<%=item._id%>" class="btn btn-primary view-btns">View</button>   
                                                             </a>
+ 
 
-                                                            <%if(item.status =='Delivered'){%>
-                                                                <button  class="btn btn-primary review-btn">Review</button>
-                                                                                  <%}%>
+
+                                                            <%if(item.status =='Delivered' ){%>
+                                                                <button class="btn btn-primary review-btn" 
+                                                                data-product-id="<%=item._id%>" 
+                                                                data-order-id="<%=item. orderObjectId%>">
+                                                                Review
+                                                              </button>
+                                                                  <%}%>
+
+                                                                  <%if(item.paymentStatus =='Failed' ){%> 
+                                                                    <button class="btn btn-primary rePayment-btn" data-totalAmount="<%=item.totalPrice%>" data-order="<%=item. orderObjectId%>">
+                                                                    Re Payment
+                                                                  </button>
+                                                                  <%}%>
+                                                                
                                                         </div>
+                                                    
                                                     </div>
                                                 </div>
                                             </div>
-                                     <%   })%>
-                                        </div>
-                                    </div>
+                                            
+      <!-- ////////////////////////////////-review modal/////////////////////// -->
+
+      <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="reviewModalLabel">Share Your Experience</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <p class="mb-2">How would you rate your experience?</p>
+              
+              <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5" />
+                <label for="star5" class="fa fa-star"></label>
+              
+                <input type="radio" id="star4" name="rating" value="4" />
+                <label for="star4" class="fa fa-star"></label>
+              
+                <input type="radio" id="star3" name="rating" value="3" />
+                <label for="star3" class="fa fa-star"></label>
+              
+                <input type="radio" id="star2" name="rating" value="2" />
+                <label for="star2" class="fa fa-star"></label>
+              
+                <input type="radio" id="star1" name="rating" value="1" />
+                <label for="star1" class="fa fa-star"></label>
+              </div>
+              
+              <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
+              
+              
+              <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
+              
+              <div class="mt-4">
+                <textarea class="form-control description-el" rows="4"  placeholder="Tell us about your experience (optional)"> </textarea>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-custom sbt-btn">Submit Review</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+     <%   })%>
+         </div>
+ </div>
 
 
+
+
+
+<!-- ////////////////////////////////////////////////pagination////////////////////////////////////// -->
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination justify-content-center">
                                           <!-- Previous Button -->
@@ -239,63 +303,7 @@
                                             </a>
                                           </li>
                                         </ul>
-                                      </nav>
-
-
-
-
-                                      <!-- ////////////////////////////////-review modal/////////////////////// -->
-
-
-
-                                    
-                                      <!-- Review Modal -->
-                                      <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                          <div class="modal-content">
-                                            <div class="modal-header">
-                                              <h5 class="modal-title" id="reviewModalLabel">Share Your Experience</h5>
-                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                              <p class="mb-2">How would you rate your experience?</p>
-                                              
-                                              <div class="star-rating">
-                                                <input type="radio" id="star5" name="rating" value="5" />
-                                                <label for="star5" class="fa fa-star"></label>
-                                              
-                                                <input type="radio" id="star4" name="rating" value="4" />
-                                                <label for="star4" class="fa fa-star"></label>
-                                              
-                                                <input type="radio" id="star3" name="rating" value="3" />
-                                                <label for="star3" class="fa fa-star"></label>
-                                              
-                                                <input type="radio" id="star2" name="rating" value="2" />
-                                                <label for="star2" class="fa fa-star"></label>
-                                              
-                                                <input type="radio" id="star1" name="rating" value="1" />
-                                                <label for="star1" class="fa fa-star"></label>
-                                              </div>
-                                              
-                                              <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
-                                              
-                                              
-                                              <div class="rating-value">Selected: <span id="selected-rating">0</span> stars</div>
-                                              
-                                              <div class="mt-4">
-                                                <textarea class="form-control description-el" rows="4"  placeholder="Tell us about your experience (optional)"> </textarea>
-                                              </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-center">
-                                              <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancel</button>
-                                              <button type="button" class="btn btn-custom sbt-btn">Submit Review</button>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    
-                                      
-                                              
+                                      </nav>     
 
 
 								    <!-- <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
@@ -612,7 +620,10 @@
     <script src="js/order.js"></script>
     <script src="js/review.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
     
@@ -634,14 +645,129 @@
         });
     });
   });
+
 });
 
 
+
+const rePayment_btns_el=document.querySelectorAll('.rePayment-btn')
+
+rePayment_btns_el.forEach((rePayment_btn_el)=>{
+    rePayment_btn_el.addEventListener('click',(e)=>{
+        e.preventDefault()
+        const totalAmount=rePayment_btn_el.getAttribute('data-totalAmount')
+        const orderId=rePayment_btn_el.getAttribute('data-order')
+      console.log(totalAmount,orderId);
+
+InitializeRazorPayment(totalAmount,orderId)         
+
+})
+})  
+const InitializeRazorPayment = async (
+  totalAmount,
+  orderId
+) => {
+  try {
+    const response = await fetch("/razor-key", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const key = await response.json();
+
+    const razorOrder = await fetch("/razor-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({ amount: parseInt(totalAmount) }),
+    });
+
+    const order = await razorOrder.json();
+
+    //razor pay configurations
+    let options = {
+      key: key,
+      amount: parseInt(totalAmount) * 100,
+      currency: "INR",
+      name: "Vintage Frost",
+      description: "Test Transaction",
+      image: `img/fav.png`,
+      order_id: order.id,
+
+      handler: function (response) {
+
+        saveOrderRazor(response, order,orderId);
+      },
+      prefill: {
+        name: "riya",
+        email: "riya@example.com",
+        contact: "9061881978",
+      },
+      notes: {
+        address: "Razor pay Corporate Office",
+      },
+      theme: {
+        color: "#1818c4",
+      },
+    };
+
+    const razor = new window.Razorpay(options);
+    razor.open();
+
+    razor.on("payment.failed", async function (response) {
+    });
+
+
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const saveOrderRazor = async (
+  razorResponse,
+  order,
+  orderId
+) => {
+  try {
+   
+    const verifyData = await fetch("/razor-verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...razorResponse,
+        orderId
+        // orderId
+      }),
+    });
+
+    if (verifyData.ok) {
+        Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "order placed",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        window.location.reload();
+      });
+    } else {
+      showErrorToast("something went wrong");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
     </script>
 </body>
 
 
-<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<!-- mollaka/dashboard.html  22 Nov 2019 10:03:13 GMT -->
 </html>

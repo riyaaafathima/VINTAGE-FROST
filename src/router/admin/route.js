@@ -18,6 +18,12 @@ const {
 const {
   dashboardRender,
   logoutAdmin,
+  getChartData,
+  getCategoryRevenue,
+  getProductsByCategory,
+  topSellingProduct,
+  topSellingProducts,
+  topSellingCategories,
 } = require("../../controller/admin/dashBoardController");
 
 const {
@@ -135,5 +141,8 @@ router.put('/delete-categoryoffer/:id',removeCategoryOffer)
 router.post("/order-generate-excel", generateOrderExcel);
 router.post("/order-generate-csv", generateOrderCSV);
 router.post("/order-generate-pdf", generateOrderPDF);
+
+router.get("/chart-data", getChartData);
+router.get("/category-revenue", getCategoryRevenue);
 
 module.exports = router;

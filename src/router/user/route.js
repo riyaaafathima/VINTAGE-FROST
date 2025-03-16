@@ -28,7 +28,7 @@ const {
   removeCoupon,
 } = require("../../controller/user/couponController");
 
-const { createReview } = require("../../controller/user/reviewController");
+const { createReview, getReview, updateReview, editReview } = require("../../controller/user/reviewController");
 
 const {
   addToCart,
@@ -53,7 +53,7 @@ const {
   placeOrder,
   viewOrderDetails,
   cancelProduct,
-  getKey,
+  getKey,     
   createRazorPayOrder,
   verifyPayment,
 } = require("../../controller/user/orderController");
@@ -131,10 +131,13 @@ router.get("/razor-key", getKey);
 router.post("/razor-order", createRazorPayOrder);
 router.post("/razor-verify", verifyPayment);
 
+
 router.post("/coupon", couponBadge);
 
 router.delete("/remove-coupon", removeCoupon);
 
 router.post("/review", createReview);
+router.post('/edit-review', editReview);
+
 
 module.exports = router;
