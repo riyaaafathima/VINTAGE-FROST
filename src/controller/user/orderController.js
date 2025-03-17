@@ -40,10 +40,10 @@ const orderPageRender = async (req, res) => {
     }
 
     const page = parseInt(req.query.page) || 1; 
-    const limit = 3; 
+    const limit = 4; 
     const skip = (page - 1) * limit;
-
-    const orders = await orderModel.find({ userId: userId });
+    
+    const orders = await orderModel.find({ userId: userId }).sort({createdAt:-1});
     
     let allOrders = orders.flatMap((order) =>
       order.products.map((product) => ({
@@ -51,11 +51,12 @@ const orderPageRender = async (req, res) => {
         orderId: order.orderId,
         orderObjectId: order._id,
         paymentStatus: order.paymentStatus,
-        totalPrice:order.totalPrice
+        totalPrice:order.totalPrice,
+        orderDate:order.createdAt
         
       }))
     );
-
+    allOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
     const totalOrders = allOrders.length; 
     const totalPages = Math.ceil(totalOrders / limit);
 
@@ -104,9 +105,10 @@ const placeOrder = async (req, res) => {
       return res.status(400).json({ error: "payment method is required" });
     }
 
-    const userCart = await cartModel.findOne({ user: userId }).populate({
-      path: "items.product",
-    });
+    const userCart = await cartModel.findOne({ user: userId }).populate([{
+      path: "items.product"},
+      {path:'coupon',populate:{path:'offerAmount'}}
+    ]);
 
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
@@ -165,12 +167,15 @@ const placeOrder = async (req, res) => {
 
     let couponCode=null
     let couponDiscount=null
+    let totalPrice =null
     if (userCart?.coupon) {
       const coupon=await couponModel.findById(userCart.coupon)
       couponCode=coupon.couponCode
       couponDiscount=coupon.offerAmount
+      totalPrice=  (userCart.total + packagingPrice) - ((userCart.total + packagingPrice) * couponDiscount / 100)
     }
  
+   
 
     const orderData = {
       userId: userId,
@@ -179,14 +184,13 @@ const placeOrder = async (req, res) => {
       products,
       totalQuantity,
       subTotal: userCart.subTotal,
-      totalPrice: userCart.total,
+      totalPrice: totalPrice ? totalPrice:userCart.total,
       packagingPrice,
       couponCode,
       couponDiscount,
       paymentStatus,
     };
 console.log("orderData==================",orderData);
-
     const updateProductPromises = userCart.items.map((item) => {
       return quantityChecking(item.product, item.kg, item.quantity);
     });
@@ -451,15 +455,15 @@ const cancelProduct = async (req, res) => {
   }
 };
 
+const mongoose = require("mongoose");
+
 const verifyPayment = async (req, res) => {
   try {
     const userId = req.session.userId;
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature,orderId } =
-      req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
-
     const expectedSign = crypto
       .createHmac("sha256", process.env.KEY_SECRET)
       .update(sign.toString())
@@ -468,20 +472,25 @@ const verifyPayment = async (req, res) => {
     if (razorpay_signature !== expectedSign) {
       throw Error("Invalid Signature sent");
     }
-    if (orderId) {
+
+    // Check if orderId is a valid MongoDB ObjectId before querying
+    if (orderId && mongoose.Types.ObjectId.isValid(orderId)) {
       const order = await orderModel.findByIdAndUpdate(
-        orderId , 
+        orderId, 
         { paymentStatus: 'Success' }, 
-        { new: true } 
+        { new: true }
       );
+    } else {
+      console.log("Invalid MongoDB Order ID:", orderId);
     }
-    return res.status(200).json({ message: "Payment verified successfully"});
+
+    return res.status(200).json({ message: "Payment verified successfully" });
   } catch (error) {
     console.log(error);
-    
     res.status(400).json({ error: error.message });
   }
 };
+
 
 
 module.exports = {

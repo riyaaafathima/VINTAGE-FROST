@@ -18,12 +18,6 @@ const {
 const {
   dashboardRender,
   logoutAdmin,
-  getChartData,
-  getCategoryRevenue,
-  getProductsByCategory,
-  topSellingProduct,
-  topSellingProducts,
-  topSellingCategories,
 } = require("../../controller/admin/dashBoardController");
 
 const {
@@ -71,7 +65,7 @@ const{ generateOrderExcel, generateOrderCSV, generateOrderPDF }=require('../../c
 
 const router = require("express").Router();
 
-router.get("/dashboard", preventNavigation, dashboardRender);
+router.get("/dashboard", dashboardRender);
 
 router.route("/add-category").get(getAllCategory).post(addCategory);
 
@@ -84,7 +78,7 @@ router.put("/delete-category/:id", deleteCategory);
 router.get("/edit-product/:id", preventNavigation, editProduct);
 
 router.put("/soft-delete/:id", preventNavigation, softDelete);
-
+ 
 router.get("/getAllproducts", preventNavigation, getAllproducts);
 
 router.put("/edit-product/:id", upload.array("images", 3), updateProduct);
@@ -142,7 +136,5 @@ router.post("/order-generate-excel", generateOrderExcel);
 router.post("/order-generate-csv", generateOrderCSV);
 router.post("/order-generate-pdf", generateOrderPDF);
 
-router.get("/chart-data", getChartData);
-router.get("/category-revenue", getCategoryRevenue);
-
+    
 module.exports = router;

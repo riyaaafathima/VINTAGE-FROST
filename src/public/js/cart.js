@@ -45,31 +45,116 @@ function hideLoadingScreen() {
   loadingOverlay.style.display = "none";
 }
 
-document.querySelectorAll(".quantity-input").forEach((input) => {
-  input.addEventListener("change", async (e) => {
-    const productId = e.target.closest("tr").querySelector(".btn-remove")
-      .dataset.id;
-    const newQuantity = parseInt(e.target.value);
-    const kg = e.target.closest("tr").querySelector(".kg-col").textContent;
-    console.log(kg);
-    console.log(e.target.closest("tr").querySelector(".kg-col"));
+// document.querySelectorAll(".quantity-input").forEach((input) => {
+//   input.addEventListener("change", async (e) => {
+//     const productId = e.target.closest("tr").querySelector(".btn-remove")
+//       .dataset.id;
+//     const newQuantity = parseInt(e.target.value);
+//     const kg = e.target.closest("tr").querySelector(".kg-col").textContent;
+//     console.log(kg);
+//     console.log(e.target.closest("tr").querySelector(".kg-col"));
+
+//     if (newQuantity < 1) {
+//       e.target.value = 1;
+//       //alert
+//       return;
+//     }
+
+//     if (newQuantity > 10) {
+//       e.target.value = 9;
+//       //alert
+//       return;
+//     }
+
+//     try {
+//       input.disabled = true;
+//       console.log(productId,  newQuantity, kg);
+      
+//       const response = await fetch("/update-cart", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ productId, quantity: newQuantity, kg }),
+//       });
+//       input.disabled = false;
+
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         window.location.reload();
+//       } else {
+//         e.target.value--;
+//         showWarningToast(data.message);
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   });
+// });
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const removeBtnEls = document.querySelectorAll(".btn-remove");
+  const quantityInputs = document.querySelectorAll(".quantity-input");
+
+  quantityInputs.forEach((input) => {
+    const container = document.createElement("div");
+    container.classList.add("quantity-wrapper");
+    container.style.display = "flex";
+    container.style.alignItems = "center";
+
+    const minusBtn = document.createElement("button");
+    minusBtn.textContent = "-";
+    minusBtn.classList.add("quantity-btn");
+    minusBtn.style.marginRight = "5px";
+    minusBtn.style.padding = "5px";
+    minusBtn.style.cursor = "pointer";
+    minusBtn.style.border = "1px solid #ccc";
+    minusBtn.style.background = "#f5f5f5";
+
+    const plusBtn = document.createElement("button");
+    plusBtn.textContent = "+";
+    plusBtn.classList.add("quantity-btn");
+    plusBtn.style.marginLeft = "5px";
+    plusBtn.style.padding = "5px";
+    plusBtn.style.cursor = "pointer";
+    plusBtn.style.border = "1px solid #ccc";
+    plusBtn.style.background = "#f5f5f5";
+
+    input.style.textAlign = "center";
+    input.style.width = "40px";
+    input.style.border = "1px solid #ccc";
+    input.style.margin = "0 5px";
+    input.style.padding = "5px";
+
+    input.parentNode.insertBefore(container, input);
+    container.appendChild(minusBtn);
+    container.appendChild(input);
+    container.appendChild(plusBtn);
+
+    minusBtn.addEventListener("click", () => updateQuantity(input, -1));
+    plusBtn.addEventListener("click", () => updateQuantity(input, 1));
+  });
+
+  async function updateQuantity(input, change) {
+    const row = input.closest("tr");
+    const productId = row.querySelector(".btn-remove").dataset.id;
+    let newQuantity = parseInt(input.value) + change;
+    const kg = row.querySelector(".kg-col").textContent.trim();
+    const maxStock = parseInt(row.dataset.stock) || 10;
 
     if (newQuantity < 1) {
-      e.target.value = 1;
-      //alert
+      showWarningToast("Minimum quantity is 1.");
       return;
     }
 
-    if (newQuantity > 10) {
-      e.target.value = 9;
-      //alert
+    if (newQuantity > maxStock) {
+      showWarningToast("Insufficient stock.");
       return;
     }
 
     try {
       input.disabled = true;
-      console.log(productId,  newQuantity, kg);
-      
       const response = await fetch("/update-cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,32 +163,28 @@ document.querySelectorAll(".quantity-input").forEach((input) => {
       input.disabled = false;
 
       const data = await response.json();
-
       if (response.ok) {
-        window.location.reload();
+        input.value = newQuantity;
+        updateTotalPrice(row, newQuantity);
+        window.location.reload()
       } else {
-        e.target.value--;
         showWarningToast(data.message);
       }
     } catch (error) {
       console.log(error);
     }
-  });
-});
+  }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const remove_btn_el = document.querySelectorAll(".btn-remove");
+  function updateTotalPrice(row, quantity) {
+    const pricePerUnit = parseFloat(row.querySelector(".price-col").textContent);
+    row.querySelector(".total-col").textContent = (pricePerUnit * quantity).toFixed(2) + " Rs";
+  }
 
-  remove_btn_el.forEach((btn) => {
+  removeBtnEls.forEach((btn) => {
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
       const productId = e.target.dataset.id;
-
-      const kg = e.target
-        .closest("tr")
-        .querySelector(".kg-col")
-        .textContent.trim();
-      console.log(kg, productId);
+      const kg = e.target.closest("tr").querySelector(".kg-col").textContent.trim();
 
       try {
         const response = await fetch("/remove-cart", {
@@ -113,20 +194,29 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         const data = await response.json();
-
         if (data.success) {
           window.location.reload();
-          // localStorage.setItem("cart-count", data.cartCount);
         } else {
-          showWarningToast("Failed to remove product");
+          showWarningToast("Failed to remove product.");
         }
       } catch (error) {
-        alert("Something went wrong");
+        alert("Something went wrong.");
         console.error(error);
       }
     });
   });
+
+  function showWarningToast(message) {
+    toastr.options = {
+      positionClass: "toast-top-center",
+      timeOut: "3000",
+      closeButton: true,
+    };
+    toastr.warning(message);
+  }
 });
+
+
 
 const modal = document.getElementById("myModal");
 const modalTitle = document.getElementById("modalTitle");

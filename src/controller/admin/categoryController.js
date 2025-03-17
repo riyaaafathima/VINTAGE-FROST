@@ -6,10 +6,10 @@ const addCategory = async (req, res) => {
     const { categoryName, isActive } = req.body;
     console.log(req.body);
 
-    const iscategoryexist = await categoryModel.find({ categoryName });
+    const isCategoryExist = await categoryModel.findOne({ categoryName });
 
-    if (!iscategoryexist) {
-      return res.status(409).json("categoryName already exist");
+    if (isCategoryExist) {
+      return res.status(409).json({ message: "Category name already exists" });
     }
 
     const newCategory = await categoryModel.create({
@@ -18,12 +18,13 @@ const addCategory = async (req, res) => {
     });
 
     console.log("Created category:", newCategory);
-
     res.status(200).json(newCategory);
   } catch (error) { 
     console.log(error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
+
 
 const editCategory = async (req, res) => {
   try {

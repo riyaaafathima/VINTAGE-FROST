@@ -333,6 +333,26 @@
       font-weight: bold;
     }
 
+    .total-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    border-top: 2px solid #ccc;
+    margin-top: 10px;
+}
+
+.total-label {
+    color: #AD9170;
+}
+
+.total-amount {
+    color:#AD9170; 
+}
+
+
           </style>
       </head>
       <body>
@@ -388,6 +408,7 @@
                                     </div>
                                       <p class="status-returned"> <%=order.selectedProduct.status%></p>
                                   </div>
+
                                   <div class="col-md-3 text-end">
                                       <div class="d-flex flex-column h-100">
                                         <% if(order.selectedProduct.status === 'Pending') { %>
@@ -401,22 +422,29 @@
                                               Cancel
                                             </button>
                                           <% } %>
-                                          <span class="status-text"><%= order.selectedProduct.status %></span>
-                                          
-
-                                          
+                                          <span class="status-text"><%= order.selectedProduct.status %></span>  
 
                                           <div>
                                               <p class="mb-0">Qty: <%=order.selectedProduct.quantity%></p>
                                               <!-- <p class="mb-0">Actual-price: <%=order.selectedProduct.actualPrice%></p> -->
+                                               
                                               <p class="mb-0">TOTAL-COST: ₹<%=order.selectedProduct.price%></p>
                                           </div>
                                       </div>
                                   </div>
+                                  
                               </div>
+                             
                           </div>
                       </div>
                   </div>
+
+                  <div class="total-container">
+                    <div class="total-label">Total:</div>
+                    <div class="total-amount">₹<span id="totalPrice"><%=order.selectedProduct.price%></span></div>
+                </div>
+                
+
 
 
 
@@ -586,6 +614,70 @@ const cancel_btn_el = document.querySelector('.btn-cancel');
 const instruction_el = document.querySelectorAll("#instruction-Btn");
 const mssg_el = document.querySelectorAll("#mssg-btn");
 
+
+
+
+cancel_btn_el.addEventListener('click', async (e) => {
+    e.preventDefault();
+    reason_modal.style.display='flex'
+
+close_modal.addEventListener('click',(e)=>{
+  reason_modal.style.display='none'
+})
+submit_reason_btn_el.addEventListener('click',async(e)=>{
+  e.preventDefault()
+
+  
+const orderId = cancel_btn_el.getAttribute('data-order-id');
+   const productId = cancel_btn_el.getAttribute('data-product-id');
+   const itemId = cancel_btn_el.getAttribute('data-id');
+  const reason=reason_input.value
+  console.log(reason);
+  
+
+  if (reason) {
+    try {
+          const response = await fetch(`/order/cancel/${orderId}/${productId}/${itemId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body:JSON.stringify({reason})
+          });
+
+          if (response.ok) {
+
+            
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "saved your message",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+     // Remove the button after successful cancel
+     cancel_btn_el.remove();
+
+// Optionally, update status text
+const statusElement = document.querySelector('.status-text');
+if (statusElement) {
+  // window.location.reload()
+   reason_modal.style.display='none'
+  statusElement.textContent = 'Cancelled';
+}
+
+      });
+
+          }
+
+        } catch (error) {
+          console.log(error);
+        }
+      }}
+)})
+
+
+
 const reason_modal=document.getElementById('reasonModal');
 const openBtn = document.getElementById('openModal');
 const close_modal=document.getElementById('closeModal');
@@ -658,65 +750,6 @@ update_btn_el.addEventListener('click',(e)=>{
     
 })
 
-
-  cancel_btn_el.addEventListener('click', async (e) => {
-    e.preventDefault();
-    reason_modal.style.display='flex'
-
-close_modal.addEventListener('click',(e)=>{
-  reason_modal.style.display='none'
-})
-submit_reason_btn_el.addEventListener('click',async(e)=>{
-  e.preventDefault()
-
-  
-const orderId = cancel_btn_el.getAttribute('data-order-id');
-   const productId = cancel_btn_el.getAttribute('data-product-id');
-   const itemId = cancel_btn_el.getAttribute('data-id');
-  const reason=reason_input.value
-  console.log(reason);
-  
-
-  if (reason) {
-    try {
-          const response = await fetch(`/order/cancel/${orderId}/${productId}/${itemId}`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body:JSON.stringify({reason})
-          });
-
-          if (response.ok) {
-
-            
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "saved your message",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then(() => {
-     // Remove the button after successful cancel
-     cancel_btn_el.remove();
-
-// Optionally, update status text
-const statusElement = document.querySelector('.status-text');
-if (statusElement) {
-  // window.location.reload()
-   reason_modal.style.display='none'
-  statusElement.textContent = 'Cancelled';
-}
-
-      });
-
-          }
-
-        } catch (error) {
-          console.log(error);
-        }
-      }}
-)})
 
 
 
