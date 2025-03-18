@@ -118,6 +118,10 @@ cart_btn_el.addEventListener("click", async (e) => {
         
         window.location.href = "/cart";
       });
+    }else{
+      const data=await response.json()
+    showErrorToast(data);
+
     }
   } catch (error) {
     console.log(error);

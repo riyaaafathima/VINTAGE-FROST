@@ -69,6 +69,8 @@ const {
   getWishlist,
   removeWishList,
 } = require("../../controller/user/whishListController");
+
+const{walletPageRender}=require('../../controller/user/walletController')
 const router = require("express").Router();
 
 router.get("/home-page", isBlock, homePageRender);
@@ -139,5 +141,8 @@ router.delete("/remove-coupon", removeCoupon);
 router.post("/review", createReview);
 router.post('/edit-review', editReview);
 
+
+//wallet//
+router.get('/wallet-page',walletPageRender)
 
 module.exports = router;

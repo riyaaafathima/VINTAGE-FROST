@@ -1,3 +1,4 @@
+
 const productName_el = document.querySelector("#productName");
 const category_el = document.querySelector("#category");
 const preperationHour_el=document.querySelector('#preperation-hour')
@@ -18,7 +19,6 @@ const input_el = document.querySelectorAll("input");
 const remove_btn_el = document.querySelector("#remove-btn");
 const inputs = document.querySelectorAll("input");
 
-console.log(inputs);
 
 let selectedImage = null;
 
@@ -369,6 +369,8 @@ savebtn_el.addEventListener("click", (e) => {
 });
 
 addpriceBtn_el.addEventListener("click", (e) => {
+  console.log('wertyuiop');
+  
   const veriant_el = document.querySelector(".price-variant"); // Select the original price-variant div
   const priceCnt_el = document.querySelector("#price-cnt"); // Parent container
 
@@ -431,5 +433,7 @@ description_el.addEventListener('focus',(e)=>{
       description_el.nextElementSibling.remove();
     }
 })
+
+
 
 

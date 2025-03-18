@@ -92,6 +92,7 @@ const placeOrder = async (req, res) => {
   try {
     const { paymentMethod, addressId,  isPaymentFailed} = req.body;
     const userId = req.session?.user?._id;
+console.log("entweeeeeeeeeeeeeeeee");
 
     if (!userId) {
       res.status(400).json({ error: "userId is not found" });
@@ -236,6 +237,7 @@ console.log("orderData==================",orderData);
           },
         },
       });
+      
     }
 
     if (order && userCart) {
@@ -248,6 +250,8 @@ console.log("orderData==================",orderData);
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 const createRazorPayOrder = async (req, res) => {
   try {

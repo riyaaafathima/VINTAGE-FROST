@@ -8,7 +8,7 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        			<h1 class="page-title">My Wallet<span>Shop</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
@@ -16,71 +16,179 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                         <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                        <li class="breadcrumb-item active" aria-current="page">My Wallet</li>
                     </ol>
-                </div><!-- End .container -->
+                </div><!-- End .container -->       
             </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
-            	<div class="dashboard">
-	                <div class="container">
-	                	<div class="row">
-	                		<aside class="col-md-4 col-lg-3">
-	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-								    <li class="nav-item">
-
-                                        <a class="nav-link " href="/user-profile" role="tab">Account details</a>
-								    </li>
-								    <li class="nav-item">
-                                        <a class="nav-link"  href="/order" role="tab">Orders</a>
-								    </li>
-								    <li class="nav-item">
-                                        <a class="nav-link active" id="tab-account-link" data-toggle="tab" href="" role="tab" aria-controls="tab-account" aria-selected="false">Recent password</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link"  href="/user-address" role="tab">Adresses</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" href="/wallet-page" role="tab" >Wallet</a>
-
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" href="#">Sign Out</a>
-								    </li>
-								</ul>
-	                		</aside><!-- End .col-lg-3 -->
-
-	                		<div class="col-md-8 col-lg-9">
-	                			<div class="tab-content">
-
-
-								    <div class="tab-pane fade show active" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<label>current password</label>
-		            						<input type="password" id="current-password" class="form-control">
-								    	<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" id="new-password" class="form-control">
-                                            <span id="err-confirm" style="color: red;"></span>
-
-		            						<label>Confirm new password</label>
-		            						<input type="password" id="confirmed-password" class="form-control mb-2">
-                                            <span id="err-new" style="color: red;"></span>
-
-                                        </div><!-- .End .tab-pane -->
-								    	<a href="category.html" id="save-btn" class="btn btn-outline-primary-2"><span>Save Changes</span><i class="icon-long-arrow-right"></i></a>
-
-								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-								    	<p>The following addresses will be used on the checkout page by default.</p>
-
-                                    
-                                  
-								  
-								</div>
-	                		</div><!-- End .col-lg-9 -->
-	                	</div><!-- End .row -->
-	                </div><!-- End .container -->
+                <div class="dashboard">
+                    <div class="container">
+                        <div class="row">
+                            <!-- Sidebar Navigation -->
+                            <aside class="col-md-4 col-lg-3">
+                                <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/user-profile" role="tab">Account details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/order" role="tab">Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/user-recentPassword">Recent password</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/user-address" role="tab">Adresses</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="/user-wallet" role="tab" aria-controls="tab-account" aria-selected="false">Wallet</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#">Sign Out</a>
+                                    </li>
+                                </ul>
+                            </aside><!-- End .col-lg-3 -->
+            
+                            <!-- Wallet Content -->
+                            <div class="col-md-8 col-lg-9">
+                                <div class="card">
+                                   
+                                    <div class="card-body">
+                                        <div class=" bg-light p-2 mb-2">
+                                            <h5 class="mb-0">
+                                                <img src="/img/WhatsApp Image 2025-03-18 at 11.00.36_4555d426.jpg" alt="Wallet" style="width: 50px; border-radius: 15%;">
+                                            </h5>
+                                            <h2 class="walletBalance">Wallet Balance: ₹<%= wallet?.balance?.toFixed(2) || '0.00' %></h2>
+                                        </div>
+                                                <div id="paginated-transactions" 
+                                            data-transactions='<%= JSON.stringify(transactions) %>'>
+                                        </div>
+            
+                                        <div class="pagination-controls">
+                                            <button id="prv-page" class="btn btn-secondary btn-sm">Previous</button>
+                                            <span id="page-info"></span>
+                                            <button id="nxt-page" class="btn btn-secondary btn-sm">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- End .col-lg-9 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .container -->
                 </div><!-- End .dashboard -->
             </div><!-- End .page-content -->
-        </main><!-- End .main -->
+            
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <style>
+                .green-text { color: rgb(0, 179, 0); }
+                .red-text { color: red; }
+                .pagination-controls {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-top: 15px;
+                }
+                #page-info {
+                    min-width: 100px;
+                    text-align: center;
+                }
+                .table {
+                    font-size: 0.9rem;
+                }
+                @media (max-width: 767px) {
+                    .card-header {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                    .card-header button {
+                        margin-top: 10px;
+                    }
+                }
+            </style>
+            
+            <script>
+                // Pagination logic
+                let transactions = [];
+                const transactionPerPage = 7;
+                let currPage = 1;
+            
+                function renderTransactions(page) {
+                    const startIndex = (page - 1) * transactionPerPage;
+                    const endIndex = startIndex + transactionPerPage;
+                    const paginatedTransactions = transactions.slice(startIndex, endIndex);
+            
+                    const transactionContainer = document.getElementById('paginated-transactions');
+                    transactionContainer.innerHTML = '';
+            
+                    if (paginatedTransactions.length > 0) {
+                        const table = document.createElement('table');
+                        table.className = 'table';
+                        table.innerHTML = `
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Type</th>
+                                    <th>Info</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionTable"></tbody>
+                        `;
+            
+                        const tbody = table.querySelector('#transactionTable');
+            
+                        paginatedTransactions.forEach(transaction => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${new Date(transaction.createdAt).toDateString()}</td>
+                                <td>₹${transaction.amount.toFixed(2)}</td>
+                                <td class="${transaction.type === 'Credit' ? 'green-text' : 'red-text'}">
+                                    ${transaction.type}
+                                </td>
+                                <td>${transaction.description}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+            
+                        transactionContainer.appendChild(table);
+                    } else {
+                        transactionContainer.innerHTML = '<p id="noHistoryMessage" class="text-muted">No history found</p>';
+                    }
+            
+                    updatePaginationControl();
+                }
+            
+                function updatePaginationControl() {
+                    const prevButton = document.getElementById('prv-page');
+                    const nextButton = document.getElementById('nxt-page');
+                    const pageInfo = document.getElementById('page-info');
+            
+                    prevButton.disabled = currPage === 1;
+                    nextButton.disabled = currPage === Math.ceil(transactions.length / transactionPerPage);
+            
+                    pageInfo.textContent = `Page ${currPage} of ${Math.ceil(transactions.length / transactionPerPage)}`;
+                }
+            
+                document.addEventListener("DOMContentLoaded", function () {
+                    const transactionsData = document.getElementById('paginated-transactions').dataset.transactions;
+                    transactions = JSON.parse(transactionsData);
+                    renderTransactions(currPage);
+            
+                    document.getElementById('prv-page').addEventListener('click', () => {
+                        if (currPage > 1) {
+                            currPage--;
+                            renderTransactions(currPage);
+                        }
+                    });
+            
+                    document.getElementById('nxt-page').addEventListener('click', () => {
+                        if (currPage < Math.ceil(transactions.length / transactionPerPage)) {
+                            currPage++;
+                            renderTransactions(currPage);
+                        }
+                    });
+                });
+            </script>
         <%- include('partials/footer.ejs') %>
 
     </div>End .page-wrapper
@@ -386,136 +494,6 @@
 
 
 </body>
-<script>
-   const new_password_el = document.getElementById('new-password');
-const err_newpassword_el = document.getElementById('err-new');
-const confirmed_password_el = document.getElementById('confirmed-password');
-const save_btn_el = document.getElementById('save-btn');
-const err_confirm_el = document.getElementById('err-confirm');
-const current_password = document.getElementById('current-password');
-
-save_btn_el.addEventListener('click', async (e) => {
-  e.preventDefault();
-
-  const createErrElAfter = (element, err) => {
-    if (element?.nextElementSibling?.id == "erro_el") {
-      element.nextElementSibling.remove();
-    }
-    const new_el = document.createElement("p");
-    new_el.setAttribute("id", "erro_el");
-    new_el.style.color = "red";
-    new_el.innerHTML = err;
-    element.after(new_el);
-
-    element.addEventListener('focus', () => {
-      if (element.nextElementSibling?.id == "erro_el") {
-        element.nextElementSibling.remove();
-      }
-    });
-  };
-
-  let isValid = true;
-
-  if (!current_password.value) {
-    createErrElAfter(current_password, 'Password cannot be empty.');
-    isValid = false;
-    
-  } else {
-    if (!/[a-z]/.test(current_password.value)) {
-      createErrElAfter(current_password, 'Include at least one lowercase letter.');
-      isValid = false;
-    }
-    if (!/[A-Z]/.test(current_password.value)) {
-      createErrElAfter(current_password, 'Include at least one uppercase letter.');
-      isValid = false;
-    }
-    if (!/\d/.test(current_password.value)) {
-      createErrElAfter(current_password, 'Include at least one number.');
-      isValid = false;
-    }
-    if (!/[@$!%*?&]/.test(current_password.value)) {
-      createErrElAfter(current_password, 'Include at least one special character (@, $, !, %, *, ?, &).');
-      isValid = false;
-    }
-    if (current_password.value.length < 6) {
-      createErrElAfter(current_password, 'Password must be at least 6 characters long.');
-      isValid = false;
-    }
-  }
-
-  if (!new_password_el.value) {
-    createErrElAfter(new_password_el, 'Password cannot be empty.');
-    isValid = false;
-    
-  } else {
-    if (!/[a-z]/.test(new_password_el.value)) {
-      createErrElAfter(new_password_el, 'Include at least one lowercase letter.');
-      isValid = false;
-    }
-    if (!/[A-Z]/.test(new_password_el.value)) {
-      createErrElAfter(new_password_el, 'Include at least one uppercase letter.');
-      isValid = false;
-    }
-    if (!/\d/.test(new_password_el.value)) {
-      createErrElAfter(new_password_el, 'Include at least one number.');
-      isValid = false;
-    }
-    if (!/[@$!%*?&]/.test(new_password_el.value)) {
-      createErrElAfter(new_password_el, 'Include at least one special character (@, $, !, %, *, ?, &).');
-      isValid = false;
-    }
-    if (new_password_el.value.length < 6) {
-      createErrElAfter(new_password_el, 'Password must be at least 6 characters long.');
-      isValid = false;
-    }
-  }
-
-  if (!confirmed_password_el.value) {
-    createErrElAfter(confirmed_password_el, 'Confirm Password cannot be empty.');
-    isValid = false;
-  } else if (new_password_el.value !== confirmed_password_el.value) {
-    createErrElAfter(confirmed_password_el, 'Passwords do not match.');
-    isValid = false;
-  }
-
-  if (!isValid) {
-    return;
-  }
-
-  const updatedPassword = {
-    newPassword: new_password_el.value,
-    currentPassword: current_password.value
-  };
-
-  try {
-    const response = await fetch('/recent-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedPassword),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "password updated",
-        showConfirmButton: false,
-        timer: 1500
-      });
-      new_password_el.value = '';
-      current_password.value = '';
-      confirmed_password_el.value = '';
-    } else {
-      alert(data.message || 'Something went wrong!');
-    }
-  } catch (error) {
-    console.error('Error updating password:', error);
-    alert('An error occurred. Please try again.');
-  }
-});
-
-</script>
 
 
 <!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->

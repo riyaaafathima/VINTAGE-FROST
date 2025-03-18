@@ -38,6 +38,7 @@ const dashboardRender = async (req, res) => {
     
     const totalOrders = await Order.countDocuments();
     const totalCategories = await category.countDocuments();
+    const totalUsers=await User.countDocuments()
 
     const totalProductsData = await Order.aggregate([
       { $unwind: "$products" },
@@ -194,7 +195,9 @@ const dashboardRender = async (req, res) => {
       filter,
       totalProducts ,
       totalOrders,
-      totalCategories
+      totalCategories,
+      totalUsers
+
     });
   } catch (error) {
     console.error("Error fetching dashboard data:", error);

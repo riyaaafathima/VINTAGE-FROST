@@ -110,6 +110,7 @@ placeorder_btn_el.addEventListener("click", async (e) => {
     showErrorToast("please select a address");
     return;
   }
+console.log(selectedPaymentMethod.value,"===========");
 
   if (
     selectedPaymentMethod.value == "COD" ||
@@ -146,8 +147,6 @@ return
 if(totalAmount>1000 && paymentMethod=='COD'){
   showErrorToast('Order Above 1000 Are Not Allowed In COD')
   return 
-}else{
-
 }
   try {
     const response = await fetch("/place-order", {
@@ -182,7 +181,9 @@ if(totalAmount>1000 && paymentMethod=='COD'){
         icon: "error",
         title: "Oops...",
         text: `${data.error}`,
-      }).then(() => {});
+      }).then(() => {
+
+      });
     }
   } catch (error) {
   };

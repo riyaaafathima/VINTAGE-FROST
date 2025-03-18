@@ -365,9 +365,9 @@
                             </label>
                         </div>
                         <div class="form-check mb-2">
-                            <input class="form-check-input wallet-btn" type="radio" data-balance="<%= walletBalance? walletBalance : 0%>" name="paymentMethod" id="wallet">
+                            <input class="form-check-input wallet-btn" type="radio" value="Wallet" data-balance="<%= walletBalance? walletBalance : 0%>" name="paymentMethod" id="wallet">
                             <label class="form-check-label" for="wallet">
-                                Wallet 
+                                Wallet (<%=walletBalance? walletBalance:0%>)
                             </label>
                         </div>
                         <div class="form-check">
