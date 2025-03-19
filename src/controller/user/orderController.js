@@ -13,6 +13,184 @@ const counter = require("../../model/user/counter");
 const { type } = require("os");
 const couponModel = require("../../model/admin/coupon");
 const order = require("../../model/user/order");
+const PDFDocument = require("pdfkit");
+const moment = require("moment");
+
+//genereting invoice//
+
+
+
+const generateInvoicePDF = async (order) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const doc = new PDFDocument({ margin: 50 });
+
+      const buffers = [];
+      doc.on("data", (buffer) => buffers.push(buffer));
+      doc.on("end", () => resolve(Buffer.concat(buffers)));
+      doc.on("error", (error) => reject(error));
+
+      // Header Section
+      doc
+        .fillColor("#444444")
+        .fontSize(20)
+        .text("Vintage Frost.", 110, 65)
+        .fontSize(10)
+        .text("South Beach, Calicut", 200, 65, { align: "right" })
+        .text("Calicut, Kerala, IN", 200, 80, { align: "right" })
+        .moveDown();
+
+      // Invoice Details Section
+      doc
+        .fontSize(20)
+        .text("Invoice", 50, 150)
+        .fontSize(10)
+        .moveTo(50, 190)
+        .lineTo(550, 190)
+        .lineWidth(0.5)
+        .strokeColor("#ccc")
+        .stroke()
+        .text(`Order ID: ${order.orderId}`, 50, 200)
+        .text(`Order Date: ${moment(order.createdAt).format("DD/MM/YYYY")}`, 50, 215)
+        // .text(`Total Amount: ₹${order.totalPrice}`, 50, 230)
+        .text(
+          `${order.address.name} | ${order.address.phoneNumber}`,
+          300, 200
+        )
+        .text(order.address.address, 300, 215)
+        .text(
+          `${order.address.city}, ${order.address.state}, ${order.address.addressType}, ${order.address.pincode}`,
+          300, 230
+        )
+        .moveTo(50, 250)
+        .lineTo(550, 250)
+        .lineWidth(0.5)
+        .strokeColor("#ccc")
+        .stroke()
+        .moveDown();
+
+      // Payment Method Section
+      doc
+        .fontSize(10)
+        .text(`Payment Method: ${order.paymentMethod}`, 50, 260)
+        .moveDown();
+
+      // Products Table Header
+      const invoiceTableTop = 330;
+      generateTableRow(
+        doc,
+        invoiceTableTop,
+        "SL No",
+        "Product Name",
+        "Price",
+        "Quantity",
+        "Sub Total"
+      );
+
+      // Table Data
+      let i;
+      for (i = 0; i < order.products.length; i++) {
+        const item = order.products[i];
+        const position = invoiceTableTop + (i + 1) * 30;
+
+        generateTableRow(
+          doc,
+          position,
+          i + 1,
+          item.product,
+          `₹ ${item.price}`,
+          item.quantity,
+          `₹ ${item.price * item.quantity}`
+        );
+      }
+
+      // Subtotal & Discounts
+      const subtotalPosition = invoiceTableTop + (i + 1) * 30;
+      generateTableRowNoLine(
+        doc,
+        subtotalPosition,
+        "",
+        "",
+        "Subtotal",
+        "",
+        `₹${order.subTotal}`
+      );
+
+      const couponPosition = subtotalPosition + 30;
+      generateTableRowNoLine(
+        doc,
+        couponPosition,
+        "",
+        "",
+        "Coupon Discount",
+        "",
+        order.couponDiscount ? `${order.couponDiscount}%` : "Not Applied"
+      );
+
+      let duePosition = couponPosition + 30;
+
+      if (order.discount) {
+        generateTableRowNoLine(
+          doc,
+          duePosition,
+          "",
+          "",
+          "Discount",
+          "",
+          `₹${order.discount}`
+        );
+        duePosition += 30;
+      }
+
+      // Total Amount
+      generateTableRowNoLine(
+        doc,
+        duePosition,
+        "",
+        "",
+        "Total",
+        "",
+        `₹${order.totalPrice}`
+      );
+
+      // Footer
+      doc
+        .fontSize(10)
+        .text(
+          "Payment has been received. Thank you for your visit.",
+          50, 700,
+          { align: "center", width: 500 }
+        );
+
+      doc.end();
+    } catch (error) {
+      console.error(error);
+      reject(error);
+    }
+  });
+};
+
+// Helper Functions
+const generateTableRow = (doc, y, sl, name, price, qty, total) => {
+  doc
+    .fontSize(10)
+    .text(sl.toString(), 50, y)
+    .text(name, 100, y)
+    .text(price, 250, y)
+    .text(qty.toString(), 350, y)
+    .text(total, 450, y);
+};
+
+const generateTableRowNoLine = (doc, y, sl, name, label, qty, value) => {
+  doc
+    .fontSize(10)
+    .text(sl, 50, y)
+    .text(name, 100, y)
+    .text(label, 250, y)
+    .text(qty, 350, y)
+    .text(value, 450, y);
+};
+
 
 async function quantityChecking(productId, kg, quantity) {
   const product = await productModel.findById(productId);
@@ -252,6 +430,31 @@ console.log("orderData==================",orderData);
 };
 
 
+const downloadInvoice= async(req,res)=>{
+  try {
+    const { id } = req.params;
+
+    let find = {};
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      find._id = id;
+    } else {
+      find.orderId = id;
+    }
+
+    const order = await orderModel.findOne(find).populate("products.productId");
+
+    const pdfBuffer = await generateInvoicePDF(order);
+
+    // Set headers for the response
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
+
+    res.status(200).end(pdfBuffer);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
 
 const createRazorPayOrder = async (req, res) => {
   try {
@@ -505,4 +708,5 @@ module.exports = {
   getKey,
   createRazorPayOrder,
   verifyPayment,
+  downloadInvoice
 };

@@ -371,7 +371,10 @@
                   </div>
                   <div>
                       <p class="mb-2" style="color: white;">Download Invoice:</p>
-                      <button class="btn btn-download">Download</button>
+                      <a href="/order-invoice/<%=order._id%>">
+
+                        <button class="btn btn-download">Download</button>
+                      </a>
                   </div>
               </div>
       
@@ -610,6 +613,14 @@
 
       
           <script>
+
+
+
+const download_btn_el=document.querySelector('.btn-download')
+download_btn_el.addEventListener('click',(e)=>{
+
+})
+
 const cancel_btn_el = document.querySelector('.btn-cancel');
 const instruction_el = document.querySelectorAll("#instruction-Btn");
 const mssg_el = document.querySelectorAll("#mssg-btn");
@@ -733,6 +744,7 @@ mssg_el.forEach((el) => {
     openModal("message");
   });
 });
+  
 
 
 
@@ -749,6 +761,7 @@ update_btn_el.addEventListener('click',(e)=>{
     console.log('skjlkd');
     
 })
+
 
 
 

@@ -56,6 +56,7 @@ const {
   getKey,     
   createRazorPayOrder,
   verifyPayment,
+  downloadInvoice,
 } = require("../../controller/user/orderController");
 const {
   checkoutRender,
@@ -144,5 +145,9 @@ router.post('/edit-review', editReview);
 
 //wallet//
 router.get('/wallet-page',walletPageRender)
+
+//invoice//
+router.get('/order-invoice/:id',downloadInvoice)
+
 
 module.exports = router;
