@@ -9,89 +9,53 @@ const safeGet = (obj, path) => {
   return path.split(".").reduce((acc, part) => acc && acc[part], obj) || "N/A";
 };
 
-// const generateOrderExcel = async (req, res) => {
-//   const { startingDate, endingDate } = req.body;
-//   try {
-//     const workbook = new excelJs.Workbook();
-//     const worksheet = workbook.addWorksheet("Orders");
-
-//     worksheet.columns = [
-//       { header: "Order ID", key: "orderId", width: 15 },
-//       { header: "User ID", key: "userId", width: 30 },
-//       { header: "User Name", key: "userName", width: 20 },
-//       { header: "Number", key: "phoneNumber", width: 20 },
-//       { header: "User Email", key: "userEmail", width: 30 },
-//       { header: "Address", key: "address", width: 30 },
-//       { header: "District", key: "district", width: 15 },
-//       { header: "Products", key: "products", width: 55 },
-//       { header: "Subtotal", key: "subTotal", width: 15 },
-//       { header: "Shipping", key: "shipping", width: 15 },
-//       { header: "Discount", key: "discount", width: 15 },
-//       { header: "Total Price", key: "totalPrice", width: 15 },
-//     ];
-
-//     const filter = {};
-//     if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
-//     if (endingDate)
-//       filter.createdAt = { ...filter.createdAt, $lte: new Date(endingDate) };
-
-//     const orders = await orderModel.find(filter).populate([
-//       { path: "userId", select: "username email" },
-//       { path: "products.productId", select: "productName" },
-//     ]);
-
-//     orders.forEach((item) => {
-//       const row = {
-//         orderId: safeGet(item, "orderId"),
-//         userId: safeGet(item, "userId._id"),
-//         userName: safeGet(item, "userId.username"),
-//         phoneNumber: safeGet(item, "address.phoneNumber"),
-//         userEmail: safeGet(item, "userId.email"),
-//         address: safeGet(item, "address.address"),
-//         district: safeGet(item, "address.city"), // Corrected from 'district' to 'city'
-//         products: item.products
-//           .map(
-//             (product) =>
-//               `${safeGet(product, "productId.productName")} (${
-//                 product.quantity
-//               } units, ₹${product.price} each)`
-//           )
-//           .join("\n"),
-//         subTotal: item.subTotal || "N/A",
-//         shipping: "free",
-//         discount: item.discount || "N/A",
-//         totalPrice: item.totalPrice || "N/A",
-//       };
-
-//       worksheet.addRow(row);
-//     });
-
-//     res.setHeader(
-//       "Content-Type",
-//       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-//     );
-//     res.setHeader("Content-Disposition", "attachment; filename=orders.xlsx");
-
-//     const buffer = await workbook.xlsx.writeBuffer();
-//     res.send(buffer);
-//   } catch (error) {
-//     console.error("Excel generation error:", error);
-//     res.status(400).json({ error: error.message });
-//   }
-// };
 
 
 const generateOrderExcel = async (req, res) => {
-  const { startingDate, endingDate } = req.body;
+  const { reportType, startingDate, endingDate } = req.body;
+
   try {
+    const filter = {};
+
+    // Apply date filters based on reportType
+    const now = new Date();
+    if (reportType === "daily") {
+      const startOfDay = new Date(now.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(now.setHours(23, 59, 59, 999));
+      filter.createdAt = { $gte: startOfDay, $lte: endOfDay };
+    } else if (reportType === "weekly") {
+      const startOfWeek = new Date();
+      startOfWeek.setDate(now.getDate() - now.getDay()); // Start of the week (Sunday)
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date();
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // End of the week (Saturday)
+      endOfWeek.setHours(23, 59, 59, 999);
+
+      filter.createdAt = { $gte: startOfWeek, $lte: endOfWeek };
+    } else if (reportType === "yearly") {
+      const startOfYear = new Date(now.getFullYear(), 0, 1); // Jan 1st
+      const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999); // Dec 31st
+      filter.createdAt = { $gte: startOfYear, $lte: endOfYear };
+    } else if (reportType === "custom") {
+      if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
+      if (endingDate) filter.createdAt = { ...filter.createdAt, $lte: new Date(endingDate) };
+    }
+
+    // Fetch Orders
+    const orders = await orderModel.find(filter).populate([
+      { path: "userId", select: "username email" },
+      { path: "products.productId", select: "productName" },
+    ]);
+
     const workbook = new excelJs.Workbook();
     const worksheet = workbook.addWorksheet("Orders");
 
     // Define Columns
     worksheet.columns = [
       { header: "Order ID", key: "orderId", width: 15 },
-      { header: "User ID", key: "userId", width: 30 },
-      { header: "User Name", key: "userName", width: 20 },
+      // { header: "User ID", key: "userId", width: 30 },
+      { header: "User Name", key: "username", width: 20 },
       { header: "Number", key: "phoneNumber", width: 20 },
       { header: "User Email", key: "userEmail", width: 30 },
       { header: "Address", key: "address", width: 30 },
@@ -99,22 +63,9 @@ const generateOrderExcel = async (req, res) => {
       { header: "Products", key: "products", width: 55 },
       { header: "Subtotal", key: "subTotal", width: 15 },
       { header: "Shipping", key: "shipping", width: 15 },
-      // { header: "Discount", key: "discount", width: 15 },
       { header: "Coupon Discount", key: "discount", width: 15 },
       { header: "Total Price", key: "totalPrice", width: 15 },
     ];
-
-    // Date Filter
-    const filter = {};
-    if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
-    if (endingDate)
-      filter.createdAt = { ...filter.createdAt, $lte: new Date(endingDate) };
-
-    // Fetch Orders
-    const orders = await orderModel.find(filter).populate([
-      { path: "userId", select: "username email" },
-      { path: "products.productId", select: "productName" },
-    ]);
 
     // Safe Getter Function
     const safeGet = (obj, path, defaultValue = "N/A") =>
@@ -124,12 +75,12 @@ const generateOrderExcel = async (req, res) => {
     orders.forEach((item) => {
       const row = {
         orderId: safeGet(item, "orderId"),
-        userId: safeGet(item, "userId._id"),
+        // userId: safeGet(item, "userId._id"),
         userName: safeGet(item, "userId.username"),
         phoneNumber: safeGet(item, "address.phoneNumber"),
         userEmail: safeGet(item, "userId.email"),
         address: safeGet(item, "address.address"),
-        district: safeGet(item, "address.city"), // Fixed from 'district' to 'city'
+        district: safeGet(item, "address.city"), 
         products: item.products
           .map(
             (product) =>
@@ -155,11 +106,13 @@ const generateOrderExcel = async (req, res) => {
     // Send Excel File
     const buffer = await workbook.xlsx.writeBuffer();
     res.send(buffer);
+
   } catch (error) {
     console.error("Excel generation error:", error);
     res.status(400).json({ error: error.message });
   }
 };
+
 
 
 const generateOrderCSV = async (req, res) => {
@@ -237,41 +190,70 @@ const generateOrderCSV = async (req, res) => {
 };
 
 const generateOrderPDF = async (req, res) => {
-  const { startingDate, endingDate } = req.body;
+  const { startingDate, endingDate, reportType } = req.body; // Include reportType in the request
   console.log("Request Body:", req.body);
 
   try {
-    // Filter Orders based on date range
     const filter = {};
-    if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
-    if (endingDate)
-      filter.createdAt = { ...filter.createdAt, $lte: new Date(endingDate) };
 
-    // Fetch Orders with User and Product details
+    // Handle filters based on report type
+    const now = new Date();
+    switch (reportType) {
+      case "daily":
+        filter.createdAt = {
+          $gte: new Date(now.setHours(0, 0, 0, 0)), // Start of today
+          $lte: new Date(now.setHours(23, 59, 59, 999)), // End of today
+        };
+        break;
+
+      case "weekly":
+        const startOfWeek = new Date();
+        startOfWeek.setDate(now.getDate() - now.getDay()); // Start of week (Sunday)
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // End of week (Saturday)
+        endOfWeek.setHours(23, 59, 59, 999);
+
+        filter.createdAt = {
+          $gte: startOfWeek,
+          $lte: endOfWeek,
+        };
+        break;
+
+      case "yearly":
+        filter.createdAt = {
+          $gte: new Date(now.getFullYear(), 0, 1), // January 1st of this year
+          $lte: new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999), // December 31st of this year
+        };
+        break;
+
+      case "custom":
+        if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
+        if (endingDate) filter.createdAt = { ...filter.createdAt, $lte: new Date(endingDate) };
+        break;
+
+      default:
+        return res.status(400).json({ error: "Invalid report type" });
+    }
+
+    // Fetch orders based on filter
     const orders = await orderModel.find(filter).populate([
       { path: "userId", select: "username email" },
-      { path: "products.productId", select: "productName" }, // Ensure correct reference
+      { path: "products.productId", select: "productName" },
     ]);
 
-    // console.log("Fetched Orders:", JSON.stringify(orders, null, 2)); // Debugging
-
-    // Create a PDF document
-    const doc = new PDFDocument({
-      margin: 30,
-      size: "A4",
-      layout: "landscape",
-    });
+    const doc = new PDFDocument({ margin: 30, size: "A4", layout: "landscape" });
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=orders.pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=sales_report_${reportType}.pdf`);
 
     doc.pipe(res);
 
     // Title
-    doc.fontSize(16).text("Sales Report", { align: "center" });
+    doc.fontSize(18).text(`Sales Report (${reportType.toUpperCase()})`, { align: "center" });
     doc.moveDown();
 
-    // Helper function to safely retrieve nested values
     const safeGet = (obj, path, defaultValue = "N/A") =>
       path.split(".").reduce((acc, key) => acc && acc[key], obj) || defaultValue;
 
@@ -303,9 +285,9 @@ const generateOrderPDF = async (req, res) => {
               `${safeGet(product, "productId.productName")} (${product.quantity || 0})`
           )
           .join(", "),
-        order.subTotal || "N/A",
-       order.couponDiscount || "N/A",
-        order.totalPrice || "N/A",
+        order.subTotal || 0,
+        order.couponDiscount || 0,
+        order.totalPrice || 0,
         order.paymentMethod || "N/A",
         order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "N/A",
       ]),
@@ -316,19 +298,31 @@ const generateOrderPDF = async (req, res) => {
       prepareRow: (row, indexColumn, indexRow, rectRow) => {
         doc.font("Helvetica").fontSize(8);
         if (indexColumn === 0) {
-          doc.addBackground(rectRow, indexRow % 2 ? "white" : "lightgray", 0.15);
+          doc.addBackground(rectRow, indexRow % 2 ? "white" : "black", 0.15);
         }
       },
     };
 
     await doc.table(tableData, tableOptions);
 
+    // Total display
+    const salesTotal = orders.reduce((sum, order) => sum + (order.subTotal || 0), 0);
+    const discountTotal = orders.reduce((sum, order) => sum + (order.couponDiscount || 0), 0);
+    const revenueTotal = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+    doc.moveDown(2);
+    doc.fontSize(12).font("Helvetica-Bold").text("Subtotal Summary", { underline: true });
+
+    doc.moveDown();
+    doc.fontSize(10).text(`Sales Total:  ${salesTotal.toFixed(2)} INR`);
+    doc.text(`Coupon Discount Total: ${discountTotal.toFixed(2)}%`);
+    doc.text(`Revenue Total:  ${revenueTotal.toFixed(2)} INR`);
+
     doc.end();
   } catch (error) {
     console.error("PDF generation error:", error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 
 module.exports = { generateOrderCSV, generateOrderExcel, generateOrderPDF };

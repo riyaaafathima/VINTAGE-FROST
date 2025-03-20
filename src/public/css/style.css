@@ -10201,7 +10201,7 @@ button:focus {
 .btn-layout:hover svg,
 .btn-layout:focus svg,
 .btn-layout.active svg {
-  fill: #333;
+  fill: #c96;
 }
 .products > .row > [class*="col-"] {
   display: flex;
@@ -10261,8 +10261,8 @@ button:focus {
 }
 .sidebar-shop .custom-control-label {
   font-weight: 400;
-  color: #333;
   cursor: pointer;
+  background: #c96;
 }
 .sidebar-shop .custom-control-label::before {
   border-radius: 0.2rem;
@@ -10294,7 +10294,7 @@ button:focus {
   padding-right: 3rem;
 }
 .widget-collapsible .widget-title a:after {
-  color: #333;
+  color: #c96;
   content: "\f110";
   display: block;
   font-family: "molla";
@@ -10336,7 +10336,7 @@ button:focus {
   font-size: 1.3rem;
   line-height: 1;
   border-radius: 0.6rem;
-  color: #777;
+  color: #c96;
   background-color: #f8f8f8;
 }
 .sidebar-toggler {

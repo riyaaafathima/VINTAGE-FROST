@@ -5,6 +5,7 @@ const cartModel = require("../../model/user/cart");
 const { default: mongoose } = require("mongoose");
 const wishlistModel = require("../../model/user/wishlist");
 const wishlist = require("../../model/user/wishlist");
+const reviewModel=require('../../model/user/review');
 
 const homePageRender = async (req, res) => {
   try {
@@ -139,7 +140,8 @@ console.log(allProducts);
       selectedCategory: category,
       user,
       cartCount,
-      wishlist:wishlist
+      wishlist:wishlist,
+      
     });
   } catch (error) {
     console.log(error);
@@ -180,6 +182,16 @@ const productView = async (req, res) => {
 
       wishlist = await wishlistModel.findOne({ user: userId });
     }
+    console.log(id);
+    
+    const reviews= await reviewModel.find({product:id}).populate({
+      path:'userId'
+
+    })
+    
+  
+    console.log('reveiwwweee',reviews);
+    
 
     const relatedProducts = await productModel.find({
       category: product.category._id,
@@ -192,6 +204,7 @@ const productView = async (req, res) => {
       user,
       cartCount,
       wishlist:wishlist,
+      reviews
     });
   } catch (error) {
     console.log(error);

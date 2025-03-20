@@ -151,12 +151,12 @@ sup {
   top: -0.5em;
 }
 a {
-  color: #007bff;
+  color: #c96;
   text-decoration: none;
   background-color: transparent;
 }
 a:hover {
-  color: #0056b3;
+  color: #c96;
   text-decoration: underline;
 }
 a:not([href]):not([tabindex]) {
@@ -3836,7 +3836,7 @@ input[type="submit"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #007bff;
+  background-color:#c96;
 }
 .nav-fill .nav-item {
   -ms-flex: 1 1 auto;

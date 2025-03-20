@@ -54,7 +54,7 @@
                         </button>
 
                         <a href="index.html" class="logo">
-                            <img src="card-assets/img/download (1).webp" alt="Vintage Frost" width="130" height="30"  style="border-radius: 75px;">
+                            <img src="/img/download (1).webp" alt="Vintage Frost" width="130" height="30"  style="border-radius: 75px;">
                         </a>
 
                         <nav class="main-nav">
@@ -63,7 +63,8 @@
                                     <a href="/home-page">Home</a>
 
                                 </li>
-                                <li>
+                             
+                                <li class="megamenu-container active" >
                                     <a href="/all-products">Shop</a>
 
                                 </li>
@@ -145,3 +146,21 @@
            
 
         </header><!-- End .header -->
+        <script>
+          // Get the current page URL path
+          const currentPage = window.location.pathname;
+      
+          // Select all menu links
+          const menuLinks = document.querySelectorAll('.menu a');
+      
+          menuLinks.forEach(link => {
+              // Remove active class from all links
+              link.parentElement.classList.remove('active');
+      
+              // Add active class to the current page link
+              if (link.getAttribute('href') === currentPage) {
+                  link.parentElement.classList.add('active');
+              }
+          });
+      </script>
+      

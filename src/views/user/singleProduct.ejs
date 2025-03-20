@@ -416,7 +416,7 @@
                     role="tab"
                     aria-controls="product-review-tab"
                     aria-selected="false"
-                    >Reviews (2)</a
+                    >Reviews (<%=reviews.length%>)</a
                   >
                 </li>
               </ul>
@@ -441,7 +441,7 @@
                   role="tabpanel"
                   aria-labelledby="product-shipping-link"
                 >
-                  <div class="product-desc-content">
+                  <!-- <div class="product-desc-content">
                     <h3>Delivery & returns</h3>
                     <p>
                       We deliver to over 100 countries around the world. For
@@ -452,7 +452,7 @@
                       For full details of how to make a return, please view our
                       <a href="#">Returns information</a>
                     </p>
-                  </div>
+                  </div> -->
                   <!-- End .product-desc-content -->
                 </div>
                 <!-- .End .tab-pane -->
@@ -463,99 +463,49 @@
                   aria-labelledby="product-review-link"
                 >
                   <div class="reviews">
-                    <h3>Reviews (2)</h3>
+                    <h3>Reviews (<%=reviews.length%>)</h3>
                     <div class="review">
                       <div class="row no-gutters">
-                        <div class="col-auto">
-                          <h4><a href="#">Samanta J.</a></h4>
-                          <div class="ratings-container">
-                            <div class="ratings">
-                              <div class="ratings-val" style="width: 80%"></div>
-                              <!-- End .ratings-val -->
-                            </div>
-                            <!-- End .ratings -->
-                          </div>
-                          <!-- End .rating-container -->
-                          <span class="review-date">6 days ago</span>
-                        </div>
+                       
                         <!-- End .col -->
-                        <div class="col">
-                          <h4>Good, perfect size</h4>
-
-                          <div class="review-content">
-                            <p>
-                              Lorem ipsum dolor sit amet, consectetur
-                              adipisicing elit. Ducimus cum dolores assumenda
-                              asperiores facilis porro reprehenderit animi culpa
-                              atque blanditiis commodi perspiciatis doloremque,
-                              possimus, explicabo, autem fugit beatae quae
-                              voluptas!
-                            </p>
-                          </div>
-                          <!-- End .review-content -->
-
-                          <div class="review-action">
-                            <a href="#"
-                              ><i class="icon-thumbs-up"></i>Helpful (2)</a
-                            >
-                            <a href="#"
-                              ><i class="icon-thumbs-down"></i>Unhelpful (0)</a
-                            >
-                          </div>
-                          <!-- End .review-action -->
-                        </div>
+                       
                         <!-- End .col-auto -->
                       </div>
                       <!-- End .row -->
                     </div>
                     <!-- End .review -->
+                    
 
-                    <div class="review">
-                      <div class="row no-gutters">
+                    <% if (reviews.length > 0) { %>
+                      <% reviews.forEach((review) => { %>
                         <div class="col-auto">
-                          <h4><a href="#">John Doe</a></h4>
+                          <h4><%= review.userId.username %></h4>
+                          
+                          <!-- Rating Display -->
                           <div class="ratings-container">
                             <div class="ratings">
-                              <div
-                                class="ratings-val"
-                                style="width: 100%"
-                              ></div>
-                              <!-- End .ratings-val -->
+                              <div class="ratings-val" style="width:<%- review.rating * 20 %>%;"></div>
                             </div>
-                            <!-- End .ratings -->
+                            <span><%= review.rating %> / 5</span>
                           </div>
-                          <!-- End .rating-container -->
-                          <span class="review-date">5 days ago</span>
+                          
+                          <!-- Description -->
+                          <p><%= review.Description %></p>
+                      
+                          <!-- Review Date -->
+                          <span class="review-date">
+                            <%= new Date(review.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric', month: 'long', day: 'numeric'
+                            }) %>
+                          </span>
                         </div>
-                        <!-- End .col -->
-                        <div class="col">
-                          <h4>Very good</h4>
+                      <% }) %>
+                    <% } else { %>
+                      <p>No reviews available for this product.</p>
+                    <% } %>
+                    
+                    
 
-                          <div class="review-content">
-                            <p>
-                              Sed, molestias, tempore? Ex dolor esse iure hic
-                              veniam laborum blanditiis laudantium iste amet.
-                              Cum non voluptate eos enim, ab cumque nam, modi,
-                              quas iure illum repellendus, blanditiis
-                              perspiciatis beatae!
-                            </p>
-                          </div>
-                          <!-- End .review-content -->
-
-                          <div class="review-action">
-                            <a href="#"
-                              ><i class="icon-thumbs-up"></i>Helpful (0)</a
-                            >
-                            <a href="#"
-                              ><i class="icon-thumbs-down"></i>Unhelpful (0)</a
-                            >
-                          </div>
-                          <!-- End .review-action -->
-                        </div>
-                        <!-- End .col-auto -->
-                      </div>
-                      <!-- End .row -->
-                    </div>
                     <!-- End .review -->
                   </div>
                   <!-- End .reviews -->

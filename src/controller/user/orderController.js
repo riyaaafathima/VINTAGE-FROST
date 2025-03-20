@@ -234,6 +234,7 @@ const orderPageRender = async (req, res) => {
         
       }))
     );
+    
     allOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate))
     const totalOrders = allOrders.length; 
     const totalPages = Math.ceil(totalOrders / limit);
@@ -532,6 +533,7 @@ const viewOrderDetails = async (req, res) => {
         cartCount = cart.items.length;
       }
     }
+console.log("productDetails",productDetails);
 
     let order = {
       orderId: orderDetails.orderId,
