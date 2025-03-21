@@ -127,7 +127,7 @@ console.log(allProducts);
       let items = await wishlistModel.findOne({ user: id });
       if(items){
         wishlist=items.products
-      }
+      }      
 
     }
 

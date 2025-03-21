@@ -2,7 +2,7 @@ const categoryModel = require("../../model/admin/category");
 const mongoose = require("mongoose");
 
 const addCategory = async (req, res) => {
-  try {
+  try {      
     const { categoryName, isActive } = req.body;
     console.log(req.body);
 
