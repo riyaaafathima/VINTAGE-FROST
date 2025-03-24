@@ -25,17 +25,17 @@ const generateOrderExcel = async (req, res) => {
       filter.createdAt = { $gte: startOfDay, $lte: endOfDay };
     } else if (reportType === "weekly") {
       const startOfWeek = new Date();
-      startOfWeek.setDate(now.getDate() - now.getDay()); // Start of the week (Sunday)
+      startOfWeek.setDate(now.getDate() - now.getDay());
       startOfWeek.setHours(0, 0, 0, 0);
 
       const endOfWeek = new Date();
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // End of the week (Saturday)
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
       endOfWeek.setHours(23, 59, 59, 999);
 
       filter.createdAt = { $gte: startOfWeek, $lte: endOfWeek };
     } else if (reportType === "yearly") {
-      const startOfYear = new Date(now.getFullYear(), 0, 1); // Jan 1st
-      const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999); // Dec 31st
+      const startOfYear = new Date(now.getFullYear(), 0, 1);
+      const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999);
       filter.createdAt = { $gte: startOfYear, $lte: endOfYear };
     } else if (reportType === "custom") {
       if (startingDate) filter.createdAt = { $gte: new Date(startingDate) };
@@ -54,7 +54,6 @@ const generateOrderExcel = async (req, res) => {
     // Define Columns
     worksheet.columns = [
       { header: "Order ID", key: "orderId", width: 15 },
-      // { header: "User ID", key: "userId", width: 30 },
       { header: "User Name", key: "username", width: 20 },
       { header: "Number", key: "phoneNumber", width: 20 },
       { header: "User Email", key: "userEmail", width: 30 },
@@ -71,30 +70,56 @@ const generateOrderExcel = async (req, res) => {
     const safeGet = (obj, path, defaultValue = "N/A") =>
       path.split(".").reduce((acc, key) => acc && acc[key], obj) || defaultValue;
 
+    // Initialize totals
+    let totalSubtotal = 0;
+    let totalDiscount = 0;
+    let totalRevenue = 0;
+
     // Populate Rows
     orders.forEach((item) => {
+      const subTotal = Number(item.subTotal) || 0;
+      const discount = Number(item.couponDiscount) || 0;
+      const totalPrice = Number(item.totalPrice) || 0;
+
+      totalSubtotal += subTotal;
+      totalDiscount += discount;
+      totalRevenue += totalPrice;
+
       const row = {
         orderId: safeGet(item, "orderId"),
-        // userId: safeGet(item, "userId._id"),
         userName: safeGet(item, "userId.username"),
         phoneNumber: safeGet(item, "address.phoneNumber"),
         userEmail: safeGet(item, "userId.email"),
         address: safeGet(item, "address.address"),
-        district: safeGet(item, "address.city"), 
+        district: safeGet(item, "address.city"),
         products: item.products
           .map(
             (product) =>
               `${safeGet(product, "productId.productName")} (${Number(product.quantity) || 0} units, ₹${Number(product.price) || "N/A"} each)`
           )
           .join("\n"),
-        subTotal: Number(item.subTotal) || 0,
+        subTotal,
         shipping: "Free",
-        discount: Number(item.couponDiscount) || 0,
-        totalPrice: Number(item.totalPrice) || 0,
+        discount,
+        totalPrice,
       };
 
       worksheet.addRow(row);
     });
+
+    // Add summary row at the bottom
+    worksheet.addRow({}); // Empty row for spacing
+    worksheet.addRow({
+      username: "Total Summary",
+      subTotal: totalSubtotal,
+      discount: totalDiscount,
+      totalPrice: totalRevenue,
+    });
+
+    worksheet.getCell(`B${worksheet.rowCount}`).font = { bold: true };
+    worksheet.getCell(`H${worksheet.rowCount}`).font = { bold: true };
+    worksheet.getCell(`J${worksheet.rowCount}`).font = { bold: true };
+    worksheet.getCell(`K${worksheet.rowCount}`).font = { bold: true };
 
     // Response Headers
     res.setHeader(

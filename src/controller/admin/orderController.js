@@ -1,4 +1,6 @@
 const orderModel = require("../../model/user/order");
+
+
 const orderListController = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -56,7 +58,7 @@ const updateOrderStatus = async (req, res) => {
     return res.status(200).json("status updated succesfully");
   } catch (error) {
     console.log(error);
-  }
+  }  
 };
 
 module.exports = {

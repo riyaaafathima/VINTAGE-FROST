@@ -1,7 +1,71 @@
 const sendMail = require("../../service/email/service");
 const generateOtp = require("../../service/otp/service");
 const userModel = require("../../model/user/user");
+const walletModel=require('../../model/user/wallet');
+const counterModel=require('../../model/user/counter')
 const bcrypt = require("bcrypt");
+
+
+ async function earnedMoneyByREfer(userId) {
+  try {
+console.log("earnedMoneyByREfer called");
+
+const reward = 500;
+
+
+      const isWalletExists = await walletModel.findOne({ user: userId });
+
+      let counter = await counterModel.findOne({
+        model: "Wallet",
+        field: "transaction_id",
+      });
+
+      if (counter) {
+        counter.count += 1;
+        await counter.save();
+      } else {
+        counter = await counterModel.create({
+          model: "Wallet",
+          field: "transaction_id",
+        });
+      }
+
+      if (isWalletExists) {
+        wallet = await walletModel.findByIdAndUpdate(isWalletExists._id, {
+          $inc: {
+            balance: +reward,
+          },
+          $push: {
+            transaction: {
+              transaction_id: counter.count + 1,
+              amount: reward,
+              type: "Credit",
+              description: " referal link reward",
+             
+            },
+          },
+        });
+      } else {
+        wallet = await walletModel.create({
+          user: userId,
+          balance: reward,
+          transaction: [
+            {
+              transaction_id: counter.count + 1,
+              amount: reward,
+              type: "Credit",
+              description: "referal link Reward",
+             
+            },
+          ],
+        });
+      }
+    
+  } catch (error) {
+    
+  }
+  
+}
 
 const signupRender = (req, res) => {
   try {
@@ -49,7 +113,7 @@ const loginController = async (req, res) => {
 
 const signupconteroller = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password,isReferedUser } = req.body;
 
     const isMailExist = await userModel.findOne({ email });
 
@@ -60,7 +124,7 @@ const signupconteroller = async (req, res) => {
     if (email) {
       const otp = generateOtp();
       const otpExpiry = Date.now() + 30000; // OTP expires in 30 seconds
-
+      
       sendMail(email, otp);
       console.log(otp, email);
 
@@ -70,6 +134,7 @@ const signupconteroller = async (req, res) => {
         password: await bcrypt.hash(password, 10),
         otp,
         otpExpiry,
+        isReferedUser
       };
 
       res.status(200).json("OTP sent to email. Expires in 30 seconds.");
@@ -131,7 +196,7 @@ const verifyOtpController = async (req, res) => {
     }
 
     if (inputOtp == otp) {
-      const { username, password, email } = req.session.otpUsersData;
+      const { username, password, email,isReferedUser } = req.session.otpUsersData;
 
       const users = await userModel.find({});
 
@@ -144,10 +209,18 @@ const verifyOtpController = async (req, res) => {
         isAdmin: isFirstDoc ? true : false,
       });
 
+      user.referalLink = `http://localhost:4000/signup?userid=${user._id}`
+
       await user.save();
+
+if(isReferedUser){
+
+  earnedMoneyByREfer(isReferedUser)
+}
 
       req.session.otpUsersData = null;
       req.session.user = user;
+
       res.status(200).json("success");
     }
   } catch (error) {

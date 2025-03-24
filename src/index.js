@@ -6,7 +6,7 @@ const userRouter = require("./router/user/route");
 const adminRouter=require('./router/admin/route')
 const connectDb = require("./config/db/dbConnection");
 const passport=require('passport')
-
+require('./service/expiryDateOfoffer');
 
 const path = require("path");
 

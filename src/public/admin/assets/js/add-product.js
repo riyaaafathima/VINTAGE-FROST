@@ -115,7 +115,6 @@ addbtn_el.addEventListener("click", async (e) => {
     isValid = false;
   }
 
-  //arra input fe
   document.querySelectorAll(".weight-inputs").forEach((inputs, index) => {
     if (inputs?.value == "") {
       createErrElAfter(inputs, "please fill the field");

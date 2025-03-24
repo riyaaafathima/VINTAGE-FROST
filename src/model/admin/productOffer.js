@@ -21,5 +21,7 @@ const productOfferschema=new mongoose. Schema({
     }
 })
 
+
+
 module.exports=mongoose.model('productOffer',productOfferschema)
 

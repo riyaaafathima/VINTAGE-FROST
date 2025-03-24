@@ -20,6 +20,9 @@ const userProfileRender = async (req, res) => {
         cartCount = cart.items.length;
       }
     }
+    
+    console.log("userDetails",userDetails);
+    
 
     res.render("user/userProfile", {
       userDetails,

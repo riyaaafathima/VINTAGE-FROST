@@ -23,6 +23,10 @@ const userSchema= new mongoose.Schema({
         type:Boolean,
         default:true
 
+    },
+    referalLink:{
+        type:String,
+        
     }
 
 },{timestamps:true})

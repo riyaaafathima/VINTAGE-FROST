@@ -50,21 +50,22 @@ const productSchema = new mongoose.Schema(
     },
     categoryOfferModel: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "categoryOffers",
+      ref: "categoryOffer",
       default: null,
     },
     productOfferModel: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "productOffers",
+      ref: "productOffer",
       default: null,
     },
     offerPercentage: {
       type: Number,
     },
   },
-  {
+  {   
     timestamps: true,
   }
 );
+
 
 module.exports = mongoose.model("products", productSchema);

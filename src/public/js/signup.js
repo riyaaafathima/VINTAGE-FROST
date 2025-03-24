@@ -17,6 +17,9 @@ console.log(err_email_el, err_password_el, err_username_el);
 function getElement(id) {
   return document.getElementById(`${id}`);
 }
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('userId');
+
 
 btn_el.addEventListener("click", async (e) => {
   e.preventDefault();
@@ -24,7 +27,11 @@ btn_el.addEventListener("click", async (e) => {
     username: username_el.value,
     email: email_el.value,
     password: password_el.value,
+    isReferedUser:userId
+
+
   };
+console.log(userCredential);
 
   let isValid = true;
 
