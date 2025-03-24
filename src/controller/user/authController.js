@@ -3,6 +3,7 @@ const generateOtp = require("../../service/otp/service");
 const userModel = require("../../model/user/user");
 const walletModel=require('../../model/user/wallet');
 const counterModel=require('../../model/user/counter')
+const cartModel=require('../../model/user/cart')
 const bcrypt = require("bcrypt");
 
 
@@ -237,6 +238,26 @@ const logoutUser = (req, res) => {
   } catch (error) {}
 };
 
+const contactPageRender= async(req,res)=>{
+  try {
+     let user = null;
+        let cartCount = 0;
+        if (req.session?.user) {
+          const id = req.session?.user?._id;
+          user = await userModel.findById(id);
+          user = user.username;
+          const cart = await cartModel.findOne({ user: id });
+          if (cart) {
+            cartCount = cart.items.length;
+          }
+        }
+    res.render('user/contactPage',{user,cartCount})
+  } catch (error) {
+    console.log();
+    
+  }
+}
+
 module.exports = {
   logoutUser,
   signupRender,
@@ -246,4 +267,5 @@ module.exports = {
   verifyOtpController,
   loginRender,
   loginController,
+  contactPageRender
 };

@@ -7,6 +7,7 @@ const {
   loginController,
   resendOtp,
   logoutUser,
+  contactPageRender,
 } = require("../../controller/user/authController");
 
 const {
@@ -83,6 +84,7 @@ router
   .route("/otp-page")
   .get(verifyUser, serveOtpController)
   .post(verifyOtpController);
+  router.get('/contact',contactPageRender)
 
 router
   .route("/login")

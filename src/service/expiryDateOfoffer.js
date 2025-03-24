@@ -9,7 +9,6 @@ cron.schedule('* * * * *', async () => {
     try {
         const now = new Date();
 
-        // Find products with expired or associated offers
         const products = await Product.find({
             $or: [
                 { productOfferModel: { $ne: null } },
@@ -32,7 +31,6 @@ cron.schedule('* * * * *', async () => {
 const checkAndUpdateOffers = async (product, now) => {
     let isModified = false;
 
-    // ** 1. Check for expired product offer **
     if (product.productOfferModel) {
         if (product.productOfferModel.expiryDate <= now) {
             product.productOfferModel = null;
@@ -41,7 +39,6 @@ const checkAndUpdateOffers = async (product, now) => {
         }
     }
 
-    // ** 2. Check for expired category offer **
     if (product.categoryOfferModel) {
         if (product.categoryOfferModel.expiryDate <= now) {
             product.categoryOfferModel = null;
