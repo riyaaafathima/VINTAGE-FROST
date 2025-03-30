@@ -186,6 +186,8 @@ if(totalAmount>1000 && paymentMethod=='COD'){
       });
     }
   } catch (error) {
+    console.log(error);
+    
   };
     
   }

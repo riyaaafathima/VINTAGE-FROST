@@ -5,8 +5,10 @@ const cart_btn_el = document.querySelector("#addcart-btn");
 const productId_el = document.querySelector("#productname");
 const instruction_el = document.querySelector("#instruction-el");
 const message_el = document.querySelector("#message-el");
-const inStock = document.querySelector("#stock")
+const inStock = document.querySelector("#stock");
 // Toast functions
+console.log("===========================",inStock);
+
 const showErrorToast = (message) => {
   toastr.options = {
     positionClass: "toast-top-center",
@@ -15,8 +17,6 @@ const showErrorToast = (message) => {
   };
   toastr.error(message);
 };
-
-
 
 const showSuccessToast = (message) => {
   toastr.options = {
@@ -77,7 +77,7 @@ cart_btn_el.addEventListener("click", async (e) => {
     return;
   }
 
-  if(inStock.innerHTML.toUpperCase() == "OUT OF STOCK"){
+  if (inStock.innerHTML.toUpperCase() == "OUT OF STOCK") {
     showErrorToast("Out of stock");
     return;
   }
@@ -86,7 +86,7 @@ cart_btn_el.addEventListener("click", async (e) => {
   console.log(productId);
 
   const productDetails = {
-    price: price,    
+    price: price,
     kg: kg,
     eggPreference: eggValue,
     productId: productId,
@@ -112,36 +112,32 @@ cart_btn_el.addEventListener("click", async (e) => {
         title: "Added to cart",
         showConfirmButton: false,
         timer: 1500,
-      }).then(async() => {
-      const data=await response.json()
+      }).then(async () => {
+        const data = await response.json();
         // localStorage.setItem("cart-count",data.cartCount)
-        
+
         window.location.href = "/cart";
       });
-    }else{
-      const data=await response.json()
-    showErrorToast(data);
-
+    } else {
+      const data = await response.json();
+      showErrorToast(data);
     }
   } catch (error) {
     console.log(error);
   }
 });
 
-
-
-
-const wishlist_btn_el = document.querySelector('.btn-wishlist');
-const productId = wishlist_btn_el.getAttribute('data-product-id');
+const wishlist_btn_el = document.querySelector(".btn-wishlist");
+const productId = wishlist_btn_el.getAttribute("data-product-id");
 
 if (wishlist?.products?.includes(productId)) {
   wishlist_btn_el.classList.add("active");
   wishlist_btn_el.querySelector("span").textContent = "Added to Wishlist";
 }
 
-wishlist_btn_el.addEventListener('click', async (e) => {
+wishlist_btn_el.addEventListener("click", async (e) => {
   e.preventDefault();
-  console.log("wishlish",wishlist);
+  console.log("wishlish", wishlist);
 
   const wishlistButton = e.currentTarget;
   wishlistButton.classList.toggle("active");
@@ -149,49 +145,41 @@ wishlist_btn_el.addEventListener('click', async (e) => {
   // let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
   if (wishlistButton.classList.contains("active")) {
-  
     wishlist_btn_el.querySelector("span").textContent = "Added to Wishlist";
 
     try {
-      const response = await fetch('/add-wishlist', {
-        method: 'POST',
+      const response = await fetch("/add-wishlist", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ productId })
+        body: JSON.stringify({ productId }),
       });
       if (response.ok) {
-        showSuccessToast('Added to wishlist');
-        
+        showSuccessToast("Added to wishlist");
       }
     } catch (error) {
       console.log(error);
     }
-
   } else {
-   
     wishlist_btn_el.querySelector("span").textContent = "Add to Wishlist";
     try {
-      const response= await fetch('/wishlist-remove',{
-       method:'POST',
-       headers:{
-           'Content-Type':'application/json'
-       },
-       body:JSON.stringify({productId})
-      })
+      const response = await fetch("/wishlist-remove", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ productId }),
+      });
       if (response.ok) {
-       showErrorToast('removed successfully');
-       wishlist = wishlist.filter(id => id !== productId);
-       window.location.reload()
-       
-      }else{
-       showErrorToast('cannot remove')
+        showErrorToast("removed successfully");
+        wishlist = wishlist.filter((id) => id !== productId);
+        window.location.reload();
+      } else {
+        showErrorToast("cannot remove");
       }
-   } catch (error) {
-       console.log(error);
-       
-   }
+    } catch (error) {
+      console.log(error);
+    }
   }
-
 });
-

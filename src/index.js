@@ -1,22 +1,24 @@
 const express = require("express");
-const multer=require('multer')
+const multer = require("multer");
 const session = require("express-session");
-const googleRouter= require('./router/user/google')
+const helmet = require("helmet");
+const googleRouter = require("./router/user/google");
 const userRouter = require("./router/user/route");
-const adminRouter=require('./router/admin/route')
+const adminRouter = require("./router/admin/route");
 const connectDb = require("./config/db/dbConnection");
-const passport=require('passport')
-require('./service/expiryDateOfoffer');
+const passport = require("passport");
+require("./service/expiryDateOfoffer");
 
 const path = require("path");
 
 const app = express();
 
-const upload=multer()
+const upload = multer();
 
-// app.use(upload.none())           
+// app.use(helmet());
+  
+// app.use(upload.none())
 
- 
 app.use(
   session({
     secret: "hihellobrry",
@@ -29,7 +31,7 @@ app.use(
   })
 );
 
-app.use(passport.initialize());  
+app.use(passport.initialize());
 
 app.use(passport.session());
 
@@ -43,31 +45,21 @@ app.set("views", path.join(__dirname, "views"));
 
 app.set("view engine", "ejs");
 
-    
-
-
 app.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
   res.setHeader("Pragma", "no-cache");
   res.setHeader("Expires", "0");
-  next();
-}); 
+  next();
+});
 
-
-    
-app.use('/admin',adminRouter);
+app.use("/admin", adminRouter);
 app.use(userRouter);
-app.use('/auth',googleRouter)
+app.use("/auth", googleRouter);
 
-app.get("*",(req,res)=>{
-  res.render('common/404')
-})
+app.get("*", (req, res) => {
+  res.render("common/404");
+});
 
-
-
-connectDb();     
+connectDb();
 
 module.exports = app;
-    
-
-

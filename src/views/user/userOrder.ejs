@@ -370,13 +370,19 @@
                       <p class="mb-0"style="color: white;"><%=order.address.pincode%>,<%=order.address.locality%></p>
                   </div>
                   <div>
-                      <p class="mb-2" style="color: white;">Download Invoice:</p>
-                      <a href="/order-invoice/<%=order._id%>">
-
-                        <button class="btn btn-download">Download</button>
-                      </a>
                   </div>
-              </div>
+                 <%if(order.selectedProduct.status=='Delivered'){%>
+                  <p class="mb-2" style="color: white;">Download Invoice:</p>
+                  <a href="/order-invoice/<%=order._id%>">
+
+                    <button class="btn btn-download">Download</button>
+                  </a>
+                <% } %>
+                     
+
+                  </div>
+                 
+     
       
               <!-- Order Details Section -->
               <div class="container">
@@ -445,7 +451,7 @@
 
                   <div class="total-container">
                     <div class="total-label">Total:</div>
-                    <div class="total-amount">₹<span id="totalPrice"><%=order.selectedProduct.price%></span></div>
+                    <div class="total-amount">₹<span id="totalPrice"><%=order.totalPrice%></span></div>
                 </div>
                 
 
@@ -617,10 +623,6 @@
 
 
 
-const download_btn_el=document.querySelector('.btn-download')
-download_btn_el.addEventListener('click',(e)=>{
-
-})
 
 const cancel_btn_el = document.querySelector('.btn-cancel');
 const instruction_el = document.querySelectorAll("#instruction-Btn");
@@ -748,11 +750,12 @@ mssg_el.forEach((el) => {
   
 
 
+const review = JSON.parse('<%= JSON.stringify(review) %>'.replace(/&#34;/g, '"'));
 
 
 ///edit reviewModal///
-
-const update_btn_el=document.querySelector('#reviewUpdate-btn')
+if(review){
+  const update_btn_el=document.querySelector('#reviewUpdate-btn')
 
 update_btn_el.addEventListener('click',(e)=>{
     e.preventDefault()
@@ -762,6 +765,8 @@ update_btn_el.addEventListener('click',(e)=>{
     console.log('skjlkd');
     
 })
+}
+
 
 
 

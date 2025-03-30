@@ -71,13 +71,12 @@ const ProductSchema = new mongoose.Schema({
   },
   price: {
     type: Number,  
-    required: true,
+    required: true, 
   },
   offerPrice:{
     type:Number,
 
   },
-
   quantity: {
     type: Number,
     required: true,
@@ -131,6 +130,10 @@ const OrderSchema = new mongoose.Schema(
       required: true,
       enum: ["Failed", "Pending", "Success"],
       default: "Pending",
+    },
+    coupon: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Coupon',
     },
     couponCode: {
       type: String,
