@@ -6,7 +6,7 @@ const preventNavigation = (req, res, next) => {
   }
 
   if (req.session.user) {
-    return res.redirect("/home-page");
+    return res.redirect("/");
   }
   return res.redirect("/login");
 };

@@ -75,7 +75,7 @@ const {
 const{walletPageRender}=require('../../controller/user/walletController')
 const router = require("express").Router();
 
-router.get("/home-page", isBlock, homePageRender);
+router.get("/", isBlock, homePageRender);
 
 //authentication route//
 router.get("/signup", verifyUser, isBlock, isOtpUser, signupRender);

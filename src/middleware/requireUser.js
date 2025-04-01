@@ -13,7 +13,7 @@ const checkCart = async (req, res, next) => {
   const cart = await cartModel.findOne({ user: userId });
 
   if (!cart) {
-    return res.redirect("/home-page");
+    return res.redirect("/");
   } else {
     next();
   }
@@ -21,7 +21,7 @@ const checkCart = async (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
   if (req.session?.user) {
-    return res.redirect("/home-page");
+    return res.redirect("/");
   } else if (req.session?.isAdmin) {
     return res.redirect("/admin/dashboard");
   } else {

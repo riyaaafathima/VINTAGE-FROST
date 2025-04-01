@@ -106,7 +106,7 @@ const loginController = async (req, res) => {
     }
     req.session.user = isMailExist;
 
-    res.status(200).json({ redirecturl: "/home-page" });
+    res.status(200).json({ redirecturl: "/" });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -234,7 +234,7 @@ if(isReferedUser){
 const logoutUser = (req, res) => {
   try {
     req.session.user = null;
-    res.redirect("/home-page");
+    res.redirect("/");
   } catch (error) {}
 };
 
