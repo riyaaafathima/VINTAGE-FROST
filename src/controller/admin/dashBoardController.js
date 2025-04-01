@@ -83,7 +83,7 @@ const dashboardRender = async (req, res) => {
         $group: {
           _id: {
             $dateToString: {
-              format: filter === "day" ? "%H" : filter === "week" ? "%Y-%m-%d" : filter === "month" ? "%Y-%m" : "%Y",
+              format: filter === "day" ? "%H" : "%Y-%m-%d", // Daily for week/month/year, hourly for day
               date: "$createdAt"
             }
           },
@@ -93,8 +93,6 @@ const dashboardRender = async (req, res) => {
       },
       { $sort: { _id: 1 } }
     ]);
-
-
 
     const productsData = await Order.aggregate([
       {
@@ -184,10 +182,7 @@ const dashboardRender = async (req, res) => {
       { $sort: { totalQuantitySold: -1 } },
       { $limit: 5 },
     ]);
-
-    console.log("  chartData,",  chartData);
-    
-
+  
     res.render("admin/index", {
       topProducts,
       topCategories,
@@ -207,7 +202,7 @@ const dashboardRender = async (req, res) => {
 
 
 
-
+ 
 ///logout controller///
 const logoutAdmin = (req, res) => {
   try {

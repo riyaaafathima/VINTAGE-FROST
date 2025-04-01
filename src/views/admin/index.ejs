@@ -697,61 +697,64 @@
       // Chart configuration
       const ctx = document.getElementById("myChart").getContext("2d");
 
-      const myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: chartData.labels,
-          datasets: [
+const myChart = new Chart(ctx, {
+    type: "line",
+    data: {
+        labels: chartData.labels,
+        datasets: [
             {
-              label: "Users",
-              tension: 0.9,
-              fill: true,
-              backgroundColor: 'rgba(44, 120, 220, 0.2)',
-              borderColor: 'rgba(44, 120, 220)',
-              data: chartData.users,
-            },
-
-            {
-              label: "Orders",
-              tension: 0.3,
-              fill: true,
-              backgroundColor: "rgba(380, 200, 230, 0.2)",
-              borderColor: "rgb(380, 200, 230)",
-              data: chartData.orders,
+                label: "Users",
+                tension: 0.9,
+                fill: true,
+                backgroundColor: 'rgba(44, 120, 220, 0.2)',
+                borderColor: 'rgb(44, 120, 220)',
+                data: chartData.users,
+                borderWidth: 2 // Added for visibility
             },
             {
-              label: "Products",
-              tension: 0.3,
-              fill: true,
-              backgroundColor: "rgba(4, 209, 130, 0.2)",
-              borderColor: "rgb(4, 209, 130)",
-              data: chartData.products,
+                label: "Orders",
+                tension: 0.3,
+                fill: true,
+                backgroundColor: "rgba(255, 200, 230, 0.2)",
+                borderColor: "rgb(255, 200, 230)",
+                data: chartData.orders,
+                borderWidth: 2 // Added for visibility
             },
-          ],
-        },
-        options: {
-          responsive: true,
-          scales: {
+            {
+                label: "Products",
+                tension: 0.3,
+                fill: true,
+                backgroundColor: "rgba(4, 209, 130, 0.2)",
+                borderColor: "rgb(4, 209, 130)",
+                data: chartData.products,
+                borderWidth: 2 // Added for visibility
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
             y: {
-              beginAtZero: true,
-            },
-          },
+                beginAtZero: true
+            }
         },
-      });
+        plugins: {
+            legend: {
+                display: true
+            }
+        }
+    }
+});
 
-      // Dropdown filter handler
-      document.querySelectorAll(".dropdown-item").forEach((item) => {
-        item.addEventListener("click", (e) => {
-          e.preventDefault();
-          const filter = e.target.getAttribute("data-filter");
-          window.location.href = `/admin/dashboard?filter=${filter}`;
-        });
-      });
-
-
-
-
-    </script>
+// Dropdown filter handler
+document.querySelectorAll(".dropdown-item").forEach((item) => {
+    item.addEventListener("click", (e) => {
+        e.preventDefault();
+        const filter = e.target.getAttribute("data-filter");
+        window.location.href = `/admin/dashboard?filter=${filter}`;
+    });
+});
+</script>
 
 
 
