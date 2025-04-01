@@ -1,11 +1,12 @@
 const express = require("express");
 const multer = require("multer");
 const session = require("express-session");
+require("dotenv").config();
 // const helmet = require("helmet");
 const googleRouter = require("./router/user/google");
 const userRouter = require("./router/user/route");
 const adminRouter = require("./router/admin/route");
-const connectDb = require("./config/db/dbConnection");
+// const connectDb = require("./config/db/dbConnection");
 const passport = require("passport");
 require("./service/expiryDateOfoffer");
 
@@ -60,6 +61,5 @@ app.get("*", (req, res) => {
   res.render("common/404");
 });
 
-connectDb();
 
 module.exports = app;
