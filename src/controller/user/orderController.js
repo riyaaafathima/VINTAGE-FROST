@@ -476,6 +476,10 @@ const createRazorPayOrder = async (req, res) => {
       receipt: crypto.randomBytes(10).toString("hex"),
     };
 
+
+    console.log("KEY_ID =>", process.env.KEY_ID);
+console.log("KEY_SECRET =>", process.env.KEY_SECRET);
+
     instance.orders.create(options, (error, order) => {
       if (error) {
         console.log(error);

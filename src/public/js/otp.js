@@ -62,7 +62,7 @@ btn_el.addEventListener("click", async (e) => {
   });
 
   if (response.ok) {
-    window.location.href = "/home-page";
+    window.location.href = "/";
   } else {
     const mssg = await response.json();
     console.log("mess",mssg);
