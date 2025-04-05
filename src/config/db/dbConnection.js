@@ -17,7 +17,7 @@ const connectDb = async () => {
     console.log("Mongoose connected");
   } catch (err) {
     console.error("Mongoose connection error:", err);
-    process.exit(1); 
+    process.exit(1);   
   }
 };
 
