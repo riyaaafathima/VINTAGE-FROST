@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="card-assets/css/bootstrap.min.css">
 <link rel="stylesheet" href="card-assets/css/plugins/owl-carousel/owl.carousel.css">
 <link rel="stylesheet" href="card-assets/css/plugins/magnific-popup/magnific-popup.css">
+<div class="page-wrapper">
 <%- include('partials/header.ejs') %>
     
 
@@ -21,87 +22,230 @@
     top: 10px;
     left: 10px;
 }
+
 .original-price {
     text-decoration: line-through;
     color: gray;
 }
+
 .discounted-price {
     color: green;
     font-weight: bold;
 }
+
 .banner {
-  display: flex;
-  width: 100%;
-  height: 500px; /* Adjust this value as needed */
-  position: relative;
+    display: flex;
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 20px;
 }
 
 .left-section {
-  flex: 1;
-  padding: 30px;
+    flex: 1;
+    padding: 20px;
 }
 
 .arch-image {
-  width: 45%;
-  height: 700px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: -40px;
+    width: 45%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .arch-image img {
-  width: 400px;
-  height: 600px;
-  object-fit: cover;
-  border-radius: 250px 250px 0 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  /* Alternative approach using clip-path: */
-  /* clip-path: ellipse(50% 50% at 50% 50%); */
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 200px 200px 0 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .subtitle {
-  font-style: italic;
-  color: #b1a173; 
-  margin-bottom: 30px;
+    font-style: italic;
+    color: #b1a173;
+    margin-bottom: 20px;
 }
 
 .product-info {
-  margin-top: 40px;
+    margin-top: 30px;
 }
 
-
-
 h1 {
-  font-family: 'Great Vibes', 'cursive';  
-  font-size: 100px;
-  font-weight: 400;
-  line-height: 1.1;
-  color: #333;
-  letter-spacing: -0.02em;
+    font-family: 'Great Vibes', 'cursive';
+    font-size: clamp(40px, 8vw, 100px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: #333;
+    letter-spacing: -0.02em;
 }
 
 h3 {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 400;
-  margin-bottom: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    margin-bottom: 10px;
 }
-.img-sm{
-  left: 20px;
+
+.img-sm {
+    left: 20px;
     width: 140px;
     height: 140px;
-  display: flex;
-  position: absolute;
-  margin-top: 100px;
-  overflow: hidden;
-  border-radius: 12px;
-  
+    position: absolute;
+    margin-top: 80px;
+    overflow: hidden;
+    border-radius: 12px;
 }
 
-.img-sm img{
-  object-fit: contain;
+.img-sm img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
 
+/* About Section */
+.about-section {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.left-about,
+.right-about {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+}
+
+.left-about img {
+    width: 100%;
+    height: auto;
+}
+
+/* Contact Section */
+.contact {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.left-contact,
+.right-contact {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+}
+
+.contact-container {
+    width: 100%;
+}
+
+/* Tell Us Section */
+.tell-us {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Media Queries */
+@media (max-width: 991px) {
+    .banner {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .left-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .arch-image {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .arch-image img {
+        max-width: 350px;
+    }
+
+    .img-sm {
+        position: static;
+        margin: 20px auto;
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media (max-width: 767px) {
+    .banner {
+        padding: 10px;
+    }
+
+    .left-section {
+        padding: 10px;
+    }
+
+    .arch-image img {
+        max-width: 300px;
+    }
+
+    .product-info {
+        margin-top: 20px;
+    }
+
+    .about-section,
+    .contact {
+        padding: 15px;
+    }
+
+    .left-about,
+    .right-about,
+    .left-contact,
+    .right-contact {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 479px) {
+    h1 {
+        font-size: clamp(30px, 10vw, 60px);
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .arch-image img {
+        max-width: 250px;
+    }
+
+    .img-sm {
+        width: 100px;
+        height: 100px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .about-section,
+    .contact {
+        padding: 10px;
+    }
+
+    .left-about,
+    .right-about,
+    .left-contact,
+    .right-contact {
+        padding: 10px;
+    }
+
+    .about-btn,
+    .catact-btn {
+        width: 100%;
+        margin: 10px 0;
+    }
 }
 
 </style>
@@ -127,26 +271,6 @@ h3 {
     <img src="\img\Coconut Cake with Coconut White Miso Buttercream - Constellation Inspiration.jpg" alt="Cake">
   </div>
 </div>
-      <!-- <div class="cake-list">
-        <div class="sml-cnt">
-          <img src="img/cakeMain.png" alt="" />
-        </div>
-        <div class="sml-cnt1"> 
-          <img src="img/cakeMain.png" alt="" />
-        </div>
-        <div class="sml-cnt2">
-          <img src="img/cakeMain.png" alt="" />    
-        </div>
-        <div class="sml-cnt3">
-          <img src="img/cakeMain.png" alt="" />
-        </div>
-        <div class="sml-cnt4">
-          <img src="img/cakeMain.png" alt="" />
-        </div>
-        <div class="sml-cnt5">
-          <img src="img/cakeMain.png" alt="" />
-        </div>
-      </div> -->
       <div class="banner">
         <div class="banner-head">
           <h1>chocolate</h1>

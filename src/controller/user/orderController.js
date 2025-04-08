@@ -288,6 +288,7 @@ const placeOrder = async (req, res) => {
       },
       { path: "coupon", populate: { path: "offerAmount" } },
     ]);
+console.log("user cart============",userCart);
 
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
@@ -315,7 +316,7 @@ const placeOrder = async (req, res) => {
 
     if (!address) {
       res.status(404).json({ message: "Address not found" });
-    }
+    } 
 
     const userName = req.session?.user?.username;
 
@@ -475,10 +476,6 @@ const createRazorPayOrder = async (req, res) => {
       currency: "INR",
       receipt: crypto.randomBytes(10).toString("hex"),
     };
-
-
-    console.log("KEY_ID =>", process.env.KEY_ID);
-console.log("KEY_SECRET =>", process.env.KEY_SECRET);
 
     instance.orders.create(options, (error, order) => {
       if (error) {
@@ -682,6 +679,8 @@ const verifyPayment = async (req, res) => {
   try {
     const userId = req.session.userId;
 
+console.log("verifying..................");
+
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -698,17 +697,21 @@ const verifyPayment = async (req, res) => {
     if (razorpay_signature !== expectedSign) {
       throw Error("Invalid Signature sent");
     }
+console.log("====order id=====",orderId);
+
 
     // Check if orderId is a valid MongoDB ObjectId before querying
-    if (orderId && mongoose.Types.ObjectId.isValid(orderId)) {
+    if (orderId) {
       const order = await orderModel.findByIdAndUpdate(
         orderId,
         { paymentStatus: "Success" },
         { new: true }
       );
-    } else {
-      console.log("Invalid MongoDB Order ID:", orderId);
-    }
+
+      console.log(order,"============");
+      
+    } 
+console.log("order veryfied");
 
     return res.status(200).json({ message: "Payment verified successfully" });
   } catch (error) {

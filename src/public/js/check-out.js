@@ -10,7 +10,7 @@ const showErrorToast = (message) => {
   toastr.options = {
     positionClass: "toast-top-center",
     timeOut: "3000",
-    closeButton: true,
+    closeButton: true,  
   };
   toastr.error(message);
 };
@@ -24,7 +24,7 @@ remove_btns_el.forEach((btn) => {
     console.log(id);
 
     if (!id) {
-      Swal.fire("Error", "Address ID not found!", "error");
+      Swal.fire("Error", "Address ID not found!","error");
       return;
     }
 
@@ -248,9 +248,9 @@ const InitializeRazorPayment = async (
     const razor = new window.Razorpay(options);
     razor.open();
 
-    razor.on("payment.failed", async function (response) {
-      createOrder( paymentMethod, addressId,true);
-    });
+    // razor.on("payment.failed", async function (response) {
+    //   createOrder( paymentMethod, addressId,true);
+    // });
 
 
 
@@ -274,7 +274,7 @@ const saveOrderRazor = async (
       },
       body: JSON.stringify({
         ...razorResponse,
-        orderId: order.id,
+        orderId: null,
       }),
     });
 

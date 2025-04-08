@@ -134,18 +134,18 @@ const renderCart = async (req, res) => {
 
     console.log("after", cart);
 
-    const cartItem = cart.items.filter((item) => item.product !== null);
-    cart.items = cartItem;
-    console.log("before", cart);
-
     if (!cart || cart.items.length == 0) {
       return res.render("user/cart", {
         cart: null,
-        cartCount: cart.items.length,
+        cartCount: 0,
         user: true,
         packagePrice: 0,
       });
     }
+    const cartItem = cart.items.filter((item) => item.product !== null);
+    cart.items = cartItem;
+    console.log("before", cart);
+
 
     const packagePrice = cart.items.reduce(
       (acc, item) => (acc += item.quantity * 20),
