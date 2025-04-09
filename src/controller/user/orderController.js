@@ -337,7 +337,7 @@ const placeOrder = async (req, res) => {
       paymentStatus = "Success";
     } else if (isPaymentFailed) {
       paymentStatus = "Failed";
-    }else if (paymentMethod === "Razorpay" && isPaymentFailed) {
+    }else if (paymentMethod === "Razorpay") {
       paymentStatus = "Success";
     }
      else {

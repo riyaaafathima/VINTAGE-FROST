@@ -229,24 +229,24 @@ const InitializeRazorPayment = async (paymentMethod, addressId, totalAmount) => 
     razor.open();
 
     razor.on("payment.failed", async function (response) { 
-      console.log("Payment failed:", response.error);
-      // await createOrder(paymentMethod, addressId, true, null, totalAmount);
-      const orderResponse = await fetch("/place-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        paymentMethod :paymentMethod, 
-        addressId: addressId,
-        isPaymentFailed: true,
-        }),
-      });
+      // console.log("Payment failed:", response.error);
+      // // await createOrder(paymentMethod, addressId, true, null, totalAmount);
+      // const orderResponse = await fetch("/place-order", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //   paymentMethod :paymentMethod, 
+      //   addressId: addressId,
+      //   isPaymentFailed: true,
+      //   }),
+      // });
   
-      const data = await orderResponse.json();
-      console.log(data.order._id, data.order.products[0]._id);
+      // const data = await orderResponse.json();
+      // console.log(data.order._id, data.order.products[0]._id);
       
-       Swal.fire({ title: "created faild order!", icon: "success" }).then(() => {
-          window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
-        });
+      //  Swal.fire({ title: "created faild order!", icon: "success" }).then(() => {
+      //     window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
+      //   });
 
     });
   } catch (error) {
