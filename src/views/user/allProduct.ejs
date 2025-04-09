@@ -1,740 +1,437 @@
-<div class="page-wrapper">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<%- include('partials/header.ejs') %>
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="card-assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="card-assets/css/plugins.css">
+    <link rel="stylesheet" href="card-assets/css/style.css">
+</head>
+<body>
+    <div class="page-wrapper">
+        <%- include('partials/header.ejs') %>
 
-<style>
-  #price-slider .noUi-connect {
-  background-color: #c96;
-}
+        <style>
+            #price-slider .noUi-connect {
+                background-color: #c96;
+            }
 
-#price-slider .noUi-handle {
-  border: none;
-  background-color: #ffffff;
-}
+            #price-slider .noUi-handle {
+                border: none;
+                background-color: #ffffff;
+            }
 
+            .offer-badge {
+                background-color: red;
+                color: white;
+                padding: 5px 10px;
+                font-size: 12px;
+                font-weight: bold;
+                border-radius: 5px;
+                position: absolute;
+                top: 10px;
+                left: 10px;
+            }
 
-.offer-badge {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 5px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-.original-price {
-    text-decoration: line-through;
-    color: gray;
-}
-.discounted-price {
-    color: green;
-    font-weight: bold;
-}
+            .original-price {
+                text-decoration: line-through;
+                color: gray;
+            }
 
-</style>
+            .discounted-price {
+                color: green;
+                font-weight: bold;
+            }
+
+            /* Responsive Adjustments */
+            @media (max-width: 768px) {
+                .page-header .page-title {
+                    font-size: 24px; /* Reduce title size on tablets */
+                }
+
+                .breadcrumb-nav {
+                    padding: 10px 0;
+                }
+
+                .toolbox {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .toolbox-left, .toolbox-right {
+                    width: 100%;
+                }
+
+                .products .col-6.col-md-4.col-lg-4 {
+                    flex: 0 0 50%; /* 2 columns on tablets */
+                    max-width: 50%;
+                }
+
+                .sidebar {
+                    margin-top: 20px;
+                }
+
+                .widget-title {
+                    font-size: 16px;
+                }
+
+                .filter-price-text, .custom-control-label {
+                    font-size: 14px;
+                }
+
+                .offer-badge {
+                    font-size: 10px;
+                    padding: 3px 6px;
+                }
+
+                .product-title {
+                    font-size: 14px;
+                }
+
+                .product-price, .ratings-text {
+                    font-size: 12px;
+                }
+
+                .btn-product-icon span {
+                    display: none; /* Hide text in buttons on tablets */
+                }
+
+                #price-slider .noUi-handle {
+                    width: 15px;
+                    height: 15px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .page-header .page-title {
+                    font-size: 20px; /* Further reduce title size on mobile */
+                }
+
+                .breadcrumb-nav {
+                    padding: 5px 0;
+                }
+
+                .products .col-6.col-md-4.col-lg-4 {
+                    flex: 0 0 100%; /* 1 column on mobile */
+                    max-width: 100%;
+                }
+
+                .toolbox-info, .toolbox-sort, .toolbox-layout {
+                    margin-bottom: 10px;
+                }
+
+                .widget-title {
+                    font-size: 14px;
+                }
+
+                .filter-price-text, .custom-control-label {
+                    font-size: 12px;
+                }
+
+                .offer-badge {
+                    font-size: 8px;
+                    padding: 2px 4px;
+                }
+
+                .product-title {
+                    font-size: 12px;
+                }
+
+                .product-price, .ratings-text {
+                    font-size: 10px;
+                }
+
+                .btn-product-icon {
+                    width: 30px;
+                    height: 30px;
+                }
+
+                .btn-product-icon i {
+                    font-size: 12px;
+                }
+
+                .btn-product.btn-cart {
+                    padding: 5px 10px;
+                    font-size: 10px;
+                }
+
+                #price-slider .noUi-handle {
+                    width: 12px;
+                    height: 12px;
+                }
+
+                .pagination .page-link {
+                    font-size: 12px;
+                    padding: 5px 8px;
+                }
+            }
+        </style>
+
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Freshly Baked  Cakes <span>For You</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
+            <div class="page-header text-center" style="background-image: url('card-assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">Freshly Baked Cakes <span>For You</span></h1>
+                </div>
+            </div>
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Grid 3 Columns</li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="/all-products">Shop</a></li>
                     </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
-
-        <div class="page-content">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-9">
-                <div class="toolbox">
-                  <div class="toolbox-left">
-                    <div class="toolbox-info">
-                      <% if (allProducts.length > 0) { %>
-                      Showing <span><%=allProducts.length%> of <%=totalProducts%></span> Products
-                      <%}else{%>
-                        <span> zero products</span>
-
-                        <%}%>
-                    </div>
-                    <!-- End .toolbox-info -->
-                  </div>
-                  <!-- End .toolbox-left -->
-
-                  <div class="toolbox-right">
-                    <div class="toolbox-sort">
-                      <label for="sortby" >Sort by:</label>
-                      <div class="select-custom" >
-                        <select name="sortby" id="sortby" class="form-control">
-                          <option value="" selected="selected">
-                          select any options
-                          </option>
-                          <option value="aToz" id="a-z">a-z</option>
-                          <option value="zToa">z-a</option>
-                          <option value="LowtoHigh">low-high</option>
-                          <option value="HightoLow">high-low</option>
-                          <option value="Newest">latest</option>
-
-                        </select>   
-                      </div>
-                    </div>
-                    <!-- End .toolbox-sort -->
-                    <div class="toolbox-layout">
-                      <a href="category-list.html" class="btn-layout">
-                        <svg width="16" height="10">
-                          <rect x="0" y="0" width="4" height="4" />
-                          <rect x="6" y="0" width="10" height="4" />
-                          <rect x="0" y="6" width="4" height="4" />
-                          <rect x="6" y="6" width="10" height="4" />
-                        </svg>
-                      </a>
-
-                      <a href="category-2cols.html" class="btn-layout">
-                        <svg width="10" height="10">
-                          <rect x="0" y="0" width="4" height="4" />
-                          <rect x="6" y="0" width="4" height="4" />
-                          <rect x="0" y="6" width="4" height="4" />
-                          <rect x="6" y="6" width="4" height="4" />
-                        </svg>
-                      </a>
-
-                      <a href="category.html" class="btn-layout active">
-                        <svg width="16" height="10">
-                          <rect x="0" y="0" width="4" height="4" />
-                          <rect x="6" y="0" width="4" height="4" />
-                          <rect x="12" y="0" width="4" height="4" />
-                          <rect x="0" y="6" width="4" height="4" />
-                          <rect x="6" y="6" width="4" height="4" />
-                          <rect x="12" y="6" width="4" height="4" />
-                        </svg>
-                      </a>
-
-                      <a href="category-4cols.html" class="btn-layout">
-                        <svg width="22" height="10">
-                          <rect x="0" y="0" width="4" height="4" />
-                          <rect x="6" y="0" width="4" height="4" />
-                          <rect x="12" y="0" width="4" height="4" />
-                          <rect x="18" y="0" width="4" height="4" />
-                          <rect x="0" y="6" width="4" height="4" />
-                          <rect x="6" y="6" width="4" height="4" />
-                          <rect x="12" y="6" width="4" height="4" />
-                          <rect x="18" y="6" width="4" height="4" />
-                        </svg>
-                      </a>
-                    </div>
-                    <!-- End .toolbox-layout -->
-                  </div>
-                  <!-- End .toolbox-right -->
                 </div>
-                <!-- End .toolbox -->
+            </nav>
 
-
-                
-                <div class="products mb-3">
-                  <div class="row justify-content-center" id="product-list">
-                    <% if (allProducts.length > 0) { %> <%
-                    allProducts.forEach(product => { %>
-
-                    <div class="col-6 col-md-4 col-lg-4">
-                      <div class="product product-7 text-center">
-                        <figure class="product-media">
-                          <% if (product.productOfferModel) { %>
-                            <span class="offer-badge">Product Offer <%=product.offerPercentage%>%</span>
-                            <% }else if(product. categoryOfferModel){%>
-                              <span class="offer-badge">CategoryOffer <%=product.offerPercentage%>%</span>
-
-                         <%} %>
-                          
-                          <a href="/product/<%=product._id%>">
-                            <img
-                              src="/uploads/<%=product.image[0]%>"
-                              alt="Product image"
-                              class="product-image"
-                            />
-                          </a>
-
-                          <div class="product-action-vertical">
-                            <a
-                            href="#"
-                            class="btn-product-icon btn-expandable wishlist-btn"
-                            data-product-id="<%= product._id %>"
-                          >
-                            <% if(wishlist.includes(product._id.toString())) { %>
-                              <i class="fa-solid fa-heart"></i>
-                              <span> remove from wishlist</span>
-                            <% } else { %>
-                              <i class="fa-regular fa-heart"></i>
-                              <span> add to wishlist</span>
-                            <% } %>
-                          </a>
-                          
-                          
-          
-                            
-                          
-                            <a
-                              href="/product/<%=product._id%>"
-                              class="btn-product-icon btn-quickview"
-                              title="Quick view"
-                              ><span>Quick view</span></a
-                            >
-                            <a
-                              href="#"
-                              class="btn-product-icon btn-compare"
-                              title="Compare"
-                              ><span>Compare</span></a
-                            >
-                          </div>
-                          <!-- End .product-action-vertical -->
-
-                          <div class="product-action">
-                            <a href="/product/<%=product._id%>" class="btn-product btn-cart"
-                              ><span>view Product</span></a
-                            >
-                          </div>
-                          <!-- End .product-action -->
-                        </figure>
-                        <!-- End .product-media -->
-
-                        <div class="product-body">
-                          <div class="product-cat">
-                            <a href="#">cakes</a>
-                          </div>
-                          <!-- End .product-cat -->
-                          <h3 class="product-title">
-                            <a href="product.html"><%=product.productName%></a>
-                          </h3>
-                          <!-- End .product-title -->
-                          <div class="product-price">
-                            <% if (product?.productOfferModel) { %>
-                              <span class="original-price">₹<%= product.varients[0].price %></span>
-                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
-                            <% } else if(product?.categoryOfferModel) { %>
-                              <span class="original-price">₹<%= product.varients[0].price %></span>
-                              <span class="discounted-price">₹<%= product.varients[0].price -(product.varients[0].price*product.offerPercentage)/100%></span>
-
-                            <% }else{%>
-                              <span>₹<%= product.varients[0].price %></span>
-                                             
-                          <%  } %>
-                          </div>
-                          
-                          <!-- End .product-price -->
-                          <div class="ratings-container">
-                            <div class="ratings">
-                              <div class="ratings-val" style="width: 0%"></div>
-                              <!-- End .ratings-val -->
+            <div class="page-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="toolbox">
+                                <div class="toolbox-left">
+                                    <div class="toolbox-info">
+                                        <% if (allProducts.length > 0) { %>
+                                            Showing <span><%=allProducts.length%> of <%=totalProducts%></span> Products
+                                        <% } else { %>
+                                            <span>zero products</span>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="toolbox-right">
+                                    <div class="toolbox-sort">
+                                        <label for="sortby">Sort by:</label>
+                                        <div class="select-custom">
+                                            <select name="sortby" id="sortby" class="form-control">
+                                                <option value="" selected="selected">select any options</option>
+                                                <option value="aToz" id="a-z">a-z</option>
+                                                <option value="zToa">z-a</option>
+                                                <option value="LowtoHigh">low-high</option>
+                                                <option value="HightoLow">high-low</option>
+                                                <option value="Newest">latest</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- End .ratings -->
-                            <span class="ratings-text">( 0 Reviews )</span>
-                          </div>
-                          <!-- End .rating-container -->
+
+                            <div class="products mb-3">
+                                <div class="row justify-content-center" id="product-list">
+                                    <% if (allProducts.length > 0) { %>
+                                        <% allProducts.forEach(product => { %>
+                                            <div class="col-6 col-md-4 col-lg-4">
+                                                <div class="product product-7 text-center">
+                                                    <figure class="product-media">
+                                                        <% if (product.productOfferModel) { %>
+                                                            <span class="offer-badge">Product Offer <%=product.offerPercentage%>%</span>
+                                                        <% } else if (product.categoryOfferModel) { %>
+                                                            <span class="offer-badge">Category Offer <%=product.offerPercentage%>%</span>
+                                                        <% } %>
+                                                        <a href="/product/<%=product._id%>">
+                                                            <img src="/uploads/<%=product.image[0]%>" alt="Product image" class="product-image" />
+                                                        </a>
+                                                        <div class="product-action-vertical">
+                                                            <a href="#" class="btn-product-icon btn-expandable wishlist-btn" data-product-id="<%= product._id %>">
+                                                                <% if (wishlist.includes(product._id.toString())) { %>
+                                                                    <i class="fa-solid fa-heart"></i>
+                                                                    <span>remove from wishlist</span>
+                                                                <% } else { %>
+                                                                    <i class="fa-regular fa-heart"></i>
+                                                                    <span>add to wishlist</span>
+                                                                <% } %>
+                                                            </a>
+                                                            <a href="/product/<%=product._id%>" class="btn-product-icon btn-quickview" title="Quick view"><span>Quick view</span></a>
+                                                            <a href="#" class="btn-product-icon btn-compare" title="Compare"><span>Compare</span></a>
+                                                        </div>
+                                                        <div class="product-action">
+                                                            <a href="/product/<%=product._id%>" class="btn-product btn-cart"><span>view Product</span></a>
+                                                        </div>
+                                                    </figure>
+                                                    <div class="product-body">
+                                                        <div class="product-cat">
+                                                            <a href="#">cakes</a>
+                                                        </div>
+                                                        <h3 class="product-title">
+                                                            <a href="product.html"><%=product.productName%></a>
+                                                        </h3>
+                                                        <div class="product-price">
+                                                            <% if (product?.productOfferModel) { %>
+                                                                <span class="original-price">₹<%= product.varients[0].price %></span>
+                                                                <span class="discounted-price">₹<%= product.varients[0].price - (product.varients[0].price * product.offerPercentage) / 100 %></span>
+                                                            <% } else if (product?.categoryOfferModel) { %>
+                                                                <span class="original-price">₹<%= product.varients[0].price %></span>
+                                                                <span class="discounted-price">₹<%= product.varients[0].price - (product.varients[0].price * product.offerPercentage) / 100 %></span>
+                                                            <% } else { %>
+                                                                <span>₹<%= product.varients[0].price %></span>
+                                                            <% } %>
+                                                        </div>
+                                                        <div class="ratings-container">
+                                                          <div class="ratings">
+                                                            <div class="ratings-val" style="width: <%= product.avgRating ? product.avgRating * 20 : 0 %>%"></div>
+                                                          </div>
+                                                          <span class="ratings-text">
+                                                            (<%= product.reviewCount > 0 ? product.reviewCount + ' Reviews' : 'No Reviews' %>)
+                                                          </span>
+                                                        </div>
+                                                        
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <p>No products available at the moment.</p>
+                                    <% } %>
+                                </div>
+                            </div>
+
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                        <a id="prev" class="page-link" href="" aria-label="Previous">
+                                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span> Prev
+                                        </a>
+                                    </li>
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" id="<%=i%>" href=""><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                        <a id="next" class="page-link" href="" aria-label="Next">
+                                            Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <!-- End .product-body -->
-                      </div>
-                      <!-- End .product -->
+                        <aside class="col-lg-3 order-lg-first">
+                            <div class="sidebar sidebar-shop">
+                                <div class="widget widget-clean">
+                                    <label>Filters:</label>
+                                    <a href="/all-products" class="sidebar-filter-clear" id="clear-btn">Clean All</a>
+                                </div>
+                                <div class="widget widget-collapsible">
+                                    <h3 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                            Category
+                                        </a>
+                                    </h3>
+                                    <div class="collapse show" id="widget-1">
+                                        <div class="widget-body">
+                                            <div class="filter-items filter-items-count">
+                                                <% categories.forEach((category) => { %>
+                                                    <div class="filter-item">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="radio" name="category" class="custom-control-input" id="<%= category._id %>" value="<%= category.categoryName %>" <%= selectedCategory === category._id.toString() ? 'checked' : '' %> />
+                                                            <label class="custom-control-label" for="<%= category._id %>">
+                                                                <%= category.categoryName %>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                <% }) %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget widget-collapsible">
+                                    <h3 class="widget-title">
+                                        <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
+                                            Price
+                                        </a>
+                                    </h3>
+                                    <div class="collapse show" id="widget-5">
+                                        <div class="widget-body">
+                                            <div class="filter-price">
+                                                <div class="filter-price-text">
+                                                    Price Range: <span id="filter-price-range"></span>
+                                                </div>
+                                                <div id="price-slider"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
                     </div>
-                    <!-- End .col-sm-6 col-lg-4 -->
-                    <% }) %> <% } else { %>
-                    <p>No products available at the moment.</p>
-                    <% } %>
-                  </div>
-                  <!-- End .row -->
                 </div>
-                <!-- End .products -->
-
-                <nav aria-label="Page navigation">
-                  <ul class="pagination justify-content-center">
-                    <!-- Previous Button -->
-                    <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                      <a
-                      id="prev"
-                        class="page-link"
-                        href=""
-                        aria-label="Previous"
-                      >
-                        <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span> Prev
-                      </a>
-                    </li>
-                
-                    <!-- Page Buttons -->
-                    <% for (let i = 1; i <= totalPages; i++) { %>
-                      <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                        <a class="page-link" id="<%=i%>" href=""><%= i %></a>
-                      </li>
-                    <% } %>
-                
-                    <!-- Next Button -->
-                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                      <a
-                      id="next"
-                        class="page-link"
-                        href=""
-                        aria-label="Next"
-                      >
-                        Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
-
-              <!-- End .col-lg-9 -->
-              <aside class="col-lg-3 order-lg-first">
-                <div class="sidebar sidebar-shop">
-                  <div class="widget widget-clean">
-                    <label>Filters:</label>
-                    <a href="/all-products" class="sidebar-filter-clear" id="clear-btn" >Clean All</a>
-                  </div>
-                  <!-- End .widget widget-clean -->
-
-                  <div class="widget widget-collapsible">
-                    <h3 class="widget-title">
-                      <a
-                        data-toggle="collapse"
-                        href="#widget-1"
-                        role="button"
-                        aria-expanded="true"
-                        aria-controls="widget-1"
-                      >
-                        Category
-                      </a>
-                    </h3>
-                    <!-- End .widget-title -->
-
-                    <div class="collapse show" id="widget-1">
-                      <div class="widget-body">
-                        <div class="filter-items filter-items-count">
-                          
-                          <% categories.forEach((category) => { %>
-                            <div class="filter-item">
-                              <div class="custom-control custom-checkbox">
-                                <input
-                                type="radio"
-                                name="category"
-                                class="custom-control-input"
-                                id="<%= category._id %>"
-                                value="<%= category.categoryName %>"
-                                <% if (selectedCategory === category._id.toString()) { %> checked <% } %>
-                              />
-                                <label class="custom-control-label" for="<%= category._id %>">
-                                  <%= category.categoryName %>
-                                </label>
-                              </div>
-                            </div>
-                          <% }) %>
-
-                      </div>
-                      <!-- End .widget-body -->
-                    </div>
-                    <!-- End .collapse -->
-                  </div>
-                  <!-- End .widget -->
-
-                 <!--  <div class="widget widget-collapsible">
-                    <h3 class="widget-title">
-                      <a
-                        data-toggle="collapse"
-                        href="#widget-2"
-                        role="button"
-                        aria-expanded="true"
-                        aria-controls="widget-2"
-                      >
-                        Size
-                      </a>
-                    </h3>
-                   <div class="collapse show" id="widget-2">
-                      <div class="widget-body">
-                        <div class="filter-items">
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="size-1"
-                              />
-                              <label class="custom-control-label" for="size-1"
-                                >XS</label
-                              >
-                            </div>
-                          </div>
-
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="size-2"
-                              />
-                              <label class="custom-control-label" for="size-2"
-                                >S</label
-                              >
-                            </div>
-                          </div>
-
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                checked
-                                id="size-3"
-                              />
-                              <label class="custom-control-label" for="size-3"
-                                >M</label
-                              >
-                            </div>
-                          
-                          </div>
-
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                checked
-                                id="size-4"
-                              />
-                              <label class="custom-control-label" for="size-4"
-                                >L</label
-                              >
-                            </div>
-                          </div>
-
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="size-5"
-                              />
-                              <label class="custom-control-label" for="size-5"
-                                >XL</label
-                              >
-                            </div>
-                          </div>
-
-                          <div class="filter-item">
-                            <div class="custom-control custom-checkbox">
-                              <input
-                                type="checkbox"
-                                class="custom-control-input"
-                                id="size-6"
-                              />
-                              <label class="custom-control-label" for="size-6"
-                                >XXL</label
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div> 
-                  </div> -->
-
-                  
-                  <!-- End .widget -->
-
-              
-
-
-                  <div class="widget widget-collapsible">
-                    <h3 class="widget-title">
-                      <a
-                        data-toggle="collapse"
-                        href="#widget-5"
-                        role="button"
-                        aria-expanded="true"
-                        aria-controls="widget-5"
-                      >
-                        Price
-                      </a>
-                    </h3>
-                    <!-- End .widget-title -->
-
-                    <div class="collapse show" id="widget-5">
-                      <div class="widget-body">
-                        <div class="filter-price">
-                          <div class="filter-price-text" >
-                            Price Range:
-                            <span id="filter-price-range" ></span>
-                          </div>
-                          <!-- End .filter-price-text -->
-
-                          <div id="price-slider" ></div>
-                          <!-- End #price-slider -->
-                        </div>
-                        <!-- End .filter-price -->
-                      </div>
-                      <!-- End .widget-body -->
-                    </div>
-                    <!-- End .collapse -->
-                  </div>
-                  <!-- End .widget -->
-                </div>
-                <!-- End .sidebar sidebar-shop -->
-              </aside>
-              <!-- End .col-lg-3 -->
             </div>
-            <!-- End .row -->
-          </div>
-          <!-- End .container -->
-        </div>
-        <!-- End .page-content -->
-      </main>
-      <!-- End .main -->
-
-      <%- include('partials/footer.ejs') %>
-
-      <!-- End .footer -->
+        </main>
+        <%- include('partials/footer.ejs') %>
     </div>
-    <!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top">
-      <i class="icon-arrow-up"></i>
+        <i class="icon-arrow-up"></i>
     </button>
 
-    <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div>
-    <!-- End .mobil-menu-overlay -->
 
-    <!-- End .mobile-menu-container -->
-
-    <!-- Sign in / Register Modal -->
-    <div
-      class="modal fade"
-      id="signin-modal"
-      tabindex="-1"
-      role="dialog"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true"><i class="icon-close"></i></span>
-            </button>
-
-            <div class="form-box">
-              <div class="form-tab">
-                <ul class="nav nav-pills nav-fill" role="tablist">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link active"
-                      id="signin-tab"
-                      data-toggle="tab"
-                      href="#signin"
-                      role="tab"
-                      aria-controls="signin"
-                      aria-selected="true"
-                      >Sign In</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      id="register-tab"
-                      data-toggle="tab"
-                      href="#register"
-                      role="tab"
-                      aria-controls="register"
-                      aria-selected="false"
-                      >Register</a
-                    >
-                  </li>
-                </ul>
-                <div class="tab-content" id="tab-content-5">
-                  <div
-                    class="tab-pane fade show active"
-                    id="signin"
-                    role="tabpanel"
-                    aria-labelledby="signin-tab"
-                  >
-                    <form action="#">
-                      <div class="form-group">
-                        <label for="singin-email"
-                          >Username or email address *</label
-                        >
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="singin-email"
-                          name="singin-email"
-                          required
-                        />
-                      </div>
-                      <!-- End .form-group -->
-
-                      <div class="form-group">
-                        <label for="singin-password">Password *</label>
-                        <input
-                          type="password"
-                          class="form-control"
-                          id="singin-password"
-                          name="singin-password"
-                          required
-                        />
-                      </div>
-                      <!-- End .form-group -->
-
-                      <div class="form-footer">
-                        <button type="submit" class="btn btn-outline-primary-2">
-                          <span>LOG IN</span>
-                          <i class="icon-long-arrow-right"></i>
-                        </button>
-
-                        <div class="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            id="signin-remember"
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="signin-remember"
-                            >Remember Me</label
-                          >
+    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                    <div class="form-box">
+                        <div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item"><a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a></li>
+                                <li class="nav-item"><a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a></li>
+                            </ul>
+                            <div class="tab-content" id="tab-content-5">
+                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+                                    <form action="#">
+                                        <div class="form-group"><label for="singin-email">Username or email address *</label><input type="text" class="form-control" id="singin-email" name="singin-email" required /></div>
+                                        <div class="form-group"><label for="singin-password">Password *</label><input type="password" class="form-control" id="singin-password" name="singin-password" required /></div>
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2"><span>LOG IN</span><i class="icon-long-arrow-right"></i></button>
+                                            <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="signin-remember" /><label class="custom-control-label" for="signin-remember">Remember Me</label></div>
+                                            <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                        </div>
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6"><a href="#" class="btn btn-login btn-g"><i class="icon-google"></i>Login With Google</a></div>
+                                            <div class="col-sm-6"><a href="#" class="btn btn-login btn-f"><i class="icon-facebook-f"></i>Login With Facebook</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                                    <form action="#">
+                                        <div class="form-group"><label for="register-email">Your email address *</label><input type="email" class="form-control" id="register-email" name="register-email" required /></div>
+                                        <div class="form-group"><label for="register-password">Password *</label><input type="password" class="form-control" id="register-password" name="register-password" required /></div>
+                                        <div class="form-footer">
+                                            <button type="submit" class="btn btn-outline-primary-2"><span>SIGN UP</span><i class="icon-long-arrow-right"></i></button>
+                                            <div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="register-policy" required /><label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label></div>
+                                        </div>
+                                    </form>
+                                    <div class="form-choice">
+                                        <p class="text-center">or sign in with</p>
+                                        <div class="row">
+                                            <div class="col-sm-6"><a href="#" class="btn btn-login btn-g"><i class="icon-google"></i>Login With Google</a></div>
+                                            <div class="col-sm-6"><a href="#" class="btn btn-login btn-f"><i class="icon-facebook-f"></i>Login With Facebook</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- End .custom-checkbox -->
-
-                        <a href="#" class="forgot-link"
-                          >Forgot Your Password?</a
-                        >
-                      </div>
-                      <!-- End .form-footer -->
-                    </form>
-                    <div class="form-choice">
-                      <p class="text-center">or sign in with</p>
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <a href="#" class="btn btn-login btn-g">
-                            <i class="icon-google"></i>
-                            Login With Google
-                          </a>
-                        </div>
-                        <!-- End .col-6 -->
-                        <div class="col-sm-6">
-                          <a href="#" class="btn btn-login btn-f">
-                            <i class="icon-facebook-f"></i>
-                            Login With Facebook
-                          </a>
-                        </div>
-                        <!-- End .col-6 -->
-                      </div>
-                      <!-- End .row -->
                     </div>
-                    <!-- End .form-choice -->
-                  </div>
-                  <!-- .End .tab-pane -->
-                  <div
-                    class="tab-pane fade"
-                    id="register"
-                    role="tabpanel"
-                    aria-labelledby="register-tab"
-                  >
-                    <form action="#">
-                      <div class="form-group">
-                        <label for="register-email">Your email address *</label>
-                        <input
-                          type="email"
-                          class="form-control"
-                          id="register-email"
-                          name="register-email"
-                          required
-                        />
-                      </div>
-                      <!-- End .form-group -->
-
-                      <div class="form-group">
-                        <label for="register-password">Password *</label>
-                        <input
-                          type="password"
-                          class="form-control"
-                          id="register-password"
-                          name="register-password"
-                          required
-                        />
-                      </div>
-                      <!-- End .form-group -->
-
-                      <div class="form-footer">
-                        <button type="submit" class="btn btn-outline-primary-2">
-                          <span>SIGN UP</span>
-                          <i class="icon-long-arrow-right"></i>
-                        </button>
-
-                        <div class="custom-control custom-checkbox">
-                          <input
-                            type="checkbox"
-                            class="custom-control-input"
-                            id="register-policy"
-                            required
-                          />
-                          <label
-                            class="custom-control-label"
-                            for="register-policy"
-                            >I agree to the
-                            <a href="#">privacy policy</a> *</label
-                          >
-                        </div>
-                        <!-- End .custom-checkbox -->
-                      </div>
-                      <!-- End .form-footer -->
-                    </form>
-                    <div class="form-choice">
-                      <p class="text-center">or sign in with</p>
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <a href="#" class="btn btn-login btn-g">
-                            <i class="icon-google"></i>
-                            Login With Google
-                          </a>
-                        </div>
-                        <!-- End .col-6 -->
-                        <div class="col-sm-6">
-                          <a href="#" class="btn btn-login btn-f">
-                            <i class="icon-facebook-f"></i>
-                            Login With Facebook
-                          </a>
-                        </div>
-                        <!-- End .col-6 -->
-                      </div>
-                      <!-- End .row -->
-                    </div>
-                    <!-- End .form-choice -->
-                  </div>
-                  <!-- .End .tab-pane -->
                 </div>
-                <!-- End .tab-content -->
-              </div>
-              <!-- End .form-tab -->
             </div>
-            <!-- End .form-box -->
-          </div>
-          <!-- End .modal-body -->
         </div>
-        <!-- End .modal-content -->
-      </div>
-      <!-- End .modal-dialog -->
     </div>
-    <!-- End .modal -->
-<script>
-  const currentPage = JSON.parse('<%= JSON.stringify(currentPage) %>'.replace(/&#34;/g, '"'));
-</script>
+
+    <script>
+        const currentPage = JSON.parse('<%= JSON.stringify(currentPage) %>'.replace(/"/g, '"'));
+    </script>
+
     <!-- Plugins JS File -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
     <script src="card-assets/js/jquery.min.js"></script>
     <script src="card-assets/js/bootstrap.bundle.min.js"></script>
     <script src="card-assets/js/jquery.hoverIntent.min.js"></script>
@@ -745,13 +442,10 @@
     <script src="card-assets/js/bootstrap-input-spinner.js"></script>
     <script src="card-assets/js/jquery.magnific-popup.min.js"></script>
     <script src="card-assets/js/nouislider.min.js"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- Main JS File -->
     <script src="card-assets/js/main.js"></script>
     <script src="js/all-products.js"></script>
-  </body>
-
-  <!-- molla/category.html  22 Nov 2019 10:02:52 GMT -->
+</body>
 </html>

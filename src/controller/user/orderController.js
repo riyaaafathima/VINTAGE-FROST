@@ -266,29 +266,28 @@ const orderPageRender = async (req, res) => {
 
 const placeOrder = async (req, res) => {
   try {
-    const { paymentMethod, addressId, isPaymentFailed } = req.body;
+    const { paymentMethod, addressId, totalAmount, isPaymentFailed } = req.body;
     const userId = req.session?.user?._id;
-    console.log("entweeeeeeeeeeeeeeeee");
 
     if (!userId) {
-      res.status(400).json({ error: "userId is not found" });
+      return res.status(400).json({ error: "userId is not found" });
     }
-
     if (!addressId) {
       return res.status(400).json({ error: "address is required" });
     }
-
     if (!paymentMethod) {
       return res.status(400).json({ error: "payment method is required" });
     }
 
     const userCart = await cartModel.findOne({ user: userId }).populate([
-      {
-        path: "items.product",
-      },
+      { path: "items.product" },
       { path: "coupon", populate: { path: "offerAmount" } },
     ]);
-console.log("user cart============",userCart);
+    console.log("user cart============", userCart);
+
+    if (!userCart || !userCart.items || userCart.items.length === 0) {
+      return res.status(400).json({ error: "No items found in cart" });
+    }
 
     const products = userCart.items.map((item) => ({
       product: item.product.productName,
@@ -303,7 +302,6 @@ console.log("user cart============",userCart);
       instruction: item.instruction,
       isEggless: item.isEggless,
     }));
-
     const userAddress = await addressModel.findOne({ user: userId });
 
     if (!userAddress) {
@@ -335,16 +333,15 @@ console.log("user cart============",userCart);
     );
 
     let paymentStatus = "";
-
-    if (
-      paymentMethod === "wallet" ||
-      (paymentMethod === "razorPay" && !isPaymentFailed)
-    ) {
+    if (paymentMethod === "Wallet") {
       paymentStatus = "Success";
     } else if (isPaymentFailed) {
       paymentStatus = "Failed";
-    } else {
-      paymentStatus = "Pending";
+    }else if (paymentMethod === "Razorpay" && isPaymentFailed) {
+      paymentStatus = "Success";
+    }
+     else {
+      paymentStatus = "Pending"; 
     }
 
     let couponCode = null;
@@ -377,7 +374,7 @@ console.log("user cart============",userCart);
       couponDiscount,
       paymentStatus,
     };
-    console.log("orderData==================", orderData);
+    console.log("orderplaced==================");
     const updateProductPromises = userCart.items.map((item) => {
       return quantityChecking(item.product, item.kg, item.quantity);
     });
@@ -465,34 +462,52 @@ const downloadInvoice = async (req, res) => {
 const createRazorPayOrder = async (req, res) => {
   try {
     const { amount } = req.body;
+    if (!amount || isNaN(amount)) {
+      throw new Error("Invalid or missing amount");
+    }
 
     const instance = new RazorPay({
       key_id: process.env.KEY_ID,
       key_secret: process.env.KEY_SECRET,
     });
 
+    if (!process.env.KEY_ID || !process.env.KEY_SECRET) {
+      throw new Error("Razorpay credentials are not configured");
+    }
+    console.log("Razorpay instance initialized with key:", process.env.KEY_ID); 
+
     const options = {
-      amount: amount * 100,
+      amount: amount * 100, // Convert to paise
       currency: "INR",
       receipt: crypto.randomBytes(10).toString("hex"),
     };
 
     instance.orders.create(options, (error, order) => {
       if (error) {
-        console.log(error);
-        throw Error(error);
+        console.error("Razorpay order creation error:", error);
+        return res.status(400).json({ error: error.message || "Failed to create Razorpay order" });
       }
+      console.log("Created Razorpay order:", order); // Debug
       res.status(200).json(order);
     });
   } catch (error) {
-    console.log(error);
-
+    console.error("Error in createRazorPayOrder:", error);
     res.status(400).json({ error: error.message });
   }
 };
 
 const getKey = async (req, res) => {
-  return res.status(200).json(process.env.KEY_ID);
+  try {
+    const keyId = process.env.KEY_ID;
+    if (!keyId) {
+      throw new Error("Razorpay Key ID is not configured in environment variables");
+    }
+    console.log("Returning Razorpay key:", keyId); // Debug
+    res.status(200).json({ key: keyId }); // Return as { key: "rzp_test_xxx" }
+  } catch (error) {
+    console.error("Error in getKey:", error);
+    res.status(500).json({ error: error.message });
+  }
 };
 const viewOrderDetails = async (req, res) => {
   try {
@@ -677,48 +692,46 @@ const cancelProduct = async (req, res) => {
 };
 const verifyPayment = async (req, res) => {
   try {
-    const userId = req.session.userId;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-console.log("verifying..................");
-
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      orderId,
-    } = req.body;
+    console.log("verifying..................");
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSign = crypto
-      .createHmac("sha256", process.env.KEY_SECRET)
+    const expectedSign = crypto.createHmac("sha256", process.env.KEY_SECRET)
       .update(sign.toString())
       .digest("hex");
 
     if (razorpay_signature !== expectedSign) {
-      throw Error("Invalid Signature sent");
+      return res.status(400).json({ error: "Invalid signature sent" });
     }
-console.log("====order id=====",orderId);
-
-
-    // Check if orderId is a valid MongoDB ObjectId before querying
-    if (orderId) {
-      const order = await orderModel.findByIdAndUpdate(
-        orderId,
-        { paymentStatus: "Success" },
-        { new: true }
-      );
-
-      console.log(order,"============");
-      
-    } 
-console.log("order veryfied");
+console.log("sucssss=======");
 
     return res.status(200).json({ message: "Payment verified successfully" });
   } catch (error) {
-    console.log(error);
+    console.error("Verification error:", error);
     res.status(400).json({ error: error.message });
   }
+}; 
+
+const changeFaildPaymentOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.body;
+    console.log("Received ID:", id);
+
+    const response = await orderModel.findByIdAndUpdate(
+      id,
+      { paymentStatus: "Success" },
+      { new: true }
+    );
+
+    console.log("Updated order:", response);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log("Error while updating order:", error);
+    res.status(500).json({ error: "server error" });
+  }
 };
+
 
 module.exports = {
   orderPageRender,
@@ -729,4 +742,5 @@ module.exports = {
   createRazorPayOrder,
   verifyPayment,
   downloadInvoice,
+  changeFaildPaymentOrderStatus
 };

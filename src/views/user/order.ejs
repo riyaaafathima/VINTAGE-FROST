@@ -276,11 +276,6 @@
      <%   })%>
          </div>
  </div>
-
-
-
-
-
 <!-- ////////////////////////////////////////////////pagination////////////////////////////////////// -->
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination justify-content-center">
@@ -627,9 +622,6 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-
-    
-
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -659,7 +651,7 @@ rePayment_btns_el.forEach((rePayment_btn_el)=>{
         e.preventDefault()
         const totalAmount=rePayment_btn_el.getAttribute('data-totalAmount')
         const orderId=rePayment_btn_el.getAttribute('data-order')
-      console.log(totalAmount,orderId);
+        console.log(totalAmount,orderId);
 
 InitializeRazorPayment(totalAmount,orderId)         
 
@@ -678,6 +670,7 @@ const InitializeRazorPayment = async (
     });
 
     const key = await response.json();
+    console.log("keyyyyyyyyy",key);
 
     const razorOrder = await fetch("/razor-order", {
       method: "POST",
@@ -691,7 +684,7 @@ const InitializeRazorPayment = async (
 
     //razor pay configurations
     let options = {
-      key: key,
+      key: key.key,
       amount: parseInt(totalAmount) * 100,
       currency: "INR",
       name: "Vintage Frost",
@@ -720,10 +713,8 @@ const InitializeRazorPayment = async (
     razor.open();
 
     razor.on("payment.failed", async function (response) {
+      console.log("payment faild");
     });
-
-
-
   } catch (error) {
     console.log(error);
   }
@@ -736,22 +727,32 @@ const saveOrderRazor = async (
 ) => {
   try {
 
-    console.log("saving order...");
-    
-   
+    console.log("Payment success, verifying with orderId:");
     const verifyData = await fetch("/razor-verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ...razorResponse,
-        orderId
-        // orderId
+        razorpay_order_id: razorResponse.razorpay_order_id,
+        razorpay_payment_id: razorResponse.razorpay_payment_id,
+        razorpay_signature: razorResponse.razorpay_signature,
       }),
     });
 
-    if (verifyData.ok) {
+    
+if (verifyData.ok) {
+  const data = await fetch("/change-faild-order-status", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      id:orderId
+      }),
+    });
+    const vali = await data.json();
+    console.log("kljdskljfhdskj",vali);
+
+    if (data.ok) {
         Swal.fire({
         position: "center",
         icon: "success",
@@ -761,9 +762,17 @@ const saveOrderRazor = async (
       }).then(() => {
         window.location.reload();
       });
+
     } else {
-      showErrorToast("something went wrong");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "somthing went wrong",
+        timer: 1500,
+      })
     }
+}
+
   } catch (error) {
     console.log(error);
   }

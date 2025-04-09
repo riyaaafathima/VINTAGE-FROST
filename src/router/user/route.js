@@ -58,6 +58,7 @@ const {
   createRazorPayOrder,
   verifyPayment,
   downloadInvoice,
+  changeFaildPaymentOrderStatus
 } = require("../../controller/user/orderController");
 const {
   checkoutRender,
@@ -135,7 +136,7 @@ router.post("/wishlist-remove", removeWishList);
 router.get("/razor-key", getKey);
 router.post("/razor-order", createRazorPayOrder);
 router.post("/razor-verify", verifyPayment);
-
+router.post("/change-faild-order-status",changeFaildPaymentOrderStatus)
 
 router.post("/coupon", couponBadge);
 

@@ -1,81 +1,85 @@
 @import url("https://fonts.googleapis.com/css2?family=Questrial&display=swap");
+
 * {
     font-family: "Questrial", sans-serif;
     font-weight: 400;
     margin: 0;
     padding: 0;
-  
+    box-sizing: border-box; /* Ensure padding doesn't affect width/height */
 }
 
-header{
+body {
+    min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+/* Header */
+header {
     display: flex;
-    height:80px;
+    height: 80px;
     width: 100%;
-     border-bottom: 1px solid lightgrey;
-     background:#AD9170;
-
+    border-bottom: 1px solid lightgrey;
+    background: #AD9170;
+    padding: 0 20px; /* Add padding for smaller screens */
 }
 
-header .logo{
-  flex: 1; 
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  
-
-}
-header .logo img {
+header .logo {
+    flex: 1;
     display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+header .logo img {
     object-fit: cover;
     width: 70px;
     height: 70px;
     border-radius: 50%;
     margin-left: 40px;
-    
-
 }
 
-header .icons{
+header .icons {
     flex: 1;
     display: flex;
     gap: 30px;
-    justify-content: end;
+    justify-content: flex-end;
     margin-right: 10%;
-    align-items:center;
+    align-items: center;
     font-weight: 300;
     color: #4a2d26;
 }
-nav{
+
+/* Navigation */
+nav {
     margin-top: 1px;
     display: flex;
     width: 100%;
     height: 40px;
     border-bottom: 1px solid lightgray;
     background-color: #AD9170;
-   
 }
-nav ul{
-    width: 50%;
+
+nav ul {
+    width: 80%; /* Adjusted for responsiveness */
     margin: auto;
     gap: 15px;
     display: flex;
     list-style: none;
     align-items: center;
     justify-content: center;
-   
-
+    font-size: 14px; /* Adjusted font size */
 }
-nav ul li a{
+
+nav ul li a {
     text-decoration: none;
     color: black;
     position: relative;
+}
 
-}
-nav ul li a:hover::after{
+nav ul li a:hover::after {
     transform: scaleX(1);
-    
 }
+
 nav ul li a::after {
     content: "";
     position: absolute;
@@ -87,90 +91,88 @@ nav ul li a::after {
     background-color: #8B4C3C;
     transform: scaleX(0);
     transition: all 0.5s ease-in;
-    transform-origin: center;
-    
+    transform-origin: center;
 }
 
-.main-container{
-    height: calc(100vh - 123px);
+/* Main Container */
+.main-container {
+    height: calc(100vh - 123px); /* Adjusted for header + nav */
     width: 100%;
-    background:#D0BCA1;
+    background: #D0BCA1;
     display: flex;
-
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
-.main-container .img-container{
+
+.main-container .img-container {
     flex: 1;
+    min-width: 300px; /* Minimum width for image container */
     background-image: url(/img/download.jpg);
-    background-position:center;
-    background-size: contain;
+    background-position: center;
+    background-size: cover; /* Use cover to ensure image fills the space */
     position: relative;
 }
-.shade{
+
+.shade {
     position: absolute;
     width: 100%;
     height: 100%;
     background: rgba(16, 16, 16, 0.300);
-
 }
 
-.main-container .form-container{
-    flex:1;
+.main-container .form-container {
+    flex: 1;
+    min-width: 300px; /* Minimum width for form container */
     display: flex;
     justify-content: center;
-    align-content: center;
-    
-
-
-
-}
-.main-container .form-container form{
-width: 40%;
-height: 60%;
-background-color:rgb(173, 145, 112);
-margin-top: 10%;
-padding: 0 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-gap: 16px;
-border-radius: 20px;
-
-}
-.main-container .form-container form h1{
-text-align: center;
-font-weight: 100;
-color: beige;
+    align-items: center;
 }
 
+.main-container .form-container form {
+    width: 80%; /* Adjusted to percentage for responsiveness */
+    max-width: 400px; /* Maximum width to prevent stretching */
+    height: auto; /* Remove fixed height */
+    background-color: rgb(173, 145, 112);
+    margin: 5% 0; /* Adjusted margin for top/bottom */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    border-radius: 20px;
+}
 
-.main-container .form-container form input{
- 
-    padding:  10px 0;
-    padding-left: 20px;
+.main-container .form-container form h1 {
+    text-align: center;
+    font-weight: 100;
+    color: beige;
+    font-size: 24px; /* Adjusted font size */
+}
+
+.main-container .form-container form input {
+    padding: 10px 15px; /* Adjusted padding */
     border-radius: 10px;
     border: none;
-    background-color: white;
-    color: #4a2d26 ;
-
-
-
-}
-.main-container .form-container form a{
+    background: white;
     color: #4a2d26;
+    font-size: 14px; /* Adjusted font size */
+    width: 100%; /* Full width for responsiveness */
 }
 
-.main-container .form-container form .signup-btn{
-    
-    
-    padding: 10px 20px;
+.main-container .form-container form a {
+    color: #4a2d26;
+    text-align: center;
+    font-size: 14px; /* Adjusted font size */
+}
+
+.main-container .form-container form .signup-btn {
+    padding: 10px 50px; /* Adjusted padding */
     align-self: center;
     margin-top: 10px;
     border-radius: 10px;
     border: none;
-    color:rgb(173, 145, 112);
-    background-color:white ;
-    
-
+    color: white;
+    background-color: rgb(93, 67, 36);
+    font-size: 16px; /* Adjusted font size */
 }
 
 .main-container .form-container form h2 {
@@ -182,23 +184,24 @@ color: beige;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: 15px 0;
+    margin: 10px 0;
+    font-size: 14px; /* Adjusted font size */
 }
 
 .main-container .form-container form h2::before,
 .main-container .form-container form h2::after {
     content: '';
     height: 1px;
-    width: 60px;
-    background-color: rgba(245, 245, 220, 0.5); 
+    width: 40px; /* Reduced width for smaller screens */
+    background-color: rgba(245, 245, 220, 0.5);
     display: inline-block;
 }
 
 .google #gle-btn {
     color: white;
     background-color: rgb(173, 145, 112);
-    padding: 12px 30px;
-    border-radius: 10px; 
+    padding: 10px 20px;
+    border-radius: 5px;
     border: 1px solid rgb(93, 67, 36);
     display: flex;
     justify-content: center;
@@ -207,6 +210,7 @@ color: beige;
     margin: 0 auto;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 14px; /* Adjusted font size */
 }
 
 .google #gle-btn:hover {
@@ -214,8 +218,7 @@ color: beige;
 }
 
 .google #gle-btn i {
-    font-size: 18px;
-    margin-right: 5px;
+    font-size: 16px; /* Adjusted icon size */
 }
 
 #err-email,
@@ -224,65 +227,134 @@ color: beige;
     font-size: 12px;
     margin-top: -8px;
 }
-.main-container .form-container form a{
-    color: #4a2d26;
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    header {
+        height: 60px; /* Reduced header height */
+        padding: 0 10px;
+    }
+
+    header .logo img {
+        width: 50px;
+        height: 50px;
+        margin-left: 10px;
+    }
+
+    header .icons {
+        gap: 15px;
+        margin-right: 5%;
+    }
+
+    nav {
+        height: 35px;
+    }
+
+    nav ul {
+        width: 90%;
+        gap: 10px;
+        font-size: 12px;
+    }
+
+    nav ul li a::after {
+        height: 2px;
+        top: 12px;
+    }
+
+    .main-container {
+        height: auto; /* Allow height to adjust */
+        flex-direction: column; /* Stack image and form on small screens */
+    }
+
+    .main-container .img-container {
+        height: 200px; /* Fixed height for image on small screens */
+    }
+
+    .main-container .form-container form {
+        width: 90%; /* Wider form on small screens */
+        margin: 10% 0;
+        padding: 15px;
+    }
+
+    .main-container .form-container form h1 {
+        font-size: 20px;
+    }
+
+    .main-container .form-container form input,
+    .main-container .form-container form .signup-btn,
+    .main-container .form-container form a,
+    .main-container .form-container form h2,
+    .google #gle-btn {
+        font-size: 12px;
+    }
+
+    .google #gle-btn i {
+        font-size: 14px;
+    }
+
+    .google #gle-btn {
+        padding: 8px 15px;
+    }
 }
 
+@media (max-width: 480px) {
+    header {
+        height: 50px;
+    }
 
+    header .logo img {
+        width: 40px;
+        height: 40px;
+        margin-left: 5px;
+    }
 
-.main-container .form-container form input{
- 
-    padding:  10px 0;
-    padding-left: 20px;
-    border-radius: 10px;
-    border: none;
-    background: white;
-    color: #4a2d26;
+    header .icons {
+        gap: 10px;
+        margin-right: 2%;
+    }
 
+    nav {
+        height: 30px;
+    }
 
+    nav ul {
+        width: 95%;
+        gap: 5px;
+        font-size: 10px;
+    }
 
+    nav ul li a::after {
+        height: 1px;
+        top: 10px;
+    }
+
+    .main-container .img-container {
+        height: 150px; /* Further reduced height */
+    }
+
+    .main-container .form-container form {
+        width: 95%;
+        margin: 15% 0;
+        padding: 10px;
+    }
+
+    .main-container .form-container form h1 {
+        font-size: 18px;
+    }
+
+    .main-container .form-container form input,
+    .main-container .form-container form .signup-btn,
+    .main-container .form-container form a,
+    .main-container .form-container form h2,
+    .google #gle-btn {
+        font-size: 10px;
+    }
+
+    .google #gle-btn i {
+        font-size: 12px;
+    }
+
+    .google #gle-btn {
+        padding: 6px 10px;
+    }
 }
-.main-container .form-container form .signup-btn{
-    
-    
-    padding: 10px 70px;
-    align-self: center;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: none;
-    color:white;
-    background-color:rgb(93, 67, 36);
-    
-
-}
-
-.main-container .form-container form .signup-btn{
-    
-    
-    padding: 10px 20px;
-    align-self: center;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: none;
-    color:rgb(173, 145, 112);
-    background-color:white ;
-    
-
-}
-.google #gle-btn {
-    color: white;
-    background-color: rgb(173, 145, 112);
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: solid rgb(93, 67, 36);
-    display: flex;
-    justify-content: center; 
-    align-items: center;    
-    margin: 0 auto;        
-}
-
-#a{
-    display: flex;
-    justify-content: center;
-    align-content: center;
-} 

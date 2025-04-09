@@ -438,7 +438,7 @@
                                               <p class="mb-0">Qty: <%=order.selectedProduct.quantity%></p>
                                               <!-- <p class="mb-0">Actual-price: <%=order.selectedProduct.actualPrice%></p> -->
                                                
-                                              <p class="mb-0">TOTAL-COST: ₹<%=order.selectedProduct.price%></p>
+                                              <p class="mb-0">TOTAL-COST: ₹<%=order.selectedProduct.price+20%></p>
                                           </div>
                                       </div>
                                   </div>
@@ -451,7 +451,7 @@
 
                   <div class="total-container">
                     <div class="total-label">Total:</div>
-                    <div class="total-amount">₹<span id="totalPrice"><%=order.totalPrice%></span></div>
+                    <div class="total-amount">₹<span id="totalPrice"><%=order.totalPrice+20%></span></div>
                 </div>
                 
 

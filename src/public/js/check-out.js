@@ -88,6 +88,8 @@ function removeAddressFromDOM(id) {
 }
     
 placeorder_btn_el.addEventListener("click", async (e) => {
+  console.log("clickkkkk");
+  
   const walletBalance=wallet_el.getAttribute('data-balance')
   let totalAmount_val = total_amount.innerHTML;
   let totalAmount = totalAmount_val.replace("₹", "");
@@ -135,7 +137,7 @@ console.log(selectedPaymentMethod.value,"===========");
 });
 
 //for create order//
-const createOrder = async (paymentMethod, addressId,isPaymentFailed=null,walletBalance,totalAmount) => {
+const createOrder = async (paymentMethod, addressId,isPaymentFailed=false,walletBalance,totalAmount) => {
 
 if(paymentMethod=='Wallet'){
   if(Number(walletBalance)<Number(totalAmount)){
@@ -193,98 +195,104 @@ if(totalAmount>1000 && paymentMethod=='COD'){
   }
 
 //for razor pay//
-const InitializeRazorPayment = async (
-  paymentMethod,
-  addressId,
-  totalAmount
-) => {
+const InitializeRazorPayment = async (paymentMethod, addressId, totalAmount) => {
   try {
-    const response = await fetch("/razor-key", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const keyResponse = await fetch("/razor-key", { method: "GET", headers: { "Content-Type": "application/json" } });
+    const keyData = await keyResponse.json();
+    const razorpayKey = keyData.key;
+    console.log("Fetched Razorpay key:", razorpayKey);
 
-    const key = await response.json();
-
-    const razorOrder = await fetch("/razor-order", {
+    const razorOrderResponse = await fetch("/razor-order", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: parseInt(totalAmount) }),
     });
+    const razorOrder = await razorOrderResponse.json();
 
-    const order = await razorOrder.json();
-
-    //razor pay configurations
     let options = {
-      key: key,
+      key: razorpayKey,
       amount: parseInt(totalAmount) * 100,
       currency: "INR",
       name: "Vintage Frost",
       description: "Test Transaction",
-      image: `img/fav.png`,
-      order_id: order.id,
-
+      image: "/img/fav.png",
+      order_id: razorOrder.id,
       handler: function (response) {
-
-        saveOrderRazor(response, order, paymentMethod, addressId);
+        saveOrderRazor(response, paymentMethod, addressId); 
       },
-      prefill: {
-        name: "riya",
-        email: "riya@example.com",
-        contact: "9061881978",
-      },
-      notes: {
-        address: "Razor pay Corporate Office",
-      },
-      theme: {
-        color: "#1818c4",
-      },
+      prefill: { name: "riya", email: "riya@example.com", contact: "9061881978" },
+      notes: { address: "Razorpay Corporate Office" },
+      theme: { color: "#1818c4" },
     };
 
     const razor = new window.Razorpay(options);
     razor.open();
 
-    // razor.on("payment.failed", async function (response) {
-    //   createOrder( paymentMethod, addressId,true);
-    // });
+    razor.on("payment.failed", async function (response) { 
+      console.log("Payment failed:", response.error);
+      // await createOrder(paymentMethod, addressId, true, null, totalAmount);
+      const orderResponse = await fetch("/place-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        paymentMethod :paymentMethod, 
+        addressId: addressId,
+        isPaymentFailed: true,
+        }),
+      });
+  
+      const data = await orderResponse.json();
+      console.log(data.order._id, data.order.products[0]._id);
+      
+       Swal.fire({ title: "created faild order!", icon: "success" }).then(() => {
+          window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
+        });
 
-
-
+    });
   } catch (error) {
-    console.log(error);
+    console.error("Razorpay initialization error:", error);
+    showErrorToast(error.message || "Failed to initialize payment");
   }
 };
 
-const saveOrderRazor = async (
-  razorResponse,
-  order,
-  selectedPayment,
-  selectedAddress
-) => {
+const saveOrderRazor = async (razorResponse, selectedPayment, selectedAddress) => {
   try {
-   
+    console.log("Payment success, verifying with orderId:");
     const verifyData = await fetch("/razor-verify", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...razorResponse,
-        orderId: null,
+        razorpay_order_id: razorResponse.razorpay_order_id,
+        razorpay_payment_id: razorResponse.razorpay_payment_id,
+        razorpay_signature: razorResponse.razorpay_signature,
       }),
     });
 
     if (verifyData.ok) {
-      createOrder(selectedPayment, selectedAddress);
+    console.log("verifyData ok");
+
+    const orderResponse = await fetch("/place-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+      paymentMethod :selectedPayment, 
+      addressId: selectedAddress,
+      isPaymentFailed: false,
+      }),
+    });
+
+    const data = await orderResponse.json();
+    console.log(data.order._id, data.order.products[0]._id);
+    
+     Swal.fire({ title: "Payment successful!", icon: "success" }).then(() => {
+        window.location.href = `/view-orderDetails/${data.order._id}/${data.order.products[0]._id}`;
+      });
     } else {
-      showErrorToast("something went wrong");
+      const errorData = await verifyData.json();
+      throw new Error(errorData.error || "Payment verification failed");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Verification error:", error);
+    showErrorToast(error.message || "Something went wrong during payment verification");
   }
 };
- 

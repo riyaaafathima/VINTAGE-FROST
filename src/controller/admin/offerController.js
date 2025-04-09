@@ -8,8 +8,9 @@ const categoryOfferPage = async (req, res) => {
     const categoryOffers = await categoryOfferModel
       .find({})
       .populate({ path: "category_id", match: { isActive: true } });
+      const filteredCategoryOffer=categoryOffers.filter(offer=>offer.category_id!=null);
 
-    res.render("admin/categoryOffer-list", { categoryOffers });
+    res.render("admin/categoryOffer-list", { categoryOffers:filteredCategoryOffer });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

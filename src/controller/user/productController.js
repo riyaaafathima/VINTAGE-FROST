@@ -5,7 +5,8 @@ const cartModel = require("../../model/user/cart");
 const { default: mongoose } = require("mongoose");
 const wishlistModel = require("../../model/user/wishlist");
 const wishlist = require("../../model/user/wishlist");
-const reviewModel=require('../../model/user/review');
+const reviewModel = require("../../model/user/review");
+const product = require("../../model/admin/product");
 
 const homePageRender = async (req, res) => {
   try {
@@ -26,31 +27,30 @@ const homePageRender = async (req, res) => {
       .sort({ rating: -1 })
       .limit(10);
 
-      let user = null;
-      let cartCount = 0;
-      let wishlist=[]
-      if (req.session?.user) {
-        const id = req.session?.user?._id;
-        user = await userModel.findById(id);
-        user = user.username;
-        const cart = await cartModel.findOne({ user: id });
-        if (cart) {
-          cartCount = cart.items.length;
-        }
-        let items = await wishlistModel.findOne({ user: id });
-        if(items){
-          wishlist=items.products
-        }
-  
+    let user = null;
+    let cartCount = 0;
+    let wishlist = [];
+    if (req.session?.user) {
+      const id = req.session?.user?._id;
+      user = await userModel.findById(id);
+      user = user.username;
+      const cart = await cartModel.findOne({ user: id });
+      if (cart) {
+        cartCount = cart.items.length;
       }
+      let items = await wishlistModel.findOne({ user: id });
+      if (items) {
+        wishlist = items.products;
+      }
+    }
 
     res.render("user/homepage", {
       allProducts,
       user,
       latestProducts,
       topRated,
-      cartCount,  
-      wishlist  
+      cartCount,
+      wishlist,
     });
   } catch (error) {
     console.log(error);
@@ -81,41 +81,89 @@ const productPageRender = async (req, res) => {
 
     let sortOptions = {};
     if (sort === "LowtoHigh") {
-      sortOptions["varients.price"] = 1; 
+      // Custom sort for offer price (low to high)
+      sortOptions = { offerPrice: 1 };
     } else if (sort === "HightoLow") {
-      sortOptions["varients.price"] = -1; 
+      // Custom sort for offer price (high to low)
+      sortOptions = { offerPrice: -1 };
     } else if (sort === "Newest") {
-      sortOptions.createdAt = -1; 
+      sortOptions.createdAt = -1;
     } else if (sort === "aToz") {
-      sortOptions.productName = 1; 
+      sortOptions.productName = 1;
     } else if (sort === "zToa") {
-      sortOptions.productName = -1; 
+      sortOptions.productName = -1;
     }
+
     const totalProducts = await productModel.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
     const skip = (currentPage - 1) * limit;
 
+    // Fetch products without initial sorting
     const Products = await productModel
       .find(filter)
-      .populate({ 
+      .populate({
         path: "category",
-        match: { isActive: true }, 
+        match: { isActive: true },
       })
-      .sort(sortOptions)
       .skip(skip)
       .limit(limit);
 
+    // Filter out products with null categories
     const allProducts = Products.filter((product) => product.category !== null);
+
+    // Calculate offer price for each product and sort
+    for (const product of allProducts) {
+      const basePrice = product.varients[0].price;
+      let offerPercentage = 0;
+    
+      if (product.productOfferModel && product.offerPercentage) {
+        offerPercentage = Math.max(offerPercentage, product.offerPercentage);
+      }
+      if (product.categoryOfferModel && product.category?.offerPercentage) {
+        offerPercentage = Math.max(offerPercentage, product.category.offerPercentage);
+      }
+    
+      product.offerPrice = basePrice - (basePrice * offerPercentage) / 100 || basePrice;
+    
+      const reviews = await reviewModel.find({ product: product._id });
+    
+      const reviewCount = reviews.length;
+      const avgRating = reviewCount > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+        : 0;
+    
+      product.avgRating = avgRating;
+      product.reviewCount = reviewCount;
+    }
+    
+    
+    if (sort === "LowtoHigh" || sort === "HightoLow") {
+      allProducts.sort((a, b) => {
+        return sort === "LowtoHigh"
+          ? a.offerPrice - b.offerPrice
+          : b.offerPrice - a.offerPrice;
+      });
+    } else if (sortOptions.createdAt || sortOptions.productName) {
+      allProducts.sort((a, b) => {
+        if (sortOptions.createdAt)
+          return (
+            sortOptions.createdAt *
+            (new Date(b.createdAt) - new Date(a.createdAt))
+          );
+        if (sortOptions.productName)
+          return (
+            sortOptions.productName * a.productName.localeCompare(b.productName)
+          );
+        return 0;
+      });
+    }
 
     const categories = await categoryModel.find({ isActive: true });
 
-console.log(allProducts);
-
-
     let user = null;
     let cartCount = 0;
-    let wishlist=[]
+    let wishlist = [];
     if (req.session?.user) {
       const id = req.session?.user?._id;
       user = await userModel.findById(id);
@@ -125,11 +173,11 @@ console.log(allProducts);
         cartCount = cart.items.length;
       }
       let items = await wishlistModel.findOne({ user: id });
-      if(items){
-        wishlist=items.products
-      }      
-
+      if (items) {
+        wishlist = items.products;
+      }
     }
+    const currentRoute = req.path;
 
     res.render("user/allProduct", {
       allProducts,
@@ -140,8 +188,9 @@ console.log(allProducts);
       selectedCategory: category,
       user,
       cartCount,
-      wishlist:wishlist,
-      
+      wishlist: wishlist,
+      currentRoute,
+        
     });
   } catch (error) {
     console.log(error);
@@ -183,15 +232,12 @@ const productView = async (req, res) => {
       wishlist = await wishlistModel.findOne({ user: userId });
     }
     console.log(id);
-    
-    const reviews= await reviewModel.find({product:id}).populate({
-      path:'userId'
 
-    })
-    
-  
-    console.log('reveiwwweee',reviews);
-    
+    const reviews = await reviewModel.find({ product: id }).populate({
+      path: "userId",
+    });
+
+    console.log("reveiwwweee", reviews);
 
     const relatedProducts = await productModel.find({
       category: product.category._id,
@@ -203,15 +249,14 @@ const productView = async (req, res) => {
       relatedProducts,
       user,
       cartCount,
-      wishlist:wishlist,
-      reviews
+      wishlist: wishlist,
+      reviews,
     });
   } catch (error) {
     console.log(error);
     res.status(500).render("common/500"); // Optional: handle server errors
   }
 };
-
 
 module.exports = {
   homePageRender,
