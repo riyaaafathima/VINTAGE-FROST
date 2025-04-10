@@ -116,7 +116,7 @@
                     <!-- End .product -->
                   </td>
 
-                  <td class="price-col"><%=item.varients[0].price%></td>
+                  <td class="price-col">₹<%=item.varients[0].price%></td>
 
                   <% if(item.varients[0].stock==0){%>
 
@@ -124,11 +124,7 @@
                     <span class="out-of-stock">Out of stock</span>
                   </td>
                   <td class="action-col">
-                    <button
-                      class="btn btn-block btn-outline-primary-2 disabled"
-                    >
-                      Out of Stock
-                    </button>
+
                   </td>
 
                   <%} else if(item.varients[0].stock<=10) {%>

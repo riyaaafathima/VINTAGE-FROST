@@ -140,12 +140,15 @@ const updateProduct = async (req, res) => {
     const exisitingProduct = await productModel.findById(id);
     const exisitingImages = exisitingProduct.image;
 
-    const filePath = path.join(
-      __dirname,
-      "../../../public/uploads",
-      exisitingImages[0]
-    );
-    console.log("enter");
+    if (exisitingImages && exisitingImages.length > 0) {
+      const filePath = path.join(
+        __dirname,
+        "../../../public/uploads",
+        exisitingImages[0]
+      );
+      console.log("enter");
+    }
+    
 
     await productModel.findByIdAndUpdate(id, {
       $set: {
@@ -157,17 +160,15 @@ const updateProduct = async (req, res) => {
         image: allImages,
       },
     });
-    if (exisitingProduct.productName !== productName) {
-      // if the existing productname is !==to the newproduct we should change imagename also as per the change in prdct name
-      exisitingImages.forEach((img) => {
-        const filePath = path.join(
-          __dirname,
-          "../../../src/public/uploads",
-          img
-        );
-        fs.unlink(filePath, (err) => console.log(err));
-      });
+    if (exisitingImages && exisitingImages.length > 0) {
+      const filePath = path.join(
+        __dirname,
+        "../../../public/uploads",
+        exisitingImages[0]
+      );
+      console.log("enter");
     }
+    
     res.status(200).json("product edited successfully");
   } catch (error) {
     console.log(error);
