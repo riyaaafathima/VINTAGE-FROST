@@ -67,13 +67,16 @@ submit_btn_el.addEventListener("click", async (e) => {
     });
 
     if (response.ok) {
-      alert("Review submitted successfully!");
-
-      if (reviewModal) {
-        reviewModal.hide();
-      }
-
-      location.reload();
+      Swal.fire({
+            position: "center",
+            icon: "success",
+            title: 'review added',
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            window.location.reload();
+            reviewModal.hide();
+          });
     } else {
       const resData = await response.json();
       alert(resData.message);
